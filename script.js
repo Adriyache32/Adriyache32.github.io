@@ -1502,6 +1502,41 @@ setTimeout(() => {
   if (aiInput) aiInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendAIMessage(); });
 }, 500);
 
+/* ───── COFFEE ───── */
+let coffeeRejected = false;
+
+function openCoffee() {
+  if (coffeeRejected) {
+    document.getElementById('coffee-face').textContent = '😭';
+    document.getElementById('coffee-text').innerHTML = '¿Ahora querés?<br><span style="color:#666;font-size:0.8rem">Me rompiste el corazón... 😭💔</span>';
+    document.getElementById('coffee-buttons').innerHTML = '<button class="btn btn-map" onclick="closeCoffee()">Bueno... 😢</button>';
+  } else {
+    document.getElementById('coffee-face').textContent = '🥺';
+    document.getElementById('coffee-text').innerHTML = '¿Me invitas un cafecito?<br><span style="color:#666;font-size:0.8rem">Por favorrr 🥺👆</span>';
+    document.getElementById('coffee-buttons').innerHTML = `
+      <button class="btn btn-discord" onclick="coffeeYes()">¡Sí! ☕</button>
+      <button class="btn btn-map" onclick="coffeeNo()">No 😤</button>
+    `;
+  }
+  document.getElementById('coffee-modal').classList.remove('hidden');
+}
+
+function closeCoffee() {
+  document.getElementById('coffee-modal').classList.add('hidden');
+}
+
+function coffeeYes() {
+  closeCoffee();
+  window.open('https://cafecito.app/chanchosmc', '_blank');
+}
+
+function coffeeNo() {
+  coffeeRejected = true;
+  document.getElementById('coffee-face').textContent = '😭';
+  document.getElementById('coffee-text').innerHTML = '¿En serio?<br><span style="color:#666;font-size:0.8rem">Me dejaste llorando... 😭💔</span>';
+  document.getElementById('coffee-buttons').innerHTML = '<button class="btn btn-discord" onclick="coffeeYes()">¡Ta bueno, dale! ☕</button>';
+}
+
 /* ───── WELCOME ───── */
 function dismissWelcome() {
   localStorage.setItem('nervalia_welcomed', 'true');
