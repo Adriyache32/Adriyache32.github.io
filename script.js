@@ -1,11 +1,11 @@
 const SERVER_IP = 'nervalia.mc';
 const API_URL = `https://api.mcstatus.io/v2/status/java/${SERVER_IP}`;
-const AUTH_USERS = ['eliezer', 'manchitas', 'Adriyache32', 'mellado'];
 const PC_STORAGE_KEY = 'nervalia_pc_id';
 const COINS_KEY = 'nervalia_coins';
 const LOGROS_KEY = 'nervalia_logros';
 const INVENTORY_KEY = 'nervalia_inventory';
 const SERVER_DATA_KEY = 'nervalia_server_data';
+const CREATOR_PASS = '2026';
 
 function toggleMenu() {
   document.getElementById('nav-menu').classList.toggle('open');
@@ -140,26 +140,13 @@ function showLoginOrDetect() {
   if (stored) {
     try {
       const data = JSON.parse(stored);
-      if (data.fingerprint === getPCFingerprint() && data.token) {
-        verifyExistingToken(data.token);
+      if (data.fingerprint === getPCFingerprint() && data.authenticated) {
+        showPCDetected('Admin');
         return;
       }
     } catch {}
   }
   showTokenInput();
-}
-
-async function verifyExistingToken(token) {
-  setLED('proc');
-  try {
-    const res = await fetch('https://api.github.com/user', {
-      headers: { 'Authorization': `token ${token}` }
-    });
-    if (!res.ok) { localStorage.removeItem(PC_STORAGE_KEY); showTokenInput(); return; }
-    const user = await res.json();
-    if (!AUTH_USERS.includes(user.login)) { localStorage.removeItem(PC_STORAGE_KEY); showTokenInput(); return; }
-    showPCDetected(user.login);
-  } catch { showTokenInput(); }
 }
 
 function showTokenInput() {
@@ -173,29 +160,33 @@ function showPCDetected(username) {
   setLED('ready');
   document.getElementById('login-input-area').classList.add('hidden');
   document.getElementById('pc-detected').classList.remove('hidden');
-  document.getElementById('pc-info').textContent = `PC: ${getPCFingerprint()} | user: ${username}`;
+  document.getElementById('pc-info').textContent = `PC: ${getPCFingerprint()} | equipo: chanchos MC studios`;
   document.getElementById('pc-username').textContent = username;
   setTimeout(() => showCreatorPanel(username), 2500);
 }
 
 async function loginCreator() {
-  const token = document.getElementById('token-input').value.trim();
+  const pass = document.getElementById('token-input').value.trim();
   const errorEl = document.getElementById('login-error');
-  if (!token) { errorEl.textContent = '[ERROR] Token requerido'; return; }
+  if (!pass) { errorEl.textContent = '[ERROR] Ingresá la contraseña'; return; }
   errorEl.textContent = '[SISTEMA] Verificando...';
   setLED('proc');
-  try {
-    const res = await fetch('https://api.github.com/user', {
-      headers: { 'Authorization': `token ${token}` }
-    });
-    if (!res.ok) { errorEl.textContent = '[ERROR] Token inválido'; return; }
-    const user = await res.json();
-    if (!AUTH_USERS.includes(user.login)) { errorEl.textContent = '[ERROR] No pertenecés al equipo'; return; }
-    localStorage.setItem(PC_STORAGE_KEY, JSON.stringify({
-      token, fingerprint: getPCFingerprint(), pairedAt: new Date().toISOString()
-    }));
-    showPCDetected(user.login);
-  } catch { errorEl.textContent = '[ERROR] Error de conexión'; }
+
+  await new Promise(r => setTimeout(r, 800));
+
+  if (pass !== CREATOR_PASS) {
+    errorEl.textContent = '[ERROR] Contraseña incorrecta';
+    setLED('idle');
+    return;
+  }
+
+  localStorage.setItem(PC_STORAGE_KEY, JSON.stringify({
+    authenticated: true,
+    fingerprint: getPCFingerprint(),
+    pairedAt: new Date().toISOString()
+  }));
+
+  showPCDetected('Miembro del equipo');
 }
 
 function showCreatorPanel(username) {
@@ -330,7 +321,7 @@ function showCreatorTab(tab) {
         </div>`;
       break;
 
-    case 'team':
+    case 'team': {
       const members = sd.team || [
         { name: 'Eliezer', role: 'Creador', color: '#f0c040' },
         { name: 'Manchitas', role: 'Creador', color: '#f0c040' },
@@ -355,8 +346,9 @@ function showCreatorTab(tab) {
           </div>
         </div>`;
       break;
+    }
 
-    case 'kits':
+    case 'kits': {
       const kdata = sd.kits || [
         { name: 'Bronce', price: 5, perks: ['Kit inicial especial', 'Tag coloreado en el chat', 'Acceso a /fly en spawn'] },
         { name: 'Plata', price: 10, perks: ['Todo lo de Bronce', 'Set de herramientas encantadas', 'Home adicional (3 total)', 'Acceso a /enderchest'] },
@@ -382,8 +374,9 @@ function showCreatorTab(tab) {
           </div>
         </div>`;
       break;
+    }
 
-    case 'logros':
+    case 'logros': {
       const ldata = sd.logros || [
         { name: 'Minero Inicial', desc: 'Consigue 10 bloques de piedra', icon: '⛏️' },
         { name: 'Leñador Novato', desc: 'Corta 10 árboles', icon: '🌳' },
@@ -413,8 +406,9 @@ function showCreatorTab(tab) {
           </div>
         </div>`;
       break;
+    }
 
-    case 'reglas':
+    case 'reglas': {
       const rdata = sd.reglas || [
         'No Griefing — No destruir construcciones ajenas',
         'No Hacks — Prohibidos clientes modificados',
@@ -441,8 +435,9 @@ function showCreatorTab(tab) {
           </div>
         </div>`;
       break;
+    }
 
-    case 'galeria':
+    case 'galeria': {
       const gdata = sd.galeria || [
         { label: 'Base principal', icon: '🏗️' },
         { label: 'Atardecer en spawn', icon: '🌄' },
@@ -470,8 +465,9 @@ function showCreatorTab(tab) {
           </div>
         </div>`;
       break;
+    }
 
-    case 'coins':
+    case 'coins': {
       const inv = JSON.parse(localStorage.getItem(INVENTORY_KEY)) || [];
       const invHtml = inv.map(i => `
         <div class="status-line"><span class="label">${i.date.split('T')[0]}</span><span class="value">Kit ${i.kit}</span></div>
@@ -489,7 +485,8 @@ function showCreatorTab(tab) {
           ${invHtml || '<div class="line" style="color:#444">No hay canjes registrados</div>'}
         </div>`;
       break;
-    case 'mods':
+    }
+    case 'mods': {
       const mdata = sd.mods || {
         mods: [
           { name: 'Sodium', desc: 'Optimización de rendimiento', version: '1.20.4', url: '#' },
@@ -537,6 +534,7 @@ function showCreatorTab(tab) {
           </div>
         </div>`;
       break;
+    }
   }
 }
 
@@ -840,6 +838,10 @@ function applyMods() {
       </div>
     `).join('');
   });
+}
+
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
 }
 
 function addModEntry(cat) {

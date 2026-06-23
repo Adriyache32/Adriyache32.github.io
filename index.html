@@ -23,6 +23,8 @@
         <li><a href="#tienda">Tienda</a></li>
         <li><a href="#galeria">Galería</a></li>
         <li><a href="#mods">Mods</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contacto">Contacto</a></li>
         <li><a href="#members">Equipo</a></li>
         <li><a href="#creator" class="nav-creator">Modo Creador</a></li>
       </ul>
@@ -339,6 +341,57 @@
       </div>
     </section>
 
+    <!-- FAQ -->
+    <section id="faq" class="section">
+      <h2>FAQ</h2>
+      <p class="section-subtitle">/// Preguntas frecuentes ///</p>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">¿Cómo entro al server?</div>
+          <div class="faq-a">Primero tenés que pedir whitelist a algún miembro del equipo. Una vez agregado, conectate con la IP <strong>nervalia.mc</strong>.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">¿Qué versión necesito?</div>
+          <div class="faq-a">El server corre en 1.20.4 - 1.21. Cualquier versión entre esas funciona.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">¿Cómo consigo monedas?</div>
+          <div class="faq-a">Completando logros del server. Cada logro completado te da <strong>0.5 🪙</strong>.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">¿Se puede hacer grief?</div>
+          <div class="faq-a">No. El server tiene whitelist y CoreProtect. Todo se revierte y el responsable es baneado.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">¿Hay voice chat?</div>
+          <div class="faq-a">Sí, usamos Simple Voice Chat con proximidad. Descargalo de la sección Mods.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto" class="section contacto-section">
+      <h2>Contacto</h2>
+      <p class="section-subtitle">/// Sumate al server ///</p>
+      <div class="contacto-cards">
+        <a href="https://discord.gg/nervalia" class="contacto-card" target="_blank">
+          <div class="contacto-icon">💬</div>
+          <h3>Discord</h3>
+          <p>Unite a nuestro Discord para pedir whitelist, chatear y enterarte de eventos.</p>
+        </a>
+        <div class="contacto-card">
+          <div class="contacto-icon">📧</div>
+          <h3>Email</h3>
+          <p>Para consultas largas o soporte: <span class="contacto-email">nervalia@chanchosmc.com</span></p>
+        </div>
+        <a href="https://map.nervalia.mc" class="contacto-card" target="_blank">
+          <div class="contacto-icon">🗺️</div>
+          <h3>Mapa Dinámico</h3>
+          <p>Explorá el mundo desde el navegador en tiempo real.</p>
+        </a>
+      </div>
+    </section>
+
     <!-- EQUIPO -->
     <section id="members" class="section">
       <h2>Equipo chanchos MC studios</h2>
@@ -387,15 +440,16 @@
           </div>
           <div id="login-input-area" class="terminal-input-area hidden">
             <div class="line"><span class="prompt">└─$</span> <span class="highlight">Autenticación requerida</span></div>
-            <div class="line" style="color:#666;font-size:0.8rem">[SISTEMA] Ingresa tu token de GitHub para vincular esta PC al equipo de desarrollo.</div>
-            <div class="line" style="margin-top:1rem"><span class="prompt">token ></span> <input type="password" id="token-input" class="terminal-input" placeholder="ghp_..." autocomplete="off" spellcheck="false"></div>
+            <div class="line" style="color:#666;font-size:0.8rem">[SISTEMA] Ingresá la contraseña del equipo de desarrollo para acceder al panel.</div>
+            <div class="line" style="margin-top:1rem"><span class="prompt">password ></span> <input type="password" id="token-input" class="terminal-input" placeholder="••••" autocomplete="off" spellcheck="false"></div>
             <div class="line" style="margin-top:0.5rem">
               <button class="btn btn-login" onclick="loginCreator()">[VINCULAR]</button>
               <span id="login-error" class="login-error"></span>
             </div>
             <div class="line" style="margin-top:1rem;color:#444;font-size:0.75rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:0.75rem">
               ───────────────────────────────────────────────<br>
-              Acceso para: eliezer, manchitas, Adriyache32, mellado
+              Contraseña compartida del equipo chanchos MC studios.<br>
+              Una vez vinculada esta PC, no volverás a necesitarla.
             </div>
           </div>
           <div id="pc-detected" class="terminal-pc-detected hidden">

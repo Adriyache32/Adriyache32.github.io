@@ -662,6 +662,115 @@ h1 {
   background: rgba(114,137,254,0.2);
 }
 
+/* FAQ */
+.faq-list {
+  max-width: 700px;
+  margin: 0 auto;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.faq-item {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.faq-q {
+  padding: 1rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #c0c0d0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.faq-q:hover { color: #fff; }
+
+.faq-q::after {
+  content: '+';
+  font-size: 1.2rem;
+  color: #555;
+  transition: transform 0.2s;
+}
+
+.faq-item.open .faq-q::after {
+  transform: rotate(45deg);
+}
+
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0 1.25rem;
+  color: #666;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.faq-item.open .faq-a {
+  max-height: 200px;
+  padding: 0 1.25rem 1rem;
+}
+
+/* Contacto */
+.contacto-section {
+  scroll-margin-top: 80px;
+}
+
+.contacto-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.contacto-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.contacto-card:hover {
+  border-color: rgba(114,137,254,0.3);
+  transform: translateY(-2px);
+}
+
+.contacto-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.contacto-card h3 {
+  font-size: 1.1rem;
+  color: #c0c0d0;
+  margin-bottom: 0.5rem;
+}
+
+.contacto-card p {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.contacto-email {
+  color: #7289da;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+}
+
 /* Members */
 .members-grid {
   display: flex;
