@@ -516,9 +516,10 @@ function showCreatorTab(tab) {
           </div>
           ${(mdata[cat] || []).map((item, i) => `
             <div class="editor-field" style="padding:0.3rem 0">
-              <input class="editor-input" id="m-${cat}-name-${i}" value="${item.name}" placeholder="Nombre" style="flex:0.3;font-size:0.7rem">
-              <input class="editor-input" id="m-${cat}-desc-${i}" value="${item.desc}" placeholder="Desc" style="flex:0.4;font-size:0.7rem">
-              <input class="editor-input" id="m-${cat}-ver-${i}" value="${item.version}" placeholder="Versión" style="flex:0.15;font-size:0.7rem">
+              <input class="editor-input" id="m-${cat}-name-${i}" value="${item.name}" placeholder="Nombre" style="flex:0.2;font-size:0.7rem">
+              <input class="editor-input" id="m-${cat}-desc-${i}" value="${item.desc}" placeholder="Desc" style="flex:0.3;font-size:0.7rem">
+              <input class="editor-input" id="m-${cat}-url-${i}" value="${item.url || '#'}" placeholder="CurseForge URL" style="flex:0.3;font-size:0.7rem">
+              <input class="editor-input" id="m-${cat}-ver-${i}" value="${item.version}" placeholder="Versión" style="flex:0.1;font-size:0.7rem">
               <button class="btn-editor danger" onclick="removeModEntry('${cat}', ${i})" style="flex:0;padding:0.2rem 0.4rem;font-size:0.65rem">✕</button>
             </div>
           `).join('')}
@@ -831,7 +832,7 @@ function applyMods() {
         <div class="mod-icon">${catIcons[cat]}</div>
         <div class="mod-info">
           <h4>${item.name}</h4>
-          <p>${item.desc}</p>
+          <p>${item.desc}<br><a href="${item.url || '#'}" class="mod-cf-link" target="_blank">CurseForge →</a></p>
           <span class="mod-version">${item.version}</span>
         </div>
         <a href="${item.url || '#'}" class="btn-mod-dl" target="_blank">Descargar</a>
@@ -870,9 +871,11 @@ function saveMods() {
     items.forEach((_, i) => {
       const n = document.getElementById(`m-${cat}-name-${i}`);
       const d = document.getElementById(`m-${cat}-desc-${i}`);
+      const u = document.getElementById(`m-${cat}-url-${i}`);
       const v = document.getElementById(`m-${cat}-ver-${i}`);
       if (n) items[i].name = n.value;
       if (d) items[i].desc = d.value;
+      if (u) items[i].url = u.value;
       if (v) items[i].version = v.value;
     });
   });

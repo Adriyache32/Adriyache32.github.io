@@ -662,6 +662,19 @@ h1 {
   background: rgba(114,137,254,0.2);
 }
 
+.mod-cf-link {
+  color: #f0c040;
+  font-size: 0.7rem;
+  text-decoration: none;
+  opacity: 0.7;
+  display: inline-block;
+  margin-top: 2px;
+}
+.mod-cf-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
 /* FAQ */
 .faq-list {
   max-width: 700px;
