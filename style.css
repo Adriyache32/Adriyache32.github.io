@@ -489,9 +489,10 @@ h1 {
 }
 
 .kit-card.featured {
-  border-color: rgba(240, 192, 64, 0.4);
-  background: rgba(240, 192, 64, 0.03);
+  border-color: #f0c040;
+  background: rgba(240, 192, 64, 0.05);
   transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(240, 192, 64, 0.15);
 }
 
 .kit-card.featured:hover {
@@ -505,8 +506,8 @@ h1 {
   transform: translateX(-50%);
   background: linear-gradient(135deg, #f0c040, #f0a040);
   color: #000;
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 800;
   padding: 0.3rem 1rem;
   border-radius: 20px;
   letter-spacing: 1px;
