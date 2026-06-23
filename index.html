@@ -620,6 +620,26 @@
     </section>
   </main>
 
+  <!-- WELCOME MODAL -->
+  <div id="welcome-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content welcome-content">
+      <div class="modal-header">
+        <h3>🏝️ Bienvenido a Nervalia</h3>
+      </div>
+      <div class="modal-body" style="text-align:center">
+        <div style="font-size:3rem;margin:1rem 0">🌴</div>
+        <p style="color:#c0c0d0;font-size:1rem;margin-bottom:0.5rem">Un mundo survival para amigos</p>
+        <p style="color:#666;font-size:0.85rem;margin-bottom:1.5rem">— chanchos MC studios —</p>
+        <p style="color:#777;font-size:0.8rem;line-height:1.6">Server privado con whitelist, voice chat de proximidad,<br>mapa dinámico y eventos periódicos.</p>
+        <div style="margin-top:1.5rem;padding:0.75rem;background:rgba(114,137,254,0.08);border-radius:8px;font-size:0.8rem">
+          <span style="color:#7289da">IP:</span> <code style="color:#f0c040">nervalia.mc</code>
+        </div>
+        <button class="btn btn-login" onclick="dismissWelcome()" style="margin-top:1.5rem">[ ENTRAR ]</button>
+      </div>
+    </div>
+  </div>
+
   <!-- PAYWALL MODAL -->
   <div id="paywall-modal" class="modal hidden">
     <div class="modal-overlay" onclick="closePaywall()"></div>

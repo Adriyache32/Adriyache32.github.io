@@ -1061,6 +1061,12 @@ function saveMods() {
   if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
 }
 
+/* ───── WELCOME ───── */
+function dismissWelcome() {
+  localStorage.setItem('nervalia_welcomed', 'true');
+  document.getElementById('welcome-modal').classList.add('hidden');
+}
+
 /* ───── INIT ───── */
 document.addEventListener('DOMContentLoaded', () => {
   setLED('idle');
@@ -1074,6 +1080,12 @@ document.addEventListener('DOMContentLoaded', () => {
   applyGaleria();
   applyMods();
   showAccountStatus();
+
+  if (!localStorage.getItem('nervalia_welcomed')) {
+    setTimeout(() => {
+      document.getElementById('welcome-modal').classList.remove('hidden');
+    }, 600);
+  }
 
   const section = document.getElementById('creator');
   const observer = new IntersectionObserver((entries) => {
