@@ -466,15 +466,81 @@ h1 {
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.terminal-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+.leds {
+  display: flex;
+  gap: 6px;
+  align-items: center;
 }
 
-.terminal-dot.red { background: #ed4245; }
-.terminal-dot.yellow { background: #f0c040; }
-.terminal-dot.green { background: #43b581; }
+.led {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.3s ease;
+  opacity: 0.15;
+}
+
+.led::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.led.led-active {
+  opacity: 1;
+}
+
+.led-red {
+  background: #ed4245;
+  box-shadow: 0 0 4px rgba(237, 66, 69, 0.3);
+}
+
+.led-red.led-active {
+  box-shadow: 0 0 12px rgba(237, 66, 69, 0.8), 0 0 24px rgba(237, 66, 69, 0.3);
+  animation: pulse-red 2s ease-in-out infinite;
+}
+
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 8px rgba(237, 66, 69, 0.6), 0 0 16px rgba(237, 66, 69, 0.2); }
+  50% { box-shadow: 0 0 16px rgba(237, 66, 69, 0.9), 0 0 32px rgba(237, 66, 69, 0.4); }
+}
+
+.led-red.led-active::after {
+  opacity: 1;
+  box-shadow: 0 0 20px rgba(237, 66, 69, 0.4);
+}
+
+.led-yellow {
+  background: #f0c040;
+  box-shadow: 0 0 4px rgba(240, 192, 64, 0.3);
+}
+
+.led-yellow.led-active {
+  box-shadow: 0 0 12px rgba(240, 192, 64, 0.8), 0 0 24px rgba(240, 192, 64, 0.3);
+}
+
+.led-yellow.led-active::after {
+  opacity: 1;
+  box-shadow: 0 0 20px rgba(240, 192, 64, 0.4);
+}
+
+.led-green {
+  background: #43b581;
+  box-shadow: 0 0 4px rgba(67, 181, 129, 0.3);
+}
+
+.led-green.led-active {
+  box-shadow: 0 0 12px rgba(67, 181, 129, 0.8), 0 0 24px rgba(67, 181, 129, 0.3);
+}
+
+.led-green.led-active::after {
+  opacity: 1;
+  box-shadow: 0 0 20px rgba(67, 181, 129, 0.4);
+}
 
 .terminal-title {
   margin-left: 0.5rem;

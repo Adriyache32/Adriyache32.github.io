@@ -158,9 +158,11 @@
       <div id="creator-login" class="creator-login">
         <div class="terminal">
           <div class="terminal-header">
-            <span class="terminal-dot red"></span>
-            <span class="terminal-dot yellow"></span>
-            <span class="terminal-dot green"></span>
+            <div class="leds">
+              <span class="led led-red" id="led-idle" title="SISTEMA"></span>
+              <span class="led led-yellow" id="led-proc" title="PROCESANDO"></span>
+              <span class="led led-green" id="led-ready" title="LISTO"></span>
+            </div>
             <span class="terminal-title">nervalia@creator:~</span>
           </div>
           <div class="terminal-body" id="terminal-body">
@@ -194,9 +196,11 @@
       <div id="creator-panel" class="creator-panel hidden">
         <div class="terminal">
           <div class="terminal-header">
-            <span class="terminal-dot red"></span>
-            <span class="terminal-dot yellow"></span>
-            <span class="terminal-dot green"></span>
+            <div class="leds">
+              <span class="led led-red" id="led-idle2" title="SISTEMA"></span>
+              <span class="led led-yellow" id="led-proc2" title="PROCESANDO"></span>
+              <span class="led led-green led-active" id="led-ready2" title="LISTO"></span>
+            </div>
             <span class="terminal-title">nervalia@creator:~/panel</span>
           </div>
           <div class="terminal-body">
@@ -246,9 +250,11 @@
 
         <div class="terminal tab-terminal">
           <div class="terminal-header">
-            <span class="terminal-dot red"></span>
-            <span class="terminal-dot yellow"></span>
-            <span class="terminal-dot green"></span>
+            <div class="leds">
+              <span class="led led-red" title="SISTEMA"></span>
+              <span class="led led-yellow" title="PROCESANDO"></span>
+              <span class="led led-green led-active" title="LISTO"></span>
+            </div>
             <span class="terminal-title">nervalia@creator:~/panel/modulo</span>
           </div>
           <div class="terminal-body" id="creator-tab-content">

@@ -66,6 +66,25 @@ function getPCFingerprint() {
   return 'PC-' + Math.abs(hash).toString(16).toUpperCase();
 }
 
+/* ───── LED CONTROL ───── */
+function setLED(state) {
+  const groups = [
+    ['led-idle', 'led-proc', 'led-ready'],
+    ['led-idle2', 'led-proc2', 'led-ready2'],
+  ];
+
+  const map = { idle: 0, proc: 1, ready: 2 };
+
+  groups.forEach(ids => {
+    ids.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.toggle('led-active', i === map[state]);
+      }
+    });
+  });
+}
+
 /* ───── TERMINAL TYPEWRITER ───── */
 const typerTexts = [
   'echo "verificando terminal..."',
@@ -91,6 +110,8 @@ function typeEffect() {
   const el = document.getElementById('typing-line');
   if (!el) return;
 
+  setLED('proc');
+
   const currentText = typerTexts[typerIndex];
 
   if (!isDeleting) {
@@ -103,6 +124,7 @@ function typeEffect() {
         setTimeout(() => {
           const cursor = document.querySelector('.cursor');
           if (cursor) cursor.style.display = 'none';
+          setLED('idle');
           showLoginOrDetect();
         }, 600);
         return;
@@ -146,6 +168,7 @@ function showLoginOrDetect() {
 }
 
 async function verifyExistingToken(token) {
+  setLED('proc');
   try {
     const res = await fetch('https://api.github.com/user', {
       headers: { 'Authorization': `token ${token}` }
@@ -172,6 +195,7 @@ async function verifyExistingToken(token) {
 }
 
 function showTokenInput() {
+  setLED('idle');
   document.getElementById('login-input-area').classList.remove('hidden');
   document.getElementById('pc-detected').classList.add('hidden');
   setTimeout(() => {
@@ -180,6 +204,7 @@ function showTokenInput() {
 }
 
 function showPCDetected(username) {
+  setLED('ready');
   document.getElementById('login-input-area').classList.add('hidden');
   const pcDetected = document.getElementById('pc-detected');
   pcDetected.classList.remove('hidden');
@@ -201,6 +226,7 @@ async function loginCreator() {
   }
 
   errorEl.textContent = '[SISTEMA] Verificando...';
+  setLED('proc');
 
   try {
     const res = await fetch('https://api.github.com/user', {
@@ -233,6 +259,7 @@ async function loginCreator() {
 }
 
 function showCreatorPanel(username) {
+  setLED('ready');
   document.getElementById('creator-login').classList.add('hidden');
   document.getElementById('creator-panel').classList.remove('hidden');
   document.getElementById('creator-name').textContent = username || CREATOR_USER;
@@ -246,6 +273,8 @@ function logoutCreator() {
   document.getElementById('pc-detected').classList.add('hidden');
   document.getElementById('token-input').value = '';
   document.getElementById('login-error').textContent = '';
+
+  setLED('idle');
 
   typerFinished = false;
   typerIndex = 0;
@@ -352,6 +381,8 @@ function showCreatorTab(tab) {
 
 /* ───── INIT ───── */
 document.addEventListener('DOMContentLoaded', () => {
+  setLED('idle');
+
   const section = document.getElementById('creator');
 
   const observer = new IntersectionObserver((entries) => {
