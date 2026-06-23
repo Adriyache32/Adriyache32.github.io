@@ -5,7 +5,7 @@ const COINS_KEY = 'nervalia_coins';
 const LOGROS_KEY = 'nervalia_logros';
 const INVENTORY_KEY = 'nervalia_inventory';
 const SERVER_DATA_KEY = 'nervalia_server_data';
-const CREATOR_PASS = '2026';
+const CREATOR_PASS = '202530';
 
 function toggleMenu() {
   document.getElementById('nav-menu').classList.toggle('open');
