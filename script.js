@@ -629,16 +629,16 @@ function showCreatorTab(tab) {
 
     case 'kits': {
       const kdata = sd.kits || [
-        { name: 'Bronce', price: 5, recommended: false, perks: ['🪖 Armadura: Set de cuero', '⛏️ Herramientas: Madera/piedra', '🍞 Comida: 10 manzanas', '📦 Items: 10 antorchas, 1 cama', '🎁 Kit inicial especial', '🏷️ Tag coloreado en el chat', '⭐ Acceso a /fly en spawn'] },
-        { name: 'Plata', price: 10, recommended: false, perks: ['🪖 Armadura: Set de hierro', '⛏️ Herramientas: Hierro encantado', '🍞 Comida: 20 bifes', '📦 Items: 20 antorchas, 1 cama, 5 libros', '🔮 Todo lo de Bronce', '🏠 Home adicional (3 total)', '📦 Acceso a /enderchest'] },
-        { name: 'Oro', price: 20, recommended: true, perks: ['🪖 Armadura: Set de diamante', '⚔️ Herramientas: Diamante encantado', '🍞 Comida: 32 bifes, 16 pasteles', '📦 Items: 1 cofre de ender, 64 antorchas, 10 obsidiana', '💰 10 monedas del server', '🪄 Todo lo de Plata', '🏠 5 Homes adicionales', '🔑 Acceso a /nick', '🎮 Rol exclusivo en Discord'] },
+        { name: 'Bronce', price: 5, badge: '', perks: ['🪖 Armadura: Set de cuero', '⛏️ Herramientas: Madera/piedra', '🍞 Comida: 10 manzanas', '📦 Items: 10 antorchas, 1 cama', '🎁 Kit inicial especial', '🏷️ Tag coloreado en el chat', '⭐ Acceso a /fly en spawn'] },
+        { name: 'Plata', price: 10, badge: '🔥 POPULAR', perks: ['🪖 Armadura: Set de hierro', '⛏️ Herramientas: Hierro encantado', '🍞 Comida: 20 bifes', '📦 Items: 20 antorchas, 1 cama, 5 libros', '🔮 Todo lo de Bronce', '🏠 Home adicional (3 total)', '📦 Acceso a /enderchest'] },
+        { name: 'Oro', price: 20, badge: '⭐ RECOMENDADO', perks: ['🪖 Armadura: Set de diamante', '⚔️ Herramientas: Diamante encantado', '🍞 Comida: 32 bifes, 16 pasteles', '📦 Items: 1 cofre de ender, 64 antorchas, 10 obsidiana', '💰 10 monedas del server', '🪄 Todo lo de Plata', '🏠 5 Homes adicionales', '🔑 Acceso a /nick', '🎮 Rol exclusivo en Discord'] },
       ];
       let kHtml = kdata.map((k, i) => `
         <div style="border:1px solid rgba(255,255,255,0.05);padding:0.75rem;border-radius:6px;margin-bottom:0.5rem">
           <div class="editor-field"><span class="label">Kit ${i+1}</span>
-            <input class="editor-input" id="k-name-${i}" value="${k.name}" placeholder="Nombre" style="flex:0.35">
-            <input class="editor-input" id="k-price-${i}" value="${k.price}" placeholder="Precio" style="flex:0.12;font-family:monospace">
-            <label style="flex:0.25;font-size:0.75rem;display:flex;align-items:center;gap:4px"><input type="checkbox" id="k-rec-${i}" ${k.recommended ? 'checked' : ''}> Recomendado</label>
+            <input class="editor-input" id="k-name-${i}" value="${k.name}" placeholder="Nombre" style="flex:0.3">
+            <input class="editor-input" id="k-price-${i}" value="${k.price}" placeholder="Precio" style="flex:0.1;font-family:monospace">
+            <input class="editor-input" id="k-badge-${i}" value="${k.badge || ''}" placeholder="Badge (ej: ⭐ RECOMENDADO)" style="flex:0.35;font-size:0.7rem">
           </div>
           <textarea class="editor-textarea" id="k-perks-${i}" style="min-height:50px">${k.perks.join('\n')}</textarea>
         </div>
@@ -1127,7 +1127,7 @@ function applyTeam() {
 function addKit() {
   const sd = getSD();
   const kits = sd.kits || [];
-  kits.push({ name: 'Nuevo Kit', price: 5, recommended: false, perks: ['🪖 Armadura:', '⛏️ Herramientas:', '🍞 Comida:', '📦 Items:'] });
+  kits.push({ name: 'Nuevo Kit', price: 5, badge: '', perks: ['🪖 Armadura:', '⛏️ Herramientas:', '🍞 Comida:', '📦 Items:'] });
   sd.kits = kits;
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   showCreatorTab('kits');
@@ -1140,11 +1140,11 @@ function saveKits() {
   kits.forEach((_, i) => {
     const n = document.getElementById(`k-name-${i}`);
     const p = document.getElementById(`k-price-${i}`);
-    const rec = document.getElementById(`k-rec-${i}`);
+    const b = document.getElementById(`k-badge-${i}`);
     const perks = document.getElementById(`k-perks-${i}`);
     if (n) kits[i].name = n.value;
     if (p) kits[i].price = parseFloat(p.value) || 5;
-    if (rec) kits[i].recommended = rec.checked;
+    if (b) kits[i].badge = b.value;
     if (perks) kits[i].perks = perks.value.split('\n').filter(Boolean);
   });
   sd.kits = kits;
@@ -1160,8 +1160,8 @@ function applyKits() {
   const grid = document.querySelector('#tienda .kits-grid');
   if (!kits || !grid) return;
   grid.innerHTML = kits.map((k, i) => `
-    <div class="kit-card${k.recommended ? ' featured' : ''}">
-      ${k.recommended ? '<div class="kit-badge">⭐ RECOMENDADO</div>' : ''}
+    <div class="kit-card${k.badge ? ' featured' : ''}">
+      ${k.badge ? `<div class="kit-badge">${k.badge}</div>` : ''}
       <div class="kit-tier">${k.name}</div>
       <div class="kit-price">${k.price} 🪙</div>
       <ul class="kit-perks">${k.perks.map(p => `<li>${p}</li>`).join('')}</ul>
