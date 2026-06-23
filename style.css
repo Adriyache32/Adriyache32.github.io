@@ -675,6 +675,48 @@ h1 {
   text-decoration: underline;
 }
 
+/* ───── GUÍA ───── */
+.guia-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.guia-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: border-color 0.2s;
+}
+.guia-card:hover {
+  border-color: rgba(114,137,254,0.2);
+}
+.guia-step {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(114,137,254,0.15);
+  color: #7289da;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+.guia-card h3 {
+  font-size: 0.95rem;
+  color: #c0c0d0;
+  margin-bottom: 0.5rem;
+}
+.guia-card p {
+  font-size: 0.82rem;
+  color: #777;
+  line-height: 1.5;
+}
+
 /* FAQ */
 .faq-list {
   max-width: 700px;
