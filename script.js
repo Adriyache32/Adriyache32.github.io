@@ -1383,6 +1383,120 @@ function saveMods() {
   if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
 }
 
+/* ───── AI SOPORTE ───── */
+const aiResponses = {
+  ip: ['nervalia.mc', 'la ip es nervalia.mc', 'conectate a nervalia.mc'],
+  whitelist: ['pedila en nuestro discord', 'solicitala en el discord del server', 'solo por discord se gestiona la whitelist'],
+  version: ['1.20.4 - 1.21', 'cualquier version entre 1.20.4 y 1.21 funciona'],
+  monedas: ['completando logros', 'cada logro aprobado da 0.5 de moneda', 'solicita un logro con prueba y recibi monedas'],
+  logro: ['solicitalo con una captura de pantalla', 'anda a la seccion logros y apreta solicitar', 'necesitas cuenta verificada y una imagen de prueba'],
+  grief: ['no se tolera', 'todo se revierte con coreprotect', 'el responsable es baneado'],
+  mod: ['postulate en el faq', 'completa el formulario de moderador en el faq', 'seccion faq, formulario de moderador'],
+  fundador: ['formulario exclusivo en el faq', 'completa el formulario de fundador en el faq', 'proceso estricto, revisa el faq'],
+  clan: ['contacta al equipo por discord', 'necesitas nombre y miembros del clan', 'habla con el staff en discord'],
+  discord: ['https://discord.gg/nervalia', 'en la seccion contacto esta el link', 'unite a nuestro discord'],
+  tienda: ['anda a la seccion tienda', 'cambia tus monedas por kits', 'bronce 5, plata 10, oro 20'],
+  voice: ['simple voice chat obligatorio', 'descarga el mod en la seccion mods', 'voice chat de proximidad'],
+  shader: ['complementary, bsl', 'descargalos de la seccion mods', 'carpeta shaderpacks'],
+  cuenta: ['vincula tu google en la seccion cuenta', 'un miembro del equipo verifica', 'necesitas cuenta verificada para canjear'],
+  version: ['1.20.4 a 1.21', 'cualquiera entre esas versiones funciona'],
+  creador: ['acceso restringido al equipo', 'contraseña compartida del staff'],
+};
+
+const aiBlocked = ['tonta', 'tonto', 'estupida', 'estupido', 'idiota', 'puta', 'puto', 'pendejo', 'pendeja', 'basura', 'mierda', 'culo', 'ctm', 'qlo', 'weon', 'weona', 'tonta', 'burro', 'burra', 'imbecil', 'mmg', 'hp', 'hijueputa', 'malparido', 'marica', 'gay', 'tonto'];
+
+let aiOffended = false;
+let aiWarnings = 0;
+
+function addAIMsg(text, type) {
+  const chat = document.getElementById('faq-ai-chat');
+  const msg = document.createElement('div');
+  msg.className = 'faq-ai-msg ' + type;
+  msg.textContent = text;
+  chat.appendChild(msg);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function sendAIMessage() {
+  const input = document.getElementById('faq-ai-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  if (aiOffended) {
+    addAIMsg('⛔ No voy a responder. Se superó el límite de advertencias.', 'ia');
+    input.value = '';
+    return;
+  }
+
+  addAIMsg(text, 'user');
+  input.value = '';
+
+  const lower = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  const isInsult = aiBlocked.some(w => lower.includes(w));
+  const spamming = lower.length < 3 || /^(.)\1{3,}/.test(lower) || /(ha|ja|aj|he|hi|ho)+/.test(lower);
+
+  if (isInsult || spamming) {
+    aiWarnings++;
+    if (aiWarnings >= 3) {
+      aiOffended = true;
+      addAIMsg('⛔ Se detectaron multiples infracciones. No voy a responder mas. Si necesitas ayuda, contacta al staff por Discord.', 'ia');
+      return;
+    }
+    const warns = ['No uses ese lenguaje. Consulta seria o no respondere.', 'Ultima advertencia. Pregunta con respeto o dejo de responder.', ''];
+    addAIMsg('⚠️ ' + warns[aiWarnings - 1], 'ia');
+    return;
+  }
+
+  aiWarnings = Math.max(0, aiWarnings - 1);
+
+  let response = null;
+  for (const [key, answers] of Object.entries(aiResponses)) {
+    if (lower.includes(key)) {
+      response = answers[Math.floor(Math.random() * answers.length)];
+      break;
+    }
+  }
+
+  if (!response) {
+    const multiWordChecks = [
+      ['como entro', 'ip', 'whitelist'],
+      ['como consigo monedas', 'monedas'],
+      ['como ser moderador', 'mod'],
+      ['como ser fundador', 'fundador'],
+      ['crear clan', 'clan'],
+      ['crear equipo', 'clan'],
+      ['que version', 'version'],
+      ['como conecto', 'ip'],
+      ['para que sirve', ''],
+    ];
+    for (const [phrase, tag] of multiWordChecks) {
+      if (lower.includes(phrase)) {
+        if (tag && aiResponses[tag]) {
+          response = aiResponses[tag][Math.floor(Math.random() * aiResponses[tag].length)];
+        }
+        break;
+      }
+    }
+  }
+
+  if (!response) {
+    const dnsWords = ['hola', 'buenas', 'hey', 'oe', 'oye', 'que tal', 'como estas', 'buenos dias', 'buenas tardes', 'buenas noches', 'hello', 'hi'];
+    if (dnsWords.some(w => lower.includes(w))) {
+      response = 'Consulta directa o no hay respuesta. Decime el tema.';
+    } else {
+      response = 'No tengo informacion sobre eso. Consulta en el FAQ o contacta al staff por Discord.';
+    }
+  }
+
+  addAIMsg(response, 'ia');
+}
+
+setTimeout(() => {
+  const aiInput = document.getElementById('faq-ai-input');
+  if (aiInput) aiInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendAIMessage(); });
+}, 500);
+
 /* ───── WELCOME ───── */
 function dismissWelcome() {
   localStorage.setItem('nervalia_welcomed', 'true');
