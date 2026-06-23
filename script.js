@@ -417,6 +417,7 @@ function showCreatorTab(tab) {
           <div class="editor-field"><span class="label">Slot</span><input class="editor-input" id="e-slot" value="${sd.slot || '20 jugadores'}"></div>
           <div class="editor-field"><span class="label">Plugins</span><input class="editor-input" id="e-plugins" value="${sd.plugins || 'VoiceChat, CoreProtect, WorldEdit'}"></div>
           <div class="editor-field"><span class="label">Discord</span><input class="editor-input" id="e-discord" value="${sd.discord || 'https://discord.gg/nervalia'}"></div>
+          <div class="editor-field"><span class="label">Icono URL</span><input class="editor-input" id="e-icon" value="${sd.icon || 'https://api.mcstatus.io/v2/icon/nervalia.mc'}"></div>
           <div class="editor-field" style="align-items:flex-start;padding-top:0.5rem">
             <span class="label">Descripción 1</span>
             <textarea class="editor-textarea" id="e-desc1">${sd.desc1 || 'Server survival privado para amigos y conocidos.'}</textarea>
@@ -720,6 +721,7 @@ function saveServerData() {
   sd.slot = document.getElementById('e-slot')?.value;
   sd.plugins = document.getElementById('e-plugins')?.value;
   sd.discord = document.getElementById('e-discord')?.value;
+  sd.icon = document.getElementById('e-icon')?.value;
   sd.desc1 = document.getElementById('e-desc1')?.value;
   sd.desc2 = document.getElementById('e-desc2')?.value;
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
@@ -741,6 +743,9 @@ function applyServerData() {
     if (vals[2]) vals[2].textContent = sd.slot || '20 jugadores';
     if (vals[4]) vals[4].textContent = sd.plugins || 'VoiceChat, CoreProtect, WorldEdit';
   }
+  const heroImg = document.querySelector('.server-icon img');
+  if (heroImg && sd.icon) heroImg.src = sd.icon;
+
   const d1 = document.getElementById('s-desc1');
   const d2 = document.getElementById('s-desc2');
   if (d1 && sd.desc1) d1.textContent = sd.desc1;
