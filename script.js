@@ -1556,8 +1556,30 @@ function dismissWelcome() {
   document.getElementById('welcome-modal').classList.add('hidden');
 }
 
+/* ───── MIGRATION ───── */
+function migrateKits() {
+  const sd = JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {};
+  const kits = sd.kits;
+  if (!kits) return;
+  let changed = false;
+  kits.forEach(k => {
+    if (k.recommended && !k.badge) {
+      k.badge = '⭐ RECOMENDADO';
+      delete k.recommended;
+      changed = true;
+    }
+    if (k.recommended === false && !k.badge) {
+      delete k.recommended;
+    }
+  });
+  if (changed) {
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  }
+}
+
 /* ───── INIT ───── */
 document.addEventListener('DOMContentLoaded', () => {
+  migrateKits();
   setLED('idle');
   updateWallet();
   restoreLogros();
