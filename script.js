@@ -1,5 +1,8 @@
-const SERVER_IP = 'nervalia.mc';
-const API_URL = `https://api.mcstatus.io/v2/status/java/${SERVER_IP}`;
+function getServerIP() {
+  const sd = JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {};
+  return sd.serverIP || 'nervalia.mc';
+}
+function getAPIURL() { return `https://api.mcstatus.io/v2/status/java/${getServerIP()}`; }
 const PC_STORAGE_KEY = 'nervalia_pc_id';
 const COINS_KEY = 'nervalia_coins';
 const LOGROS_KEY = 'nervalia_logros';
@@ -25,7 +28,7 @@ async function checkStatus() {
   const dot = document.querySelector('.status-dot');
   const text = document.querySelector('.status-text');
   try {
-    const res = await fetch(API_URL);
+    const res = await fetch(getAPIURL());
     const data = await res.json();
     if (data.online) {
       dot.className = 'status-dot online';
@@ -41,7 +44,7 @@ async function checkStatus() {
 }
 
 function copyIP() {
-  navigator.clipboard.writeText(SERVER_IP).then(() => {
+  navigator.clipboard.writeText(getServerIP()).then(() => {
     const btn = document.querySelector('.copy-btn');
     const original = btn.textContent;
     btn.textContent = '✓ Copiado';
@@ -572,6 +575,7 @@ function showCreatorTab(tab) {
           <div class="editor-field"><span class="label">Modo</span><input class="editor-input" id="e-mode" value="${sd.mode || 'Survival / Hard'}"></div>
           <div class="editor-field"><span class="label">Slot</span><input class="editor-input" id="e-slot" value="${sd.slot || '20 jugadores'}"></div>
           <div class="editor-field"><span class="label">Plugins</span><input class="editor-input" id="e-plugins" value="${sd.plugins || 'VoiceChat, CoreProtect, WorldEdit'}"></div>
+          <div class="editor-field"><span class="label">IP Server</span><input class="editor-input" id="e-ip" value="${sd.serverIP || 'nervalia.mc'}"></div>
           <div class="editor-field"><span class="label">Discord</span><input class="editor-input" id="e-discord" value="${sd.discord || 'https://discord.gg/nervalia'}"></div>
           <div class="editor-field"><span class="label">Icono URL</span><input class="editor-input" id="e-icon" value="${sd.icon || 'https://api.mcstatus.io/v2/icon/nervalia.mc'}"></div>
           <div class="editor-field"><span class="label">Estado</span>
@@ -1014,6 +1018,7 @@ function saveServerData() {
   logCreatorAction('guardó Server');
   const sd = getSD();
   sd.title = document.getElementById('e-title')?.value;
+  sd.serverIP = document.getElementById('e-ip')?.value;
   sd.version = document.getElementById('e-version')?.value;
   sd.mode = document.getElementById('e-mode')?.value;
   sd.slot = document.getElementById('e-slot')?.value;
@@ -1042,8 +1047,12 @@ function applyServerData() {
     if (vals[2]) vals[2].textContent = sd.slot || '20 jugadores';
     if (vals[4]) vals[4].textContent = sd.plugins || 'VoiceChat, CoreProtect, WorldEdit';
   }
+  const ipEl = document.getElementById('server-ip');
+  if (ipEl && sd.serverIP) ipEl.textContent = sd.serverIP;
+
   const heroImg = document.querySelector('.server-icon img');
   if (heroImg && sd.icon) heroImg.src = sd.icon;
+  else if (heroImg && sd.serverIP) heroImg.src = `https://api.mcstatus.io/v2/icon/${sd.serverIP}`;
 
   const modeDot = document.getElementById('mode-dot');
   const modeText = document.getElementById('mode-text');
