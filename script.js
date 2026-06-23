@@ -1562,6 +1562,19 @@ function migrateKits() {
   const kits = sd.kits;
   if (!kits) return;
   let changed = false;
+  const ver = sd._kitVer || 0;
+  if (ver < 1) {
+    kits.forEach(k => {
+      k.perks = [
+        '🪖 Armadura: ...',
+        '⛏️ Herramientas: ...',
+        '🍞 Comida: ...',
+        '📦 Items: ...',
+      ];
+    });
+    sd._kitVer = 1;
+    changed = true;
+  }
   kits.forEach(k => {
     if (k.recommended && !k.badge) {
       k.badge = '⭐ RECOMENDADO';
