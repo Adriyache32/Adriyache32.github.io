@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nervalia - Minecraft Server</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="bg"></div>
+
+  <header>
+    <nav>
+      <div class="logo">Nervalia</div>
+      <ul>
+        <li><a href="#info">Info</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#members">Miembros</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="server-icon">
+          <img src="https://api.mcstatus.io/v2/icon/nervalia.mc" alt="Nervalia" onerror="this.style.display='none'">
+        </div>
+        <h1>Nervalia</h1>
+        <p class="subtitle">Un mundo para amigos</p>
+        <div class="ip-box">
+          <code id="server-ip">nervalia.mc</code>
+          <button class="copy-btn" onclick="copyIP()">Copiar IP</button>
+        </div>
+        <div class="status" id="server-status">
+          <span class="status-dot offline"></span>
+          <span class="status-text">Verificando...</span>
+        </div>
+        <div class="hero-buttons">
+          <a href="https://discord.gg/nervalia" class="btn btn-discord" target="_blank">Discord</a>
+          <a href="https://map.nervalia.mc" class="btn btn-map" target="_blank">Mapa</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="info" class="section">
+      <h2>Sobre el Server</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>Survival</h3>
+          <p>Server survival vanilla con amigos. Construye, explora y sobrevive en un mundo compartido.</p>
+        </div>
+        <div class="info-card">
+          <h3>Whitelist</h3>
+          <p>Acceso solo para invitados. Ambiente tranquilo y sin griefing.</p>
+        </div>
+        <div class="info-card">
+          <h3>24/7</h3>
+          <p>El server siempre está online para que juegues cuando quieras.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <h2>Características</h2>
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon">🌍</div>
+          <h3>Mundo Amplio</h3>
+          <p>Explora un mundo infinito generado con semilla personalizada.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🏗️</div>
+          <h3>Proyectos Grupales</h3>
+          <p>Construcciones colaborativas y eventos semanales.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🎮</div>
+          <h3>Mini-juegos</h3>
+          <p>Eventos y mini-juegos organizados por la comunidad.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔊</div>
+          <h3>Voice Chat</h3>
+          <p>Plugin de proximidad voice chat para comunicación ingame.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📸</div>
+          <h3>Galería</h3>
+          <p>Comparte tus builds y momentos épicos en Discord.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🛡️</div>
+          <h3>Protegido</h3>
+          <p>Backups diarios y protección contra griefing.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="members" class="section">
+      <h2>Miembros</h2>
+      <div class="members-grid">
+        <div class="member">
+          <div class="member-avatar" style="background: #ff6b6b">A</div>
+          <span>Adriyache32</span>
+        </div>
+        <div class="member">
+          <div class="member-avatar" style="background: #4ecdc4">?</div>
+          <span>Amigo 1</span>
+        </div>
+        <div class="member">
+          <div class="member-avatar" style="background: #45b7d1">?</div>
+          <span>Amigo 2</span>
+        </div>
+        <div class="member">
+          <div class="member-avatar" style="background: #f9ca24">?</div>
+          <span>Amigo 3</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Nervalia &mdash; hecho con 💚 para amigos</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
