@@ -1527,7 +1527,7 @@ function closeCoffee() {
 
 function coffeeYes() {
   closeCoffee();
-  window.open('https://cafecito.app/chanchosmc', '_blank');
+  window.open('https://cafecito.app/Adriyache32', '_blank');
 }
 
 function coffeeNo() {
