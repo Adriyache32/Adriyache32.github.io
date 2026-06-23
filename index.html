@@ -26,6 +26,7 @@
         <li><a href="#faq">FAQ</a></li>
         <li><a href="#contacto">Contacto</a></li>
         <li><a href="#members">Equipo</a></li>
+        <li><a href="#cuenta">Cuenta</a></li>
         <li><a href="#creator" class="nav-creator">Modo Creador</a></li>
       </ul>
     </nav>
@@ -419,6 +420,31 @@
       </div>
     </section>
 
+    <!-- CUENTA -->
+    <section id="cuenta" class="section">
+      <h2>Mi Cuenta</h2>
+      <p class="section-subtitle">/// Vinculá tu cuenta para canjear recompensas ///</p>
+      <div class="cuenta-container">
+        <div class="cuenta-card">
+          <div class="line" style="margin-bottom:0.75rem"><span class="prompt">└─$</span> <span class="highlight">Vincular cuenta Google</span></div>
+          <div class="line" style="color:#666;font-size:0.8rem;margin-bottom:1rem">Registrá tu email de Google y usuario de Minecraft. Un miembro del equipo verificará tu cuenta para habilitar los canjes.</div>
+          <div class="cuenta-form">
+            <input class="terminal-input" id="reg-email" type="email" placeholder="tu-email@gmail.com" style="width:100%;margin-bottom:0.5rem">
+            <input class="terminal-input" id="reg-mcuser" type="text" placeholder="TuUsuarioMC" style="width:100%;margin-bottom:0.5rem">
+            <button class="btn btn-login" onclick="registerAccount()">[ VINCULAR ]</button>
+            <span id="reg-error" class="login-error"></span>
+            <div id="reg-success" class="hidden" style="color:#43b581;margin-top:0.5rem;font-size:0.8rem">✔ Solicitud enviada. Esperá la verificación del equipo.</div>
+          </div>
+        </div>
+        <div class="cuenta-card">
+          <div class="line" style="margin-bottom:0.75rem"><span class="prompt">└─$</span> <span class="highlight">Estado de tu cuenta</span></div>
+          <div id="account-status">
+            <div class="line" style="color:#666">Cargando...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- MODO CREADOR -->
     <section id="creator" class="section creator-section">
       <h2><span class="glitch" data-text="MODO CREADOR">MODO CREADOR</span></h2>
@@ -518,6 +544,16 @@
             <div class="card-icon">🪙</div>
             <h4>Monedas</h4>
             <p>Dar/quitar monedas</p>
+          </div>
+          <div class="dashboard-card" onclick="showCreatorTab('registro')">
+            <div class="card-icon">📋</div>
+            <h4>Registro</h4>
+            <p>Accesos al panel</p>
+          </div>
+          <div class="dashboard-card" onclick="showCreatorTab('verificaciones')">
+            <div class="card-icon">✅</div>
+            <h4>Verificaciones</h4>
+            <p>Aprobar cuentas</p>
           </div>
           <div class="dashboard-card" onclick="logoutCreator()">
             <div class="card-icon">🚪</div>

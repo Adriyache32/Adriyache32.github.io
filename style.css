@@ -824,6 +824,28 @@ h1 {
   color: #555 !important;
 }
 
+/* ───── CUENTA ───── */
+.cuenta-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.cuenta-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+.cuenta-form {
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 700px) {
+  .cuenta-container { grid-template-columns: 1fr; }
+}
+
 /* ───── MODAL ───── */
 .modal {
   position: fixed;

@@ -6,6 +6,8 @@ const LOGROS_KEY = 'nervalia_logros';
 const INVENTORY_KEY = 'nervalia_inventory';
 const SERVER_DATA_KEY = 'nervalia_server_data';
 const CREATOR_PASS = '202530';
+const CREATOR_LOG_KEY = 'nervalia_creator_log';
+const ACCOUNTS_KEY = 'nervalia_accounts';
 
 function toggleMenu() {
   document.getElementById('nav-menu').classList.toggle('open');
@@ -157,6 +159,7 @@ function showTokenInput() {
 }
 
 function showPCDetected(username) {
+  logCreatorAccess(username);
   setLED('ready');
   document.getElementById('login-input-area').classList.add('hidden');
   document.getElementById('pc-detected').classList.remove('hidden');
@@ -211,6 +214,104 @@ function logoutCreator() {
   const cursor = document.querySelector('.cursor');
   if (cursor) cursor.style.display = 'inline-block';
   setTimeout(typeEffect, 500);
+}
+
+/* ───── CREATOR ACCESS LOG ───── */
+function logCreatorAccess(username) {
+  const log = JSON.parse(localStorage.getItem(CREATOR_LOG_KEY)) || [];
+  log.push({
+    timestamp: new Date().toISOString(),
+    fingerprint: getPCFingerprint(),
+    username: username || 'Desconocido'
+  });
+  localStorage.setItem(CREATOR_LOG_KEY, JSON.stringify(log));
+}
+
+/* ───── ACCOUNTS & VERIFICATION ───── */
+function getAccounts() {
+  return JSON.parse(localStorage.getItem(ACCOUNTS_KEY)) || [];
+}
+
+function saveAccounts(accounts) {
+  localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+}
+
+function registerAccount() {
+  const email = document.getElementById('reg-email').value.trim();
+  const mcUser = document.getElementById('reg-mcuser').value.trim();
+  const errorEl = document.getElementById('reg-error');
+
+  if (!email || !mcUser) {
+    errorEl.textContent = '[ERROR] Completá todos los campos';
+    return;
+  }
+  if (!email.includes('@')) {
+    errorEl.textContent = '[ERROR] Ingresá un email válido';
+    return;
+  }
+
+  const accounts = getAccounts();
+  const fp = getPCFingerprint();
+  const existing = accounts.find(a => a.fingerprint === fp);
+  if (existing) {
+    if (existing.status === 'verified') {
+      errorEl.textContent = '[SISTEMA] Ya tenés cuenta verificada en esta PC';
+    } else if (existing.status === 'pending') {
+      errorEl.textContent = '[SISTEMA] Ya solicitaste verificación. Esperá al equipo.';
+    } else {
+      errorEl.textContent = '[SISTEMA] Tu cuenta fue rechazada. Contactá al equipo.';
+    }
+    return;
+  }
+
+  accounts.push({
+    email,
+    minecraftUser: mcUser,
+    fingerprint: fp,
+    status: 'pending',
+    timestamp: new Date().toISOString()
+  });
+  saveAccounts(accounts);
+  errorEl.textContent = '';
+  document.getElementById('reg-email').value = '';
+  document.getElementById('reg-mcuser').value = '';
+  showAccountStatus();
+  document.getElementById('reg-success').classList.remove('hidden');
+  setTimeout(() => document.getElementById('reg-success').classList.add('hidden'), 4000);
+}
+
+function showAccountStatus() {
+  const container = document.getElementById('account-status');
+  if (!container) return;
+  const fp = getPCFingerprint();
+  const accounts = getAccounts();
+  const mine = accounts.find(a => a.fingerprint === fp);
+
+  if (!mine) {
+    container.innerHTML = '<div class="line" style="color:#666">No vinculaste tu cuenta todavía.</div>';
+    return;
+  }
+
+  const statusMap = {
+    pending: '<span style="color:#f0c040">⏳ Pendiente</span>',
+    verified: '<span style="color:#43b581">✅ Verificada</span>',
+    rejected: '<span style="color:#ed4245">❌ Rechazada</span>'
+  };
+
+  container.innerHTML = `
+    <div class="line"><span class="prompt">└─$</span> <span class="cmd">Email: ${mine.email}</span></div>
+    <div class="line"><span class="prompt">└─$</span> <span class="cmd">MC Usuario: ${mine.minecraftUser}</span></div>
+    <div class="line"><span class="prompt">└─$</span> <span class="cmd">Estado: ${statusMap[mine.status] || 'Desconocido'}</span></div>
+  `;
+}
+
+function verifyAccount(fingerprint, action) {
+  const accounts = getAccounts();
+  const acc = accounts.find(a => a.fingerprint === fingerprint);
+  if (!acc) return;
+  acc.status = action === 'approve' ? 'verified' : 'rejected';
+  saveAccounts(accounts);
+  showCreatorTab('verificaciones');
 }
 
 /* ───── COINS & LOGROS ───── */
@@ -283,6 +384,15 @@ function confirmPaywall() {
     document.getElementById('modal-error').classList.remove('hidden');
     return;
   }
+
+  const accounts = getAccounts();
+  const fp = getPCFingerprint();
+  const mine = accounts.find(a => a.fingerprint === fp);
+  if (!mine || mine.status !== 'verified') {
+    alert('❌ Necesitás vincular y verificar tu cuenta Google para canjear. Andá a la sección "Cuenta".');
+    return;
+  }
+
   setCoins(balance - paywallPrice);
   let inv = JSON.parse(localStorage.getItem(INVENTORY_KEY)) || [];
   inv.push({ kit: paywallKit, date: new Date().toISOString() });
@@ -306,6 +416,7 @@ function showCreatorTab(tab) {
           <div class="editor-field"><span class="label">Modo</span><input class="editor-input" id="e-mode" value="${sd.mode || 'Survival / Hard'}"></div>
           <div class="editor-field"><span class="label">Slot</span><input class="editor-input" id="e-slot" value="${sd.slot || '20 jugadores'}"></div>
           <div class="editor-field"><span class="label">Plugins</span><input class="editor-input" id="e-plugins" value="${sd.plugins || 'VoiceChat, CoreProtect, WorldEdit'}"></div>
+          <div class="editor-field"><span class="label">Discord</span><input class="editor-input" id="e-discord" value="${sd.discord || 'https://discord.gg/nervalia'}"></div>
           <div class="editor-field" style="align-items:flex-start;padding-top:0.5rem">
             <span class="label">Descripción 1</span>
             <textarea class="editor-textarea" id="e-desc1">${sd.desc1 || 'Server survival privado para amigos y conocidos.'}</textarea>
@@ -536,6 +647,65 @@ function showCreatorTab(tab) {
         </div>`;
       break;
     }
+
+    case 'registro': {
+      const log = JSON.parse(localStorage.getItem(CREATOR_LOG_KEY)) || [];
+      const logHtml = log.length === 0
+        ? '<div class="line" style="color:#444">Sin registros aún</div>'
+        : log.reverse().map(entry => `
+          <div class="status-line">
+            <span class="label" style="font-size:0.65rem;min-width:auto">${new Date(entry.timestamp).toLocaleString()}</span>
+            <span class="value" style="font-size:0.65rem">${entry.fingerprint}</span>
+            <span class="value" style="font-size:0.65rem;color:#7289da">${entry.username}</span>
+          </div>
+        `).join('');
+      content.innerHTML = `
+        <div class="tab-content">
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">Registro de Accesos</span></div>
+          <div class="line" style="color:#666;font-size:0.7rem;margin-bottom:0.5rem">Últimos accesos al Modo Creador</div>
+          ${logHtml}
+        </div>`;
+      break;
+    }
+
+    case 'verificaciones': {
+      const accounts = getAccounts();
+      const pending = accounts.filter(a => a.status === 'pending');
+      const allOthers = accounts.filter(a => a.status !== 'pending');
+      let html = '';
+      if (pending.length === 0) {
+        html += '<div class="line" style="color:#666">No hay solicitudes pendientes.</div>';
+      } else {
+        html += '<div class="line" style="color:#f0c040;font-size:0.75rem;margin-bottom:0.5rem">⏳ Pendientes</div>';
+        html += pending.map(a => `
+          <div style="border:1px solid rgba(255,255,255,0.05);border-radius:6px;padding:0.5rem;margin-bottom:0.4rem;display:flex;align-items:center;gap:0.5rem">
+            <div style="flex:1;font-size:0.75rem">
+              <div style="color:#c0c0d0">${a.minecraftUser}</div>
+              <div style="color:#666;font-size:0.65rem">${a.email}</div>
+              <div style="color:#444;font-size:0.6rem">${new Date(a.timestamp).toLocaleString()}</div>
+            </div>
+            <button class="btn-editor save" onclick="verifyAccount('${a.fingerprint}','approve')" style="font-size:0.65rem;padding:0.2rem 0.5rem">✓</button>
+            <button class="btn-editor danger" onclick="verifyAccount('${a.fingerprint}','reject')" style="font-size:0.65rem;padding:0.2rem 0.5rem">✕</button>
+          </div>
+        `).join('');
+      }
+      if (allOthers.length > 0) {
+        html += '<div class="line" style="color:#666;font-size:0.75rem;margin:1rem 0 0.5rem">Historial</div>';
+        html += allOthers.map(a => `
+          <div style="border:1px solid rgba(255,255,255,0.03);border-radius:4px;padding:0.4rem 0.5rem;margin-bottom:0.3rem;display:flex;align-items:center;gap:0.5rem;font-size:0.7rem">
+            <span style="flex:1;color:#888">${a.minecraftUser}</span>
+            <span style="color:#666;font-size:0.6rem">${a.email}</span>
+            <span style="color:${a.status === 'verified' ? '#43b581' : '#ed4245'}">${a.status === 'verified' ? '✓' : '✕'}</span>
+          </div>
+        `).join('');
+      }
+      content.innerHTML = `
+        <div class="tab-content">
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">Verificaciones de Cuentas</span></div>
+          ${html}
+        </div>`;
+      break;
+    }
   }
 }
 
@@ -549,6 +719,7 @@ function saveServerData() {
   sd.mode = document.getElementById('e-mode')?.value;
   sd.slot = document.getElementById('e-slot')?.value;
   sd.plugins = document.getElementById('e-plugins')?.value;
+  sd.discord = document.getElementById('e-discord')?.value;
   sd.desc1 = document.getElementById('e-desc1')?.value;
   sd.desc2 = document.getElementById('e-desc2')?.value;
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
@@ -574,6 +745,11 @@ function applyServerData() {
   const d2 = document.getElementById('s-desc2');
   if (d1 && sd.desc1) d1.textContent = sd.desc1;
   if (d2 && sd.desc2) d2.textContent = sd.desc2;
+
+  const discordLink = document.querySelector('.contacto-card[href*="discord"]');
+  if (discordLink && sd.discord) discordLink.href = sd.discord;
+  const heroDiscord = document.querySelector('.hero-buttons .btn-discord');
+  if (heroDiscord && sd.discord) heroDiscord.href = sd.discord;
 }
 
 function giveCoins() {
@@ -897,6 +1073,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyLogros();
   applyGaleria();
   applyMods();
+  showAccountStatus();
 
   const section = document.getElementById('creator');
   const observer = new IntersectionObserver((entries) => {
