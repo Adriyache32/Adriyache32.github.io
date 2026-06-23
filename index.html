@@ -14,16 +14,19 @@
   <header>
     <nav>
       <div class="logo">Nervalia</div>
-      <ul>
-        <li><a href="#info">Info</a></li>
-        <li><a href="#features">Features</a></li>
+      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+      <ul id="nav-menu">
+        <li><a href="#home">Inicio</a></li>
+        <li><a href="#server">Server</a></li>
+        <li><a href="#kits">Kit de Paga</a></li>
         <li><a href="#members">Miembros</a></li>
+        <li><a href="#creator" class="nav-creator">Modo Creador</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
-    <section class="hero">
+    <section id="home" class="hero">
       <div class="hero-content">
         <div class="server-icon">
           <img src="https://api.mcstatus.io/v2/icon/nervalia.mc" alt="Nervalia" onerror="this.style.display='none'">
@@ -40,61 +43,84 @@
         </div>
         <div class="hero-buttons">
           <a href="https://discord.gg/nervalia" class="btn btn-discord" target="_blank">Discord</a>
-          <a href="https://map.nervalia.mc" class="btn btn-map" target="_blank">Mapa</a>
+          <a href="https://map.nervalia.mc" class="btn btn-map" target="_blank">Mapa Dinámico</a>
         </div>
       </div>
     </section>
 
-    <section id="info" class="section">
-      <h2>Sobre el Server</h2>
-      <div class="info-grid">
-        <div class="info-card">
-          <h3>Survival</h3>
-          <p>Server survival vanilla con amigos. Construye, explora y sobrevive en un mundo compartido.</p>
+    <section id="server" class="section">
+      <h2>El Server</h2>
+      <div class="server-details">
+        <div class="server-specs">
+          <div class="spec">
+            <span class="spec-label">Versión</span>
+            <span class="spec-value">1.20.4 - 1.21</span>
+          </div>
+          <div class="spec">
+            <span class="spec-label">Modo</span>
+            <span class="spec-value">Survival / Hard</span>
+          </div>
+          <div class="spec">
+            <span class="spec-label">Slot</span>
+            <span class="spec-value">20 jugadores</span>
+          </div>
+          <div class="spec">
+            <span class="spec-label">Tipo</span>
+            <span class="spec-value">Whitelist</span>
+          </div>
+          <div class="spec">
+            <span class="spec-label">Plugins</span>
+            <span class="spec-value">VoiceChat, CoreProtect, WorldEdit</span>
+          </div>
+          <div class="spec">
+            <span class="spec-label">Reglas</span>
+            <span class="spec-value">No grief / No hacks / Respeto</span>
+          </div>
         </div>
-        <div class="info-card">
-          <h3>Whitelist</h3>
-          <p>Acceso solo para invitados. Ambiente tranquilo y sin griefing.</p>
-        </div>
-        <div class="info-card">
-          <h3>24/7</h3>
-          <p>El server siempre está online para que juegues cuando quieras.</p>
+        <div class="server-description">
+          <p>Server survival privado para amigos y conocidos. Ambiente tranquilo, construcción colaborativa y eventos periódicos. Todos los jugadores pasan por un proceso de whitelist para mantener la calidad.</p>
+          <p>Contamos con voice chat de proximidad, protección de construcciones con CoreProtect y un mapa dinámico para ver el mundo desde el navegador.</p>
         </div>
       </div>
     </section>
 
-    <section id="features" class="section">
-      <h2>Características</h2>
-      <div class="features-grid">
-        <div class="feature">
-          <div class="feature-icon">🌍</div>
-          <h3>Mundo Amplio</h3>
-          <p>Explora un mundo infinito generado con semilla personalizada.</p>
+    <section id="kits" class="section">
+      <h2>Kit de Paga</h2>
+      <p class="section-subtitle">Apoya al server y obtén beneficios exclusivos</p>
+      <div class="kits-grid">
+        <div class="kit-card">
+          <div class="kit-tier">Bronce</div>
+          <div class="kit-price">$5 USD</div>
+          <ul class="kit-perks">
+            <li>Kit inicial especial</li>
+            <li>Tag coloreado en el chat</li>
+            <li>Acceso a /fly en spawn</li>
+          </ul>
+          <a href="#" class="btn btn-kit">Comprar</a>
         </div>
-        <div class="feature">
-          <div class="feature-icon">🏗️</div>
-          <h3>Proyectos Grupales</h3>
-          <p>Construcciones colaborativas y eventos semanales.</p>
+        <div class="kit-card featured">
+          <div class="kit-badge">MÁS POPULAR</div>
+          <div class="kit-tier">Plata</div>
+          <div class="kit-price">$10 USD</div>
+          <ul class="kit-perks">
+            <li>Todo lo de Bronce</li>
+            <li>Set de herramientas encantadas</li>
+            <li>Home adicional (3 total)</li>
+            <li>Acceso a /enderchest</li>
+          </ul>
+          <a href="#" class="btn btn-kit">Comprar</a>
         </div>
-        <div class="feature">
-          <div class="feature-icon">🎮</div>
-          <h3>Mini-juegos</h3>
-          <p>Eventos y mini-juegos organizados por la comunidad.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">🔊</div>
-          <h3>Voice Chat</h3>
-          <p>Plugin de proximidad voice chat para comunicación ingame.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">📸</div>
-          <h3>Galería</h3>
-          <p>Comparte tus builds y momentos épicos en Discord.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">🛡️</div>
-          <h3>Protegido</h3>
-          <p>Backups diarios y protección contra griefing.</p>
+        <div class="kit-card">
+          <div class="kit-tier">Oro</div>
+          <div class="kit-price">$20 USD</div>
+          <ul class="kit-perks">
+            <li>Todo lo de Plata</li>
+            <li>Set de armadura de diamante</li>
+            <li>5 Homes adicionales</li>
+            <li>Acceso a /nick</li>
+            <li>Rol exclusivo en Discord</li>
+          </ul>
+          <a href="#" class="btn btn-kit">Comprar</a>
         </div>
       </div>
     </section>
@@ -105,18 +131,87 @@
         <div class="member">
           <div class="member-avatar" style="background: #ff6b6b">A</div>
           <span>Adriyache32</span>
+          <span class="member-role">Dueño</span>
         </div>
         <div class="member">
           <div class="member-avatar" style="background: #4ecdc4">?</div>
           <span>Amigo 1</span>
+          <span class="member-role">Admin</span>
         </div>
         <div class="member">
           <div class="member-avatar" style="background: #45b7d1">?</div>
           <span>Amigo 2</span>
+          <span class="member-role">Miembro</span>
         </div>
         <div class="member">
           <div class="member-avatar" style="background: #f9ca24">?</div>
           <span>Amigo 3</span>
+          <span class="member-role">Miembro</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="creator" class="section creator-section">
+      <h2>🔐 Modo Creador</h2>
+      <p class="section-subtitle">Panel privado del creador del server</p>
+
+      <div id="creator-login" class="creator-login">
+        <div class="login-box">
+          <div class="login-icon">🔑</div>
+          <h3>Acceso Restringido</h3>
+          <p>Ingresa tu token personal de GitHub para acceder</p>
+          <div class="login-input-group">
+            <input type="password" id="token-input" placeholder="ghp_..." autocomplete="off">
+            <button class="btn btn-login" onclick="loginCreator()">Ingresar</button>
+          </div>
+          <p id="login-error" class="login-error"></p>
+          <p class="login-hint">Tu token solo se usa para verificar tu identidad vía la API de GitHub. No se almacena.</p>
+        </div>
+      </div>
+
+      <div id="creator-panel" class="creator-panel hidden">
+        <div class="creator-header">
+          <h3>Bienvenido, <span id="creator-name">Creador</span></h3>
+          <button class="btn btn-logout" onclick="logoutCreator()">Cerrar sesión</button>
+        </div>
+
+        <div class="creator-dashboard">
+          <div class="dashboard-card" onclick="showCreatorTab('server-control')">
+            <div class="card-icon">🖥️</div>
+            <h4>Control del Server</h4>
+            <p>Iniciar, detener y monitorear</p>
+          </div>
+          <div class="dashboard-card" onclick="showCreatorTab('players')">
+            <div class="card-icon">👥</div>
+            <h4>Jugadores</h4>
+            <p>Gestionar whitelist y bans</p>
+          </div>
+          <div class="dashboard-card" onclick="showCreatorTab('backups')">
+            <div class="card-icon">💾</div>
+            <h4>Backups</h4>
+            <p>Crear y restaurar backups</p>
+          </div>
+          <div class="dashboard-card" onclick="showCreatorTab('kits-admin')">
+            <div class="card-icon">📦</div>
+            <h4>Kits</h4>
+            <p>Administrar kits de paga</p>
+          </div>
+          <div class="dashboard-card" onclick="showCreatorTab('logs')">
+            <div class="card-icon">📋</div>
+            <h4>Logs</h4>
+            <p>Actividad del server</p>
+          </div>
+          <div class="dashboard-card" onclick="showCreatorTab('settings')">
+            <div class="card-icon">⚙️</div>
+            <h4>Configuración</h4>
+            <p>Ajustes del servidor</p>
+          </div>
+        </div>
+
+        <div id="creator-tab-content" class="creator-tab-content">
+          <div class="tab-placeholder">
+            <p>Selecciona una opción del panel</p>
+          </div>
         </div>
       </div>
     </section>
