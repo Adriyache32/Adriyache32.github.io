@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nervalia - Minecraft Server</title>
+  <title>Nervalia - chanchos MC studios</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -18,14 +18,18 @@
       <ul id="nav-menu">
         <li><a href="#home">Inicio</a></li>
         <li><a href="#server">Server</a></li>
-        <li><a href="#kits">Kit de Paga</a></li>
-        <li><a href="#members">Miembros</a></li>
+        <li><a href="#reglas">Reglas</a></li>
+        <li><a href="#logros">Logros</a></li>
+        <li><a href="#tienda">Tienda</a></li>
+        <li><a href="#galeria">Galería</a></li>
+        <li><a href="#members">Equipo</a></li>
         <li><a href="#creator" class="nav-creator">Modo Creador</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
+    <!-- HERO -->
     <section id="home" class="hero">
       <div class="hero-content">
         <div class="server-icon">
@@ -48,45 +52,108 @@
       </div>
     </section>
 
+    <!-- SERVER -->
     <section id="server" class="section">
-      <h2>El Server</h2>
+      <h2 id="s-title">El Server</h2>
       <div class="server-details">
-        <div class="server-specs">
-          <div class="spec">
-            <span class="spec-label">Versión</span>
-            <span class="spec-value">1.20.4 - 1.21</span>
-          </div>
-          <div class="spec">
-            <span class="spec-label">Modo</span>
-            <span class="spec-value">Survival / Hard</span>
-          </div>
-          <div class="spec">
-            <span class="spec-label">Slot</span>
-            <span class="spec-value">20 jugadores</span>
-          </div>
-          <div class="spec">
-            <span class="spec-label">Tipo</span>
-            <span class="spec-value">Whitelist</span>
-          </div>
-          <div class="spec">
-            <span class="spec-label">Plugins</span>
-            <span class="spec-value">VoiceChat, CoreProtect, WorldEdit</span>
-          </div>
-          <div class="spec">
-            <span class="spec-label">Reglas</span>
-            <span class="spec-value">No grief / No hacks / Respeto</span>
-          </div>
+        <div class="server-specs" id="server-specs">
+          <div class="spec"><span class="spec-label">Versión</span><span class="spec-value">1.20.4 - 1.21</span></div>
+          <div class="spec"><span class="spec-label">Modo</span><span class="spec-value">Survival / Hard</span></div>
+          <div class="spec"><span class="spec-label">Slot</span><span class="spec-value">20 jugadores</span></div>
+          <div class="spec"><span class="spec-label">Tipo</span><span class="spec-value">Whitelist</span></div>
+          <div class="spec"><span class="spec-label">Plugins</span><span class="spec-value">VoiceChat, CoreProtect, WorldEdit</span></div>
+          <div class="spec"><span class="spec-label">Reglas</span><span class="spec-value">No grief / No hacks / Respeto</span></div>
         </div>
         <div class="server-description">
-          <p>Server survival privado para amigos y conocidos. Ambiente tranquilo, construcción colaborativa y eventos periódicos. Todos los jugadores pasan por un proceso de whitelist para mantener la calidad.</p>
-          <p>Contamos con voice chat de proximidad, protección de construcciones con CoreProtect y un mapa dinámico para ver el mundo desde el navegador.</p>
+          <p id="s-desc1">Server survival privado para amigos y conocidos. Ambiente tranquilo, construcción colaborativa y eventos periódicos. Todos los jugadores pasan por un proceso de whitelist para mantener la calidad.</p>
+          <p id="s-desc2">Contamos con voice chat de proximidad, protección de construcciones con CoreProtect y un mapa dinámico para ver el mundo desde el navegador.</p>
         </div>
       </div>
     </section>
 
-    <section id="kits" class="section">
-      <h2>Kit de Paga</h2>
-      <p class="section-subtitle">Consigue logros y canjea por monedas del server (0.5 🪙 por logro)</p>
+    <!-- REGLAS -->
+    <section id="reglas" class="section">
+      <h2>Reglas del Server</h2>
+      <p class="section-subtitle">/// Mantengamos el orden ///</p>
+      <div class="reglas-list">
+        <div class="regla"><span class="regla-num">01</span><div><strong>No Griefing</strong><p>No destruir construcciones ajenas sin permiso.</p></div></div>
+        <div class="regla"><span class="regla-num">02</span><div><strong>No Hacks</strong><p>Prohibidos clientes modificados con ventajas injustas.</p></div></div>
+        <div class="regla"><span class="regla-num">03</span><div><strong>Respeto</strong><p>Trata a todos con respeto. No toleramos toxicidad.</p></div></div>
+        <div class="regla"><span class="regla-num">04</span><div><strong>No Robar</strong><p>No tomar items de cofres o bases ajenas sin permiso.</p></div></div>
+        <div class="regla"><span class="regla-num">05</span><div><strong>Duplicación</strong><p>Prohibido duplicar items o usar bugs intencionalmente.</p></div></div>
+        <div class="regla"><span class="regla-num">06</span><div><strong>Voice Chat</strong><p>Uso obligatorio de voice chat de proximidad para mejor experiencia.</p></div></div>
+      </div>
+    </section>
+
+    <!-- LOGROS -->
+    <section id="logros" class="section">
+      <h2>Logros</h2>
+      <p class="section-subtitle">Gana <span class="coin">0.5 🪙</span> por cada logro completado</p>
+      <div class="logros-grid" id="logros-grid">
+        <div class="logro" data-id="logro1" onclick="claimLogro(this)">
+          <div class="logro-icon">⛏️</div>
+          <div class="logro-info">
+            <h4>Minero Inicial</h4>
+            <p>Consigue 10 bloques de piedra</p>
+          </div>
+          <span class="logro-reward">+0.5 🪙</span>
+          <span class="logro-badge no-completado">❌</span>
+        </div>
+        <div class="logro" data-id="logro2" onclick="claimLogro(this)">
+          <div class="logro-icon">🌳</div>
+          <div class="logro-info">
+            <h4>Leñador Novato</h4>
+            <p>Corta 10 árboles</p>
+          </div>
+          <span class="logro-reward">+0.5 🪙</span>
+          <span class="logro-badge no-completado">❌</span>
+        </div>
+        <div class="logro" data-id="logro3" onclick="claimLogro(this)">
+          <div class="logro-icon">🏠</div>
+          <div class="logro-info">
+            <h4>Primera Base</h4>
+            <p>Construye tu primera casa</p>
+          </div>
+          <span class="logro-reward">+0.5 🪙</span>
+          <span class="logro-badge no-completado">❌</span>
+        </div>
+        <div class="logro" data-id="logro4" onclick="claimLogro(this)">
+          <div class="logro-icon">🌾</div>
+          <div class="logro-info">
+            <h4>Granjero</h4>
+            <p>Planta y cosecha 20 cultivos</p>
+          </div>
+          <span class="logro-reward">+0.5 🪙</span>
+          <span class="logro-badge no-completado">❌</span>
+        </div>
+        <div class="logro" data-id="logro5" onclick="claimLogro(this)">
+          <div class="logro-icon">🐉</div>
+          <div class="logro-info">
+            <h4>Cazador de Dragones</h4>
+            <p>Derrota al Ender Dragon</p>
+          </div>
+          <span class="logro-reward">+0.5 🪙</span>
+          <span class="logro-badge no-completado">❌</span>
+        </div>
+        <div class="logro" data-id="logro6" onclick="claimLogro(this)">
+          <div class="logro-icon">⚔️</div>
+          <div class="logro-info">
+            <h4>Explorador del Nether</h4>
+            <p>Visita el Nether por primera vez</p>
+          </div>
+          <span class="logro-reward">+0.5 🪙</span>
+          <span class="logro-badge no-completado">❌</span>
+        </div>
+      </div>
+      <div class="wallet" id="wallet-display">
+        <span>💰 Tus monedas: <strong id="coin-balance">0</strong> 🪙</span>
+      </div>
+    </section>
+
+    <!-- TIENDA -->
+    <section id="tienda" class="section">
+      <h2>Tienda</h2>
+      <p class="section-subtitle">Canjea tus monedas por recompensas</p>
       <div class="kits-grid">
         <div class="kit-card">
           <div class="kit-tier">Bronce</div>
@@ -96,7 +163,7 @@
             <li>Tag coloreado en el chat</li>
             <li>Acceso a /fly en spawn</li>
           </ul>
-          <a href="#" class="btn btn-kit">Canjear</a>
+          <button class="btn btn-kit" onclick="openPaywall('Bronce', 5)">Canjear</button>
         </div>
         <div class="kit-card featured">
           <div class="kit-badge">MÁS POPULAR</div>
@@ -108,7 +175,7 @@
             <li>Home adicional (3 total)</li>
             <li>Acceso a /enderchest</li>
           </ul>
-          <a href="#" class="btn btn-kit">Canjear</a>
+          <button class="btn btn-kit" onclick="openPaywall('Plata', 10)">Canjear</button>
         </div>
         <div class="kit-card">
           <div class="kit-tier">Oro</div>
@@ -120,14 +187,47 @@
             <li>Acceso a /nick</li>
             <li>Rol exclusivo en Discord</li>
           </ul>
-          <a href="#" class="btn btn-kit">Canjear</a>
+          <button class="btn btn-kit" onclick="openPaywall('Oro', 20)">Canjear</button>
         </div>
       </div>
     </section>
 
+    <!-- GALERÍA -->
+    <section id="galeria" class="section">
+      <h2>Galería</h2>
+      <p class="section-subtitle">/// Momentos del server ///</p>
+      <div class="galeria-grid">
+        <div class="galeria-item">
+          <div class="galeria-placeholder">🏗️</div>
+          <span>Base principal</span>
+        </div>
+        <div class="galeria-item">
+          <div class="galeria-placeholder">🌄</div>
+          <span>Atardecer en spawn</span>
+        </div>
+        <div class="galeria-item">
+          <div class="galeria-placeholder">🏰</div>
+          <span>Castillo medieval</span>
+        </div>
+        <div class="galeria-item">
+          <div class="galeria-placeholder">🌊</div>
+          <span>Base acuática</span>
+        </div>
+        <div class="galeria-item">
+          <div class="galeria-placeholder">🔥</div>
+          <span>Portal del Nether</span>
+        </div>
+        <div class="galeria-item">
+          <div class="galeria-placeholder">🌌</div>
+          <span>End base</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- EQUIPO -->
     <section id="members" class="section">
       <h2>Equipo chanchos MC studios</h2>
-      <div class="members-grid">
+      <div class="members-grid" id="members-grid">
         <div class="member">
           <div class="member-avatar" style="background: #f0c040">E</div>
           <span>Eliezer</span>
@@ -151,9 +251,10 @@
       </div>
     </section>
 
+    <!-- MODO CREADOR -->
     <section id="creator" class="section creator-section">
       <h2><span class="glitch" data-text="MODO CREADOR">MODO CREADOR</span></h2>
-      <p class="section-subtitle">/// ACCESO RESTRINGIDO ///</p>
+      <p class="section-subtitle">/// PANEL DE ADMINISTRACIÓN ///</p>
 
       <div id="creator-login" class="creator-login">
         <div class="terminal">
@@ -163,15 +264,15 @@
               <span class="led led-yellow" id="led-proc" title="PROCESANDO"></span>
               <span class="led led-green" id="led-ready" title="LISTO"></span>
             </div>
-            <span class="terminal-title">nervalia@creator:~</span>
+            <span class="terminal-title">admin@nervalia:~</span>
           </div>
           <div class="terminal-body" id="terminal-body">
-            <div class="line"><span class="prompt">┌──(nervalia㉿creator)-[~/panel]</span></div>
+            <div class="line"><span class="prompt">┌──(admin㉿nervalia)-[~/panel]</span></div>
             <div class="line"><span class="prompt">└─$</span> <span class="cmd" id="typing-line"></span><span class="cursor">█</span></div>
           </div>
           <div id="login-input-area" class="terminal-input-area hidden">
             <div class="line"><span class="prompt">└─$</span> <span class="highlight">Autenticación requerida</span></div>
-            <div class="line" style="color:#666;font-size:0.8rem">[SISTEMA] Nuevo dispositivo detectado. Ingresa tu token de GitHub para vincular esta PC al equipo de desarrollo.</div>
+            <div class="line" style="color:#666;font-size:0.8rem">[SISTEMA] Ingresa tu token de GitHub para vincular esta PC al equipo de desarrollo.</div>
             <div class="line" style="margin-top:1rem"><span class="prompt">token ></span> <input type="password" id="token-input" class="terminal-input" placeholder="ghp_..." autocomplete="off" spellcheck="false"></div>
             <div class="line" style="margin-top:0.5rem">
               <button class="btn btn-login" onclick="loginCreator()">[VINCULAR]</button>
@@ -179,15 +280,13 @@
             </div>
             <div class="line" style="margin-top:1rem;color:#444;font-size:0.75rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:0.75rem">
               ───────────────────────────────────────────────<br>
-              El token se guarda LOCALMENTE en tu navegador.<br>
-              Solo se usa para verificar tu identidad vía API de GitHub.<br>
-              Una vez vinculada esta PC, no volverás a necesitarlo.
+              Acceso para: eliezer, manchitas, Adriyache32, mellado
             </div>
           </div>
           <div id="pc-detected" class="terminal-pc-detected hidden">
             <div class="line"><span class="prompt">└─$</span> <span class="highlight-green">✔ PC reconocida</span></div>
             <div class="line" style="margin-top:0.5rem"><span class="prompt">└─$</span> <span id="pc-info" class="cmd"></span></div>
-            <div class="line" style="margin-top:0.5rem"><span class="prompt">└─$</span> <span class="highlight">Acceso concedido. Bienvenido al equipo, <span id="pc-username"></span>.</span></div>
+            <div class="line" style="margin-top:0.5rem"><span class="prompt">└─$</span> <span class="highlight">Bienvenido al equipo, <span id="pc-username"></span>.</span></div>
             <div class="line" style="margin-top:0.5rem"><span class="prompt">└─$</span> <span class="cmd">Cargando panel de control...</span></div>
           </div>
         </div>
@@ -201,50 +300,55 @@
               <span class="led led-yellow" id="led-proc2" title="PROCESANDO"></span>
               <span class="led led-green led-active" id="led-ready2" title="LISTO"></span>
             </div>
-            <span class="terminal-title">nervalia@creator:~/panel</span>
+            <span class="terminal-title">admin@nervalia:~/panel</span>
           </div>
           <div class="terminal-body">
-            <div class="line"><span class="prompt">┌──(nervalia㉿creator)-[~/panel]</span></div>
-            <div class="line"><span class="prompt">└─$</span> <span class="highlight">Bienvenido, <span id="creator-name">Creador</span></span> <span class="cmd">| PC vinculada ✔</span></div>
-            <div class="line" style="margin-top:0.5rem"><span class="prompt">└─$</span> <span class="cmd">Selecciona un módulo:</span></div>
+            <div class="line"><span class="prompt">┌──(admin㉿nervalia)-[~/panel]</span></div>
+            <div class="line"><span class="prompt">└─$</span> <span class="highlight">Bienvenido, <span id="creator-name">Admin</span></span></div>
+            <div class="line" style="margin-top:0.5rem"><span class="prompt">└─$</span> <span class="cmd">Selecciona un módulo para editar:</span></div>
           </div>
         </div>
 
         <div class="creator-dashboard">
-          <div class="dashboard-card" onclick="showCreatorTab('server-control')">
+          <div class="dashboard-card" onclick="showCreatorTab('server')">
             <div class="card-icon">🖥️</div>
-            <h4>Control</h4>
-            <p>Iniciar / Detener server</p>
+            <h4>Server</h4>
+            <p>Editar info del server</p>
           </div>
-          <div class="dashboard-card" onclick="showCreatorTab('players')">
+          <div class="dashboard-card" onclick="showCreatorTab('team')">
             <div class="card-icon">👥</div>
-            <h4>Jugadores</h4>
-            <p>Whitelist y bans</p>
+            <h4>Equipo</h4>
+            <p>Gestionar miembros</p>
           </div>
-          <div class="dashboard-card" onclick="showCreatorTab('backups')">
-            <div class="card-icon">💾</div>
-            <h4>Backups</h4>
-            <p>Copias de seguridad</p>
-          </div>
-          <div class="dashboard-card" onclick="showCreatorTab('kits-admin')">
+          <div class="dashboard-card" onclick="showCreatorTab('kits')">
             <div class="card-icon">📦</div>
             <h4>Kits</h4>
-            <p>Gestionar kits de paga</p>
+            <p>Editar precios y perks</p>
           </div>
-          <div class="dashboard-card" onclick="showCreatorTab('logs')">
-            <div class="card-icon">📋</div>
-            <h4>Logs</h4>
-            <p>Actividad reciente</p>
+          <div class="dashboard-card" onclick="showCreatorTab('logros')">
+            <div class="card-icon">🏆</div>
+            <h4>Logros</h4>
+            <p>Administrar logros</p>
           </div>
-          <div class="dashboard-card" onclick="showCreatorTab('settings')">
-            <div class="card-icon">⚙️</div>
-            <h4>Config</h4>
-            <p>Ajustes del server</p>
+          <div class="dashboard-card" onclick="showCreatorTab('reglas')">
+            <div class="card-icon">📜</div>
+            <h4>Reglas</h4>
+            <p>Editar reglas</p>
+          </div>
+          <div class="dashboard-card" onclick="showCreatorTab('galeria')">
+            <div class="card-icon">🖼️</div>
+            <h4>Galería</h4>
+            <p>Agregar imágenes</p>
+          </div>
+          <div class="dashboard-card" onclick="showCreatorTab('coins')">
+            <div class="card-icon">🪙</div>
+            <h4>Monedas</h4>
+            <p>Dar/quitar monedas</p>
           </div>
           <div class="dashboard-card" onclick="logoutCreator()">
             <div class="card-icon">🚪</div>
             <h4>Salir</h4>
-            <p>Desvincular esta PC</p>
+            <p>Cerrar sesión</p>
           </div>
         </div>
 
@@ -255,15 +359,11 @@
               <span class="led led-yellow" title="PROCESANDO"></span>
               <span class="led led-green led-active" title="LISTO"></span>
             </div>
-            <span class="terminal-title">nervalia@creator:~/panel/modulo</span>
+            <span class="terminal-title">admin@nervalia:~/panel/modulo</span>
           </div>
           <div class="terminal-body" id="creator-tab-content">
             <div class="tab-placeholder">
-              <div class="line"><span class="prompt">└─$</span> <span class="cmd">Esperando selección de módulo...</span></div>
-              <div class="line" style="margin-top:1rem;color:#444;font-size:0.75rem">
-                ───────────────────────────────────────────────<br>
-                Selecciona una opción del panel superior.
-              </div>
+              <div class="line"><span class="prompt">└─$</span> <span class="cmd">Selecciona un módulo del panel.</span></div>
             </div>
           </div>
         </div>
@@ -271,8 +371,29 @@
     </section>
   </main>
 
+  <!-- PAYWALL MODAL -->
+  <div id="paywall-modal" class="modal hidden">
+    <div class="modal-overlay" onclick="closePaywall()"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>🛒 Canjear Kit</h3>
+        <button class="modal-close" onclick="closePaywall()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-kit-name" id="modal-kit-name">Kit Bronce</p>
+        <p class="modal-kit-price" id="modal-kit-price">5 🪙</p>
+        <div class="modal-balance">
+          <span>Tu saldo:</span>
+          <span id="modal-balance">0 🪙</span>
+        </div>
+        <div id="modal-error" class="modal-error hidden">No tenés suficientes monedas</div>
+        <button class="btn btn-kit modal-btn" id="modal-confirm-btn" onclick="confirmPaywall()">Confirmar Canje</button>
+      </div>
+    </div>
+  </div>
+
   <footer>
-    <p>Nervalia &mdash; hecho con 💚 para amigos</p>
+    <p>Nervalia &mdash; chanchos MC studios &mdash; hecho con 💚</p>
   </footer>
 
   <script src="script.js"></script>

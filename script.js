@@ -1,8 +1,11 @@
 const SERVER_IP = 'nervalia.mc';
 const API_URL = `https://api.mcstatus.io/v2/status/java/${SERVER_IP}`;
-const CREATOR_USER = 'Adriyache32';
 const AUTH_USERS = ['eliezer', 'manchitas', 'Adriyache32', 'mellado'];
 const PC_STORAGE_KEY = 'nervalia_pc_id';
+const COINS_KEY = 'nervalia_coins';
+const LOGROS_KEY = 'nervalia_logros';
+const INVENTORY_KEY = 'nervalia_inventory';
+const SERVER_DATA_KEY = 'nervalia_server_data';
 
 function toggleMenu() {
   document.getElementById('nav-menu').classList.toggle('open');
@@ -17,11 +20,9 @@ document.querySelectorAll('nav a').forEach(a => {
 async function checkStatus() {
   const dot = document.querySelector('.status-dot');
   const text = document.querySelector('.status-text');
-
   try {
     const res = await fetch(API_URL);
     const data = await res.json();
-
     if (data.online) {
       dot.className = 'status-dot online';
       text.textContent = `Online — ${data.players.online}/${data.players.max} jugadores`;
@@ -48,15 +49,11 @@ function copyIP() {
   });
 }
 
-/* ───── PC FINGERPRINT ───── */
+/* ───── FINGERPRINT ───── */
 function getPCFingerprint() {
   const raw = [
-    navigator.userAgent,
-    screen.width,
-    screen.height,
-    screen.colorDepth,
-    Intl.DateTimeFormat().resolvedOptions().timeZone,
-    navigator.language
+    navigator.userAgent, screen.width, screen.height, screen.colorDepth,
+    Intl.DateTimeFormat().resolvedOptions().timeZone, navigator.language
   ].join('||');
   let hash = 0;
   for (let i = 0; i < raw.length; i++) {
@@ -67,26 +64,22 @@ function getPCFingerprint() {
   return 'PC-' + Math.abs(hash).toString(16).toUpperCase();
 }
 
-/* ───── LED CONTROL ───── */
+/* ───── LED ───── */
 function setLED(state) {
   const groups = [
     ['led-idle', 'led-proc', 'led-ready'],
     ['led-idle2', 'led-proc2', 'led-ready2'],
   ];
-
   const map = { idle: 0, proc: 1, ready: 2 };
-
   groups.forEach(ids => {
     ids.forEach((id, i) => {
       const el = document.getElementById(id);
-      if (el) {
-        el.classList.toggle('led-active', i === map[state]);
-      }
+      if (el) el.classList.toggle('led-active', i === map[state]);
     });
   });
 }
 
-/* ───── TERMINAL TYPEWRITER ───── */
+/* ───── TYPEWRITER ───── */
 const typerTexts = [
   'echo "verificando terminal..."',
   'whoami',
@@ -102,23 +95,16 @@ const typerTexts = [
   '[SISTEMA] Amplificando...',
 ];
 
-let typerIndex = 0;
-let charIndex = 0;
-let isDeleting = false;
-let typerFinished = false;
+let typerIndex = 0, charIndex = 0, isDeleting = false, typerFinished = false;
 
 function typeEffect() {
   const el = document.getElementById('typing-line');
   if (!el) return;
-
   setLED('proc');
-
   const currentText = typerTexts[typerIndex];
-
   if (!isDeleting) {
     el.textContent = currentText.substring(0, charIndex + 1);
     charIndex++;
-
     if (charIndex === currentText.length) {
       if (typerIndex === typerTexts.length - 1) {
         typerFinished = true;
@@ -138,7 +124,6 @@ function typeEffect() {
   } else {
     el.textContent = currentText.substring(0, charIndex - 1);
     charIndex--;
-
     if (charIndex === 0) {
       isDeleting = false;
       typerIndex++;
@@ -149,22 +134,18 @@ function typeEffect() {
   }
 }
 
-/* ───── PC DETECTION ───── */
+/* ───── AUTH ───── */
 function showLoginOrDetect() {
-  const storedData = localStorage.getItem(PC_STORAGE_KEY);
-
-  if (storedData) {
+  const stored = localStorage.getItem(PC_STORAGE_KEY);
+  if (stored) {
     try {
-      const data = JSON.parse(storedData);
-      const fp = getPCFingerprint();
-
-      if (data.fingerprint === fp && data.token) {
+      const data = JSON.parse(stored);
+      if (data.fingerprint === getPCFingerprint() && data.token) {
         verifyExistingToken(data.token);
         return;
       }
     } catch {}
   }
-
   showTokenInput();
 }
 
@@ -174,97 +155,54 @@ async function verifyExistingToken(token) {
     const res = await fetch('https://api.github.com/user', {
       headers: { 'Authorization': `token ${token}` }
     });
-
-    if (!res.ok) {
-      localStorage.removeItem(PC_STORAGE_KEY);
-      showTokenInput();
-      return;
-    }
-
+    if (!res.ok) { localStorage.removeItem(PC_STORAGE_KEY); showTokenInput(); return; }
     const user = await res.json();
-
-    if (!AUTH_USERS.includes(user.login)) {
-      localStorage.removeItem(PC_STORAGE_KEY);
-      showTokenInput();
-      return;
-    }
-
+    if (!AUTH_USERS.includes(user.login)) { localStorage.removeItem(PC_STORAGE_KEY); showTokenInput(); return; }
     showPCDetected(user.login);
-  } catch {
-    showTokenInput();
-  }
+  } catch { showTokenInput(); }
 }
 
 function showTokenInput() {
   setLED('idle');
   document.getElementById('login-input-area').classList.remove('hidden');
   document.getElementById('pc-detected').classList.add('hidden');
-  setTimeout(() => {
-    document.getElementById('token-input')?.focus();
-  }, 100);
+  setTimeout(() => document.getElementById('token-input')?.focus(), 100);
 }
 
 function showPCDetected(username) {
   setLED('ready');
   document.getElementById('login-input-area').classList.add('hidden');
-  const pcDetected = document.getElementById('pc-detected');
-  pcDetected.classList.remove('hidden');
+  document.getElementById('pc-detected').classList.remove('hidden');
   document.getElementById('pc-info').textContent = `PC: ${getPCFingerprint()} | user: ${username}`;
   document.getElementById('pc-username').textContent = username;
-
-  setTimeout(() => {
-    showCreatorPanel(username);
-  }, 2500);
+  setTimeout(() => showCreatorPanel(username), 2500);
 }
 
-/* ───── LOGIN ───── */
 async function loginCreator() {
   const token = document.getElementById('token-input').value.trim();
   const errorEl = document.getElementById('login-error');
-
-  if (!token) {
-    errorEl.textContent = '[ERROR] Token requerido';
-    return;
-  }
-
+  if (!token) { errorEl.textContent = '[ERROR] Token requerido'; return; }
   errorEl.textContent = '[SISTEMA] Verificando...';
   setLED('proc');
-
   try {
     const res = await fetch('https://api.github.com/user', {
       headers: { 'Authorization': `token ${token}` }
     });
-
-    if (!res.ok) {
-      errorEl.textContent = '[ERROR] Token inválido o expirado';
-      return;
-    }
-
+    if (!res.ok) { errorEl.textContent = '[ERROR] Token inválido'; return; }
     const user = await res.json();
-
-    if (!AUTH_USERS.includes(user.login)) {
-      errorEl.textContent = '[ERROR] Este token no pertenece al equipo de desarrollo';
-      return;
-    }
-
-    const fp = getPCFingerprint();
+    if (!AUTH_USERS.includes(user.login)) { errorEl.textContent = '[ERROR] No pertenecés al equipo'; return; }
     localStorage.setItem(PC_STORAGE_KEY, JSON.stringify({
-      token: token,
-      fingerprint: fp,
-      pairedAt: new Date().toISOString()
+      token, fingerprint: getPCFingerprint(), pairedAt: new Date().toISOString()
     }));
-
     showPCDetected(user.login);
-  } catch {
-    errorEl.textContent = '[ERROR] Error de conexión';
-  }
+  } catch { errorEl.textContent = '[ERROR] Error de conexión'; }
 }
 
 function showCreatorPanel(username) {
   setLED('ready');
   document.getElementById('creator-login').classList.add('hidden');
   document.getElementById('creator-panel').classList.remove('hidden');
-  document.getElementById('creator-name').textContent = username || CREATOR_USER;
+  document.getElementById('creator-name').textContent = username || 'Admin';
 }
 
 function logoutCreator() {
@@ -275,118 +213,562 @@ function logoutCreator() {
   document.getElementById('pc-detected').classList.add('hidden');
   document.getElementById('token-input').value = '';
   document.getElementById('login-error').textContent = '';
-
   setLED('idle');
-
-  typerFinished = false;
-  typerIndex = 0;
-  charIndex = 0;
-  isDeleting = false;
-
+  typerFinished = false; typerIndex = 0; charIndex = 0; isDeleting = false;
   const el = document.getElementById('typing-line');
   if (el) el.textContent = '';
   const cursor = document.querySelector('.cursor');
   if (cursor) cursor.style.display = 'inline-block';
-
   setTimeout(typeEffect, 500);
+}
+
+/* ───── COINS & LOGROS ───── */
+function getCoins() {
+  return parseFloat(localStorage.getItem(COINS_KEY)) || 0;
+}
+
+function setCoins(n) {
+  localStorage.setItem(COINS_KEY, Math.max(0, n));
+  updateWallet();
+}
+
+function updateWallet() {
+  const el = document.getElementById('coin-balance');
+  if (el) el.textContent = getCoins().toFixed(1);
+}
+
+function claimLogro(el) {
+  if (el.classList.contains('completado')) return;
+  el.classList.add('completado');
+  el.querySelector('.logro-badge').textContent = '✅';
+  const coins = getCoins() + 0.5;
+  setCoins(coins);
+  saveLogroState();
+}
+
+function saveLogroState() {
+  const state = {};
+  document.querySelectorAll('.logro').forEach(el => {
+    state[el.dataset.id] = el.classList.contains('completado');
+  });
+  localStorage.setItem(LOGROS_KEY, JSON.stringify(state));
+}
+
+function restoreLogros() {
+  const saved = localStorage.getItem(LOGROS_KEY);
+  if (!saved) return;
+  try {
+    const state = JSON.parse(saved);
+    document.querySelectorAll('.logro').forEach(el => {
+      if (state[el.dataset.id]) {
+        el.classList.add('completado');
+        el.querySelector('.logro-badge').textContent = '✅';
+      }
+    });
+  } catch {}
+}
+
+/* ───── PAYWALL ───── */
+let paywallKit = null;
+let paywallPrice = 0;
+
+function openPaywall(name, price) {
+  paywallKit = name;
+  paywallPrice = price;
+  document.getElementById('modal-kit-name').textContent = `Kit ${name}`;
+  document.getElementById('modal-kit-price').textContent = `${price} 🪙`;
+  document.getElementById('modal-balance').textContent = `${getCoins().toFixed(1)} 🪙`;
+  document.getElementById('modal-error').classList.add('hidden');
+  document.getElementById('paywall-modal').classList.remove('hidden');
+}
+
+function closePaywall() {
+  document.getElementById('paywall-modal').classList.add('hidden');
+}
+
+function confirmPaywall() {
+  const balance = getCoins();
+  if (balance < paywallPrice) {
+    document.getElementById('modal-error').classList.remove('hidden');
+    return;
+  }
+  setCoins(balance - paywallPrice);
+  let inv = JSON.parse(localStorage.getItem(INVENTORY_KEY)) || [];
+  inv.push({ kit: paywallKit, date: new Date().toISOString() });
+  localStorage.setItem(INVENTORY_KEY, JSON.stringify(inv));
+  closePaywall();
+  alert(`✅ Kit ${paywallKit} canjeado con éxito!`);
 }
 
 /* ───── CREATOR TABS ───── */
 function showCreatorTab(tab) {
   const content = document.getElementById('creator-tab-content');
+  const sd = JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {};
 
-  const tabs = {
-    'server-control': `
-      <div class="tab-content">
-        <div class="line"><span class="prompt">└─$</span> <span class="highlight">Control del Server</span></div>
-        <div class="status-line"><span class="label">Estado</span><span class="value" id="ctrl-status">Consultando...</span></div>
-        <div class="status-line"><span class="label">IP</span><span class="value">${SERVER_IP}</span></div>
-        <div class="status-line"><span class="label">Versión</span><span class="value">1.20.4 - 1.21</span></div>
-        <div class="status-line"><span class="label">Jugadores</span><span class="value" id="ctrl-players">-</span></div>
-        <div class="tab-actions">
-          <button class="btn-term primary" onclick="alert('[SISTEMA] Comando reiniciar enviado')">[ REINICIAR ]</button>
-          <button class="btn-term danger" onclick="alert('[SISTEMA] Comando detener enviado')">[ DETENER ]</button>
-        </div>
-      </div>`,
-    'players': `
-      <div class="tab-content">
-        <div class="line"><span class="prompt">└─$</span> <span class="highlight">Gestión de Jugadores</span></div>
-        <div class="status-line"><span class="label">Online</span><span class="value" id="p-online">-</span></div>
-        <div class="status-line"><span class="label">Whitelist</span><span class="value">Activada</span></div>
-        <div class="status-line"><span class="label">Baneados</span><span class="value">0</span></div>
-        <div class="tab-actions">
-          <button class="btn-term primary" onclick="alert('[SISTEMA] Abriendo gestión de whitelist...')">[ GESTIONAR WHITELIST ]</button>
-        </div>
-      </div>`,
-    'backups': `
-      <div class="tab-content">
-        <div class="line"><span class="prompt">└─$</span> <span class="highlight">Backups</span></div>
-        <div class="status-line"><span class="label">Último backup</span><span class="value">Hoy 03:00 AM</span></div>
-        <div class="status-line"><span class="label">Tamaño</span><span class="value">2.4 GB</span></div>
-        <div class="status-line"><span class="label">Totales</span><span class="value">14 backups</span></div>
-        <div class="tab-actions">
-          <button class="btn-term primary" onclick="alert('[SISTEMA] Creando backup...')">[ CREAR BACKUP ]</button>
-          <button class="btn-term" onclick="alert('[SISTEMA] Listando backups...')">[ RESTAURAR ]</button>
-        </div>
-      </div>`,
-    'kits-admin': `
-      <div class="tab-content">
-        <div class="line"><span class="prompt">└─$</span> <span class="highlight">Kits de Paga</span></div>
-        <div class="status-line"><span class="label">Bronce</span><span class="value">$5 USD — Activo</span></div>
-        <div class="status-line"><span class="label">Plata</span><span class="value">$10 USD — Activo</span></div>
-        <div class="status-line"><span class="label">Oro</span><span class="value">$20 USD — Activo</span></div>
-        <div class="tab-actions">
-          <button class="btn-term primary" onclick="alert('[SISTEMA] Editor de kits abierto')">[ EDITAR KITS ]</button>
-        </div>
-      </div>`,
-    'logs': `
-      <div class="tab-content">
-        <div class="line"><span class="prompt">└─$</span> <span class="highlight">Logs del Server</span></div>
-        <div style="margin-top:0.5rem">
-          <div class="status-line"><span class="label" style="color:#666">10:23</span><span class="value" style="color:#666">Jugador1 se unió</span></div>
-          <div class="status-line"><span class="label" style="color:#666">10:15</span><span class="value" style="color:#666">Auto-backup completado</span></div>
-          <div class="status-line"><span class="label" style="color:#666">09:50</span><span class="value" style="color:#666">Jugador2 salió</span></div>
-          <div class="status-line"><span class="label" style="color:#666">09:30</span><span class="value" style="color:#666">Server iniciado</span></div>
-        </div>
-        <div class="tab-actions">
-          <button class="btn-term" onclick="alert('[SISTEMA] Mostrando logs completos...')">[ VER TODOS ]</button>
-        </div>
-      </div>`,
-    'settings': `
-      <div class="tab-content">
-        <div class="line"><span class="prompt">└─$</span> <span class="highlight">Configuración</span></div>
-        <div class="status-line"><span class="label">Dificultad</span><span class="value">Hard</span></div>
-        <div class="status-line"><span class="label">PVP</span><span class="value">Activado</span></div>
-        <div class="status-line"><span class="label">Whitelist</span><span class="value">Activada</span></div>
-        <div class="status-line"><span class="label">Bienvenida</span><span class="value">¡Bienvenido a Nervalia!</span></div>
-        <div class="tab-actions">
-          <button class="btn-term primary" onclick="alert('[SISTEMA] Abriendo configuración avanzada...')">[ CONFIGURACIÓN AVANZADA ]</button>
-        </div>
-      </div>`
-  };
+  switch (tab) {
+    case 'server':
+      content.innerHTML = `
+        <div class="tab-content">
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">Editar Info del Server</span></div>
+          <div class="editor-field"><span class="label">Título</span><input class="editor-input" id="e-title" value="${sd.title || 'El Server'}"></div>
+          <div class="editor-field"><span class="label">Versión</span><input class="editor-input" id="e-version" value="${sd.version || '1.20.4 - 1.21'}"></div>
+          <div class="editor-field"><span class="label">Modo</span><input class="editor-input" id="e-mode" value="${sd.mode || 'Survival / Hard'}"></div>
+          <div class="editor-field"><span class="label">Slot</span><input class="editor-input" id="e-slot" value="${sd.slot || '20 jugadores'}"></div>
+          <div class="editor-field"><span class="label">Plugins</span><input class="editor-input" id="e-plugins" value="${sd.plugins || 'VoiceChat, CoreProtect, WorldEdit'}"></div>
+          <div class="editor-field" style="align-items:flex-start;padding-top:0.5rem">
+            <span class="label">Descripción 1</span>
+            <textarea class="editor-textarea" id="e-desc1">${sd.desc1 || 'Server survival privado para amigos y conocidos.'}</textarea>
+          </div>
+          <div class="editor-field" style="align-items:flex-start;padding-top:0.5rem">
+            <span class="label">Descripción 2</span>
+            <textarea class="editor-textarea" id="e-desc2">${sd.desc2 || 'Contamos con voice chat de proximidad y mapa dinámico.'}</textarea>
+          </div>
+          <div class="editor-actions">
+            <button class="btn-editor save" onclick="saveServerData()">[ GUARDAR ]</button>
+            <span id="e-msg" class="editor-success"></span>
+          </div>
+        </div>`;
+      break;
 
-  content.innerHTML = tabs[tab] || '<div class="tab-placeholder"><div class="line"><span class="prompt">└─$</span> <span class="cmd">Módulo no encontrado</span></div></div>';
+    case 'team':
+      const members = sd.team || [
+        { name: 'Eliezer', role: 'Creador', color: '#f0c040' },
+        { name: 'Manchitas', role: 'Creador', color: '#f0c040' },
+        { name: 'Adriyache32', role: 'Moderador', color: '#4ecdc4' },
+        { name: 'Mellado', role: 'Moderador', color: '#4ecdc4' },
+      ];
+      let teamHtml = members.map((m, i) => `
+        <div class="editor-field">
+          <span class="label">#${i+1}</span>
+          <input class="editor-input" id="tm-name-${i}" value="${m.name}" placeholder="Nombre" style="flex:0.5">
+          <input class="editor-input" id="tm-role-${i}" value="${m.role}" placeholder="Rol" style="flex:0.3">
+        </div>
+      `).join('');
+      content.innerHTML = `
+        <div class="tab-content">
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">Gestionar Equipo</span></div>
+          ${teamHtml}
+          <div class="editor-actions">
+            <button class="btn-editor" onclick="addTeamMember()">[ + AGREGAR ]</button>
+            <button class="btn-editor save" onclick="saveTeam()">[ GUARDAR ]</button>
+            <span id="e-msg" class="editor-success"></span>
+          </div>
+        </div>`;
+      break;
 
-  if (tab === 'server-control' || tab === 'players') {
-    fetch(API_URL).then(r => r.json()).then(data => {
-      if (data.online) {
-        const el1 = document.getElementById('ctrl-status');
-        const el2 = document.getElementById('ctrl-players');
-        const el3 = document.getElementById('p-online');
-        if (el1) el1.textContent = 'Online';
-        if (el2) el2.textContent = `${data.players.online}/${data.players.max}`;
-        if (el3) el3.textContent = `${data.players.online}/${data.players.max}`;
-      }
-    }).catch(() => {});
+    case 'kits':
+      const kdata = sd.kits || [
+        { name: 'Bronce', price: 5, perks: ['Kit inicial especial', 'Tag coloreado en el chat', 'Acceso a /fly en spawn'] },
+        { name: 'Plata', price: 10, perks: ['Todo lo de Bronce', 'Set de herramientas encantadas', 'Home adicional (3 total)', 'Acceso a /enderchest'] },
+        { name: 'Oro', price: 20, perks: ['Todo lo de Plata', 'Set de armadura de diamante', '5 Homes adicionales', 'Acceso a /nick', 'Rol exclusivo en Discord'] },
+      ];
+      let kHtml = kdata.map((k, i) => `
+        <div style="border:1px solid rgba(255,255,255,0.05);padding:0.75rem;border-radius:6px;margin-bottom:0.5rem">
+          <div class="editor-field"><span class="label">Kit ${i+1}</span>
+            <input class="editor-input" id="k-name-${i}" value="${k.name}" placeholder="Nombre" style="flex:0.4">
+            <input class="editor-input" id="k-price-${i}" value="${k.price}" placeholder="Precio" style="flex:0.15;font-family:monospace">
+          </div>
+          <textarea class="editor-textarea" id="k-perks-${i}" style="min-height:50px">${k.perks.join('\n')}</textarea>
+        </div>
+      `).join('');
+      content.innerHTML = `
+        <div class="tab-content">
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">Editar Kits</span></div>
+          ${kHtml}
+          <div class="editor-actions">
+            <button class="btn-editor" onclick="addKit()">[ + AGREGAR KIT ]</button>
+            <button class="btn-editor save" onclick="saveKits()">[ GUARDAR ]</button>
+            <span id="e-msg" class="editor-success"></span>
+          </div>
+        </div>`;
+      break;
+
+    case 'logros':
+      const ldata = sd.logros || [
+        { name: 'Minero Inicial', desc: 'Consigue 10 bloques de piedra', icon: '⛏️' },
+        { name: 'Leñador Novato', desc: 'Corta 10 árboles', icon: '🌳' },
+        { name: 'Primera Base', desc: 'Construye tu primera casa', icon: '🏠' },
+        { name: 'Granjero', desc: 'Planta y cosecha 20 cultivos', icon: '🌾' },
+        { name: 'Cazador de Dragones', desc: 'Derrota al Ender Dragon', icon: '🐉' },
+        { name: 'Explorador del Nether', desc: 'Visita el Nether', icon: '⚔️' },
+      ];
+      let lHtml = ldata.map((l, i) => `
+        <div style="border:1px solid rgba(255,255,255,0.05);padding:0.5rem;border-radius:6px;margin-bottom:0.4rem">
+          <div class="editor-field">
+            <span class="label">#${i+1}</span>
+            <input class="editor-input" id="l-name-${i}" value="${l.name}" style="flex:0.4">
+            <input class="editor-input" id="l-desc-${i}" value="${l.desc}" style="flex:0.5">
+            <input class="editor-input" id="l-icon-${i}" value="${l.icon}" style="flex:0.1;text-align:center">
+          </div>
+        </div>
+      `).join('');
+      content.innerHTML = `
+        <div class="tab-content">
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">Editar Logros</span></div>
+          ${lHtml}
+          <div class="editor-actions">
+            <button class="btn-editor" onclick="addLogro()">[ + AGREGAR ]</button>
+            <button class="btn-editor save" onclick="saveLogros()">[ GUARDAR ]</button>
+            <span id="e-msg" class="editor-success"></span>
+          </div>
+        </div>`;
+      break;
+
+    case 'reglas':
+      const rdata = sd.reglas || [
+        'No Griefing — No destruir construcciones ajenas',
+        'No Hacks — Prohibidos clientes modificados',
+        'Respeto — Trata a todos con respeto',
+        'No Robar — No tomar items ajenos sin permiso',
+        'Duplicación — Prohibido duplicar items',
+        'Voice Chat — Uso obligatorio de proximidad',
+      ];
+      let rHtml = rdata.map((r, i) => `
+        <div class="editor-field">
+          <span class="label">#${i+1}</span>
+          <textarea class="editor-textarea" id="r-text-${i}" style="min-height:40px">${r}</textarea>
+          <button class="btn-editor danger" onclick="removeRegla(${i})" style="flex:0;padding:0.3rem 0.5rem">✕</button>
+        </div>
+      `).join('');
+      content.innerHTML = `
+        <div class="tab-content">
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">Editar Reglas</span></div>
+          ${rHtml}
+          <div class="editor-actions">
+            <button class="btn-editor" onclick="addRegla()">[ + AGREGAR ]</button>
+            <button class="btn-editor save" onclick="saveReglas()">[ GUARDAR ]</button>
+            <span id="e-msg" class="editor-success"></span>
+          </div>
+        </div>`;
+      break;
+
+    case 'galeria':
+      const gdata = sd.galeria || [
+        { label: 'Base principal', icon: '🏗️' },
+        { label: 'Atardecer en spawn', icon: '🌄' },
+        { label: 'Castillo medieval', icon: '🏰' },
+        { label: 'Base acuática', icon: '🌊' },
+        { label: 'Portal del Nether', icon: '🔥' },
+        { label: 'End base', icon: '🌌' },
+      ];
+      let gHtml = gdata.map((g, i) => `
+        <div class="editor-field">
+          <span class="label">#${i+1}</span>
+          <input class="editor-input" id="g-icon-${i}" value="${g.icon}" style="flex:0.1;text-align:center">
+          <input class="editor-input" id="g-label-${i}" value="${g.label}" style="flex:0.7">
+          <button class="btn-editor danger" onclick="removeGaleria(${i})" style="flex:0;padding:0.3rem 0.5rem">✕</button>
+        </div>
+      `).join('');
+      content.innerHTML = `
+        <div class="tab-content">
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">Editar Galería</span></div>
+          ${gHtml}
+          <div class="editor-actions">
+            <button class="btn-editor" onclick="addGaleria()">[ + AGREGAR ]</button>
+            <button class="btn-editor save" onclick="saveGaleria()">[ GUARDAR ]</button>
+            <span id="e-msg" class="editor-success"></span>
+          </div>
+        </div>`;
+      break;
+
+    case 'coins':
+      const inv = JSON.parse(localStorage.getItem(INVENTORY_KEY)) || [];
+      const invHtml = inv.map(i => `
+        <div class="status-line"><span class="label">${i.date.split('T')[0]}</span><span class="value">Kit ${i.kit}</span></div>
+      `).join('');
+      content.innerHTML = `
+        <div class="tab-content">
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">🪙 Monedas del Server</span></div>
+          <div class="editor-field"><span class="label">Saldo actual</span><span class="value" style="color:#f0c040;font-weight:700">${getCoins().toFixed(1)} 🪙</span></div>
+          <div class="editor-field" style="border:none;margin-top:0.5rem">
+            <span class="label">Dar monedas</span>
+            <input class="editor-input" id="e-coin-amount" type="number" value="10" step="0.5" style="flex:0.2;font-family:monospace">
+            <button class="btn-editor save" onclick="giveCoins()">[ DAR ]</button>
+          </div>
+          <div class="line" style="margin-top:1rem"><span class="prompt">└─$</span> <span class="highlight">Inventario canjeado</span></div>
+          ${invHtml || '<div class="line" style="color:#444">No hay canjes registrados</div>'}
+        </div>`;
+      break;
   }
+}
+
+/* ───── SAVE HELPERS ───── */
+function getSD() { return JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {}; }
+
+function saveServerData() {
+  const sd = getSD();
+  sd.title = document.getElementById('e-title')?.value;
+  sd.version = document.getElementById('e-version')?.value;
+  sd.mode = document.getElementById('e-mode')?.value;
+  sd.slot = document.getElementById('e-slot')?.value;
+  sd.plugins = document.getElementById('e-plugins')?.value;
+  sd.desc1 = document.getElementById('e-desc1')?.value;
+  sd.desc2 = document.getElementById('e-desc2')?.value;
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  applyServerData();
+  const msg = document.getElementById('e-msg');
+  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+}
+
+function applyServerData() {
+  const sd = getSD();
+  const title = document.getElementById('s-title');
+  if (title && sd.title) title.textContent = sd.title;
+
+  const specs = document.getElementById('server-specs');
+  if (specs && sd.version) {
+    const vals = specs.querySelectorAll('.spec-value');
+    if (vals[0]) vals[0].textContent = sd.version || '1.20.4 - 1.21';
+    if (vals[1]) vals[1].textContent = sd.mode || 'Survival / Hard';
+    if (vals[2]) vals[2].textContent = sd.slot || '20 jugadores';
+    if (vals[4]) vals[4].textContent = sd.plugins || 'VoiceChat, CoreProtect, WorldEdit';
+  }
+  const d1 = document.getElementById('s-desc1');
+  const d2 = document.getElementById('s-desc2');
+  if (d1 && sd.desc1) d1.textContent = sd.desc1;
+  if (d2 && sd.desc2) d2.textContent = sd.desc2;
+}
+
+function giveCoins() {
+  const amount = parseFloat(document.getElementById('e-coin-amount')?.value);
+  if (!amount || amount <= 0) return;
+  setCoins(getCoins() + amount);
+  showCreatorTab('coins');
+}
+
+function addTeamMember() {
+  const sd = getSD();
+  const team = sd.team || [];
+  team.push({ name: 'Nuevo', role: 'Miembro', color: '#7289da' });
+  sd.team = team;
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  showCreatorTab('team');
+}
+
+function saveTeam() {
+  const sd = getSD();
+  const team = sd.team || [];
+  team.forEach((_, i) => {
+    const n = document.getElementById(`tm-name-${i}`);
+    const r = document.getElementById(`tm-role-${i}`);
+    if (n) team[i].name = n.value;
+    if (r) team[i].role = r.value;
+  });
+  sd.team = team;
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  applyTeam();
+  const msg = document.getElementById('e-msg');
+  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+}
+
+function applyTeam() {
+  const sd = getSD();
+  const team = sd.team;
+  const grid = document.getElementById('members-grid');
+  if (!team || !grid) return;
+  grid.innerHTML = team.map(m => `
+    <div class="member">
+      <div class="member-avatar" style="background: ${m.color || '#7289da'}">${m.name.charAt(0).toUpperCase()}</div>
+      <span>${m.name}</span>
+      <span class="member-role">${m.role}</span>
+    </div>
+  `).join('');
+}
+
+function addKit() {
+  const sd = getSD();
+  const kits = sd.kits || [];
+  kits.push({ name: 'Nuevo Kit', price: 5, perks: ['Beneficio 1', 'Beneficio 2'] });
+  sd.kits = kits;
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  showCreatorTab('kits');
+}
+
+function saveKits() {
+  const sd = getSD();
+  const kits = sd.kits || [];
+  kits.forEach((_, i) => {
+    const n = document.getElementById(`k-name-${i}`);
+    const p = document.getElementById(`k-price-${i}`);
+    const perks = document.getElementById(`k-perks-${i}`);
+    if (n) kits[i].name = n.value;
+    if (p) kits[i].price = parseFloat(p.value) || 5;
+    if (perks) kits[i].perks = perks.value.split('\n').filter(Boolean);
+  });
+  sd.kits = kits;
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  applyKits();
+  const msg = document.getElementById('e-msg');
+  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+}
+
+function applyKits() {
+  const sd = getSD();
+  const kits = sd.kits;
+  const grid = document.querySelector('#tienda .kits-grid');
+  if (!kits || !grid) return;
+  grid.innerHTML = kits.map((k, i) => `
+    <div class="kit-card${i === 1 ? ' featured' : ''}">
+      ${i === 1 ? '<div class="kit-badge">MÁS POPULAR</div>' : ''}
+      <div class="kit-tier">${k.name}</div>
+      <div class="kit-price">${k.price} 🪙</div>
+      <ul class="kit-perks">${k.perks.map(p => `<li>${p}</li>`).join('')}</ul>
+      <button class="btn btn-kit" onclick="openPaywall('${k.name}', ${k.price})">Canjear</button>
+    </div>
+  `).join('');
+}
+
+function addLogro() {
+  const sd = getSD();
+  const logros = sd.logros || [];
+  logros.push({ name: 'Nuevo Logro', desc: 'Descripción', icon: '⭐' });
+  sd.logros = logros;
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  showCreatorTab('logros');
+}
+
+function saveLogros() {
+  const sd = getSD();
+  const logros = sd.logros || [];
+  logros.forEach((_, i) => {
+    const n = document.getElementById(`l-name-${i}`);
+    const d = document.getElementById(`l-desc-${i}`);
+    const icon = document.getElementById(`l-icon-${i}`);
+    if (n) logros[i].name = n.value;
+    if (d) logros[i].desc = d.value;
+    if (icon) logros[i].icon = icon.value;
+  });
+  sd.logros = logros;
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  applyLogros();
+  const msg = document.getElementById('e-msg');
+  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+}
+
+function applyLogros() {
+  const sd = getSD();
+  const logros = sd.logros;
+  const grid = document.getElementById('logros-grid');
+  if (!logros || !grid) return;
+  const saved = JSON.parse(localStorage.getItem(LOGROS_KEY)) || {};
+  grid.innerHTML = logros.map((l, i) => {
+    const id = `logro-${i}`;
+    const completed = saved[id];
+    return `
+      <div class="logro${completed ? ' completado' : ''}" data-id="${id}" onclick="claimLogro(this)">
+        <div class="logro-icon">${l.icon}</div>
+        <div class="logro-info"><h4>${l.name}</h4><p>${l.desc}</p></div>
+        <span class="logro-reward">+0.5 🪙</span>
+        <span class="logro-badge">${completed ? '✅' : '❌'}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function addRegla() {
+  const sd = getSD();
+  const reglas = sd.reglas || [];
+  reglas.push('Nueva regla — Descripción');
+  sd.reglas = reglas;
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  showCreatorTab('reglas');
+}
+
+function removeRegla(index) {
+  const sd = getSD();
+  sd.reglas = (sd.reglas || []).filter((_, i) => i !== index);
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  showCreatorTab('reglas');
+}
+
+function saveReglas() {
+  const sd = getSD();
+  const reglas = sd.reglas || [];
+  reglas.forEach((_, i) => {
+    const el = document.getElementById(`r-text-${i}`);
+    if (el) reglas[i] = el.value;
+  });
+  sd.reglas = reglas;
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  applyReglas();
+  const msg = document.getElementById('e-msg');
+  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+}
+
+function applyReglas() {
+  const sd = getSD();
+  const reglas = sd.reglas;
+  const list = document.querySelector('#reglas .reglas-list');
+  if (!reglas || !list) return;
+  list.innerHTML = reglas.map((r, i) => {
+    const parts = r.split(' — ');
+    return `
+      <div class="regla">
+        <span class="regla-num">${String(i + 1).padStart(2, '0')}</span>
+        <div><strong>${parts[0] || r}</strong><p>${parts[1] || ''}</p></div>
+      </div>
+    `;
+  }).join('');
+}
+
+function addGaleria() {
+  const sd = getSD();
+  const galeria = sd.galeria || [];
+  galeria.push({ label: 'Nueva imagen', icon: '🖼️' });
+  sd.galeria = galeria;
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  showCreatorTab('galeria');
+}
+
+function removeGaleria(index) {
+  const sd = getSD();
+  sd.galeria = (sd.galeria || []).filter((_, i) => i !== index);
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  showCreatorTab('galeria');
+}
+
+function saveGaleria() {
+  const sd = getSD();
+  const galeria = sd.galeria || [];
+  galeria.forEach((_, i) => {
+    const icon = document.getElementById(`g-icon-${i}`);
+    const label = document.getElementById(`g-label-${i}`);
+    if (icon) galeria[i].icon = icon.value;
+    if (label) galeria[i].label = label.value;
+  });
+  sd.galeria = galeria;
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  applyGaleria();
+  const msg = document.getElementById('e-msg');
+  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+}
+
+function applyGaleria() {
+  const sd = getSD();
+  const galeria = sd.galeria;
+  const grid = document.querySelector('#galeria .galeria-grid');
+  if (!galeria || !grid) return;
+  grid.innerHTML = galeria.map(g => `
+    <div class="galeria-item">
+      <div class="galeria-placeholder">${g.icon}</div>
+      <span>${g.label}</span>
+    </div>
+  `).join('');
 }
 
 /* ───── INIT ───── */
 document.addEventListener('DOMContentLoaded', () => {
   setLED('idle');
+  updateWallet();
+  restoreLogros();
+  applyServerData();
+  applyTeam();
+  applyKits();
+  applyReglas();
+  applyLogros();
+  applyGaleria();
 
   const section = document.getElementById('creator');
-
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting && !typerFinished) {
@@ -395,8 +777,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }, { threshold: 0.3 });
-
-  observer.observe(section);
+  if (section) observer.observe(section);
 });
 
 checkStatus();
