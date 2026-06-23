@@ -1,6 +1,7 @@
 const SERVER_IP = 'nervalia.mc';
 const API_URL = `https://api.mcstatus.io/v2/status/java/${SERVER_IP}`;
 const CREATOR_USER = 'Adriyache32';
+const AUTH_USERS = ['eliezer', 'manchitas', 'Adriyache32', 'mellado'];
 const PC_STORAGE_KEY = 'nervalia_pc_id';
 
 function toggleMenu() {
@@ -182,7 +183,7 @@ async function verifyExistingToken(token) {
 
     const user = await res.json();
 
-    if (user.login !== CREATOR_USER) {
+    if (!AUTH_USERS.includes(user.login)) {
       localStorage.removeItem(PC_STORAGE_KEY);
       showTokenInput();
       return;
@@ -209,6 +210,7 @@ function showPCDetected(username) {
   const pcDetected = document.getElementById('pc-detected');
   pcDetected.classList.remove('hidden');
   document.getElementById('pc-info').textContent = `PC: ${getPCFingerprint()} | user: ${username}`;
+  document.getElementById('pc-username').textContent = username;
 
   setTimeout(() => {
     showCreatorPanel(username);
@@ -240,8 +242,8 @@ async function loginCreator() {
 
     const user = await res.json();
 
-    if (user.login !== CREATOR_USER) {
-      errorEl.textContent = '[ERROR] Este token no pertenece al creador';
+    if (!AUTH_USERS.includes(user.login)) {
+      errorEl.textContent = '[ERROR] Este token no pertenece al equipo de desarrollo';
       return;
     }
 

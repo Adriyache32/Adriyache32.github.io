@@ -32,7 +32,7 @@
           <img src="https://api.mcstatus.io/v2/icon/nervalia.mc" alt="Nervalia" onerror="this.style.display='none'">
         </div>
         <h1>Nervalia</h1>
-        <p class="subtitle">Un mundo para amigos</p>
+        <p class="subtitle">Un mundo para amigos <span class="byline">— chanchos MC studios</span></p>
         <div class="ip-box">
           <code id="server-ip">nervalia.mc</code>
           <button class="copy-btn" onclick="copyIP()">Copiar IP</button>
@@ -86,33 +86,33 @@
 
     <section id="kits" class="section">
       <h2>Kit de Paga</h2>
-      <p class="section-subtitle">Apoya al server y obtén beneficios exclusivos</p>
+      <p class="section-subtitle">Consigue logros y canjea por monedas del server (0.5 🪙 por logro)</p>
       <div class="kits-grid">
         <div class="kit-card">
           <div class="kit-tier">Bronce</div>
-          <div class="kit-price">$5 USD</div>
+          <div class="kit-price">5 🪙</div>
           <ul class="kit-perks">
             <li>Kit inicial especial</li>
             <li>Tag coloreado en el chat</li>
             <li>Acceso a /fly en spawn</li>
           </ul>
-          <a href="#" class="btn btn-kit">Comprar</a>
+          <a href="#" class="btn btn-kit">Canjear</a>
         </div>
         <div class="kit-card featured">
           <div class="kit-badge">MÁS POPULAR</div>
           <div class="kit-tier">Plata</div>
-          <div class="kit-price">$10 USD</div>
+          <div class="kit-price">10 🪙</div>
           <ul class="kit-perks">
             <li>Todo lo de Bronce</li>
             <li>Set de herramientas encantadas</li>
             <li>Home adicional (3 total)</li>
             <li>Acceso a /enderchest</li>
           </ul>
-          <a href="#" class="btn btn-kit">Comprar</a>
+          <a href="#" class="btn btn-kit">Canjear</a>
         </div>
         <div class="kit-card">
           <div class="kit-tier">Oro</div>
-          <div class="kit-price">$20 USD</div>
+          <div class="kit-price">20 🪙</div>
           <ul class="kit-perks">
             <li>Todo lo de Plata</li>
             <li>Set de armadura de diamante</li>
@@ -120,33 +120,33 @@
             <li>Acceso a /nick</li>
             <li>Rol exclusivo en Discord</li>
           </ul>
-          <a href="#" class="btn btn-kit">Comprar</a>
+          <a href="#" class="btn btn-kit">Canjear</a>
         </div>
       </div>
     </section>
 
     <section id="members" class="section">
-      <h2>Miembros</h2>
+      <h2>Equipo chanchos MC studios</h2>
       <div class="members-grid">
         <div class="member">
-          <div class="member-avatar" style="background: #ff6b6b">A</div>
+          <div class="member-avatar" style="background: #f0c040">E</div>
+          <span>Eliezer</span>
+          <span class="member-role">Creador</span>
+        </div>
+        <div class="member">
+          <div class="member-avatar" style="background: #f0c040">M</div>
+          <span>Manchitas</span>
+          <span class="member-role">Creador</span>
+        </div>
+        <div class="member">
+          <div class="member-avatar" style="background: #4ecdc4">A</div>
           <span>Adriyache32</span>
-          <span class="member-role">Dueño</span>
+          <span class="member-role">Moderador</span>
         </div>
         <div class="member">
-          <div class="member-avatar" style="background: #4ecdc4">?</div>
-          <span>Amigo 1</span>
-          <span class="member-role">Admin</span>
-        </div>
-        <div class="member">
-          <div class="member-avatar" style="background: #45b7d1">?</div>
-          <span>Amigo 2</span>
-          <span class="member-role">Miembro</span>
-        </div>
-        <div class="member">
-          <div class="member-avatar" style="background: #f9ca24">?</div>
-          <span>Amigo 3</span>
-          <span class="member-role">Miembro</span>
+          <div class="member-avatar" style="background: #4ecdc4">M</div>
+          <span>Mellado</span>
+          <span class="member-role">Moderador</span>
         </div>
       </div>
     </section>
@@ -171,7 +171,7 @@
           </div>
           <div id="login-input-area" class="terminal-input-area hidden">
             <div class="line"><span class="prompt">└─$</span> <span class="highlight">Autenticación requerida</span></div>
-            <div class="line" style="color:#666;font-size:0.8rem">[SISTEMA] Se detectó un nuevo dispositivo. Para vincular esta PC como tu estación de creador, ingresa tu token de GitHub.</div>
+            <div class="line" style="color:#666;font-size:0.8rem">[SISTEMA] Nuevo dispositivo detectado. Ingresa tu token de GitHub para vincular esta PC al equipo de desarrollo.</div>
             <div class="line" style="margin-top:1rem"><span class="prompt">token ></span> <input type="password" id="token-input" class="terminal-input" placeholder="ghp_..." autocomplete="off" spellcheck="false"></div>
             <div class="line" style="margin-top:0.5rem">
               <button class="btn btn-login" onclick="loginCreator()">[VINCULAR]</button>
@@ -185,9 +185,9 @@
             </div>
           </div>
           <div id="pc-detected" class="terminal-pc-detected hidden">
-            <div class="line"><span class="prompt">└─$</span> <span class="highlight-green">✔ PC reconozida</span></div>
+            <div class="line"><span class="prompt">└─$</span> <span class="highlight-green">✔ PC reconocida</span></div>
             <div class="line" style="margin-top:0.5rem"><span class="prompt">└─$</span> <span id="pc-info" class="cmd"></span></div>
-            <div class="line" style="margin-top:0.5rem"><span class="prompt">└─$</span> <span class="highlight">Acceso concedido. Bienvenido, Creador.</span></div>
+            <div class="line" style="margin-top:0.5rem"><span class="prompt">└─$</span> <span class="highlight">Acceso concedido. Bienvenido al equipo, <span id="pc-username"></span>.</span></div>
             <div class="line" style="margin-top:0.5rem"><span class="prompt">└─$</span> <span class="cmd">Cargando panel de control...</span></div>
           </div>
         </div>

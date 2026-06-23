@@ -128,6 +128,12 @@ h1 {
   margin-bottom: 2rem;
 }
 
+.byline {
+  font-size: 0.85rem;
+  color: #444;
+  font-family: 'JetBrains Mono', monospace;
+}
+
 .ip-box {
   display: flex;
   align-items: center;
