@@ -1574,10 +1574,12 @@ function migrateKits() {
       'esmeralda': ['🪖 Armadura: Casco de esmeralda, Peto de esmeralda, Pantalones de esmeralda, Botas de esmeralda', '⛏️ Herramientas: Pico de esmeralda (Fortuna V), Hacha de esmeralda (Eficiencia V), Espada de esmeralda (Filo V), Pala de esmeralda (Eficiencia V)', '🍞 Comida: 64 filetes de res, 32 pasteles de calabaza, 16 manzanas doradas', '📦 Items: 64 antorchas, 1 Cama verde, 1 Cofre de ender, 16 Obsidiana, 5 Perlas de ender, 1 Huevo de dragón'],
       'netherite': ['🪖 Armadura: Casco de netherite, Peto de netherite, Pantalones de netherite, Botas de netherite', '⛏️ Herramientas: Pico de netherite (Fortuna V), Hacha de netherite (Eficiencia V), Espada de netherite (Filo V), Pala de netherite (Eficiencia V)', '🍞 Comida: 64 filetes de res, 32 pasteles de calabaza, 32 manzanas doradas', '📦 Items: 64 antorchas, 1 Cama negra, 1 Cofre de ender, 32 Obsidiana, 10 Perlas de ender, 1 Huevo de dragón, 1 Totem de inmortalidad'],
     };
+    const priceMap = { 'cobre': 0 };
     const defaultPerks = ['🪖 Armadura: ...', '⛏️ Herramientas: ...', '🍞 Comida: ...', '📦 Items: ...'];
     kits.forEach(k => {
       const key = k.name.toLowerCase().trim();
       k.perks = perkMap[key] || defaultPerks;
+      if (priceMap[key] !== undefined) k.price = priceMap[key];
     });
     sd._kitVer = 1;
     changed = true;
