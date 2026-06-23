@@ -1564,13 +1564,20 @@ function migrateKits() {
   let changed = false;
   const ver = sd._kitVer || 0;
   if (ver < 1) {
+    const perkMap = {
+      'cobre': ['🪖 Armadura: Casco de cobre, Peto de cobre, Pantalones de cobre, Botas de cobre', '⛏️ Herramientas: Pico de cobre, Hacha de cobre, Espada de cobre, Pala de cobre, Azada de cobre', '🍞 Comida: 10 panes, 5 manzanas', '📦 Items: 16 antorchas, 1 Cama marrón', '🏷️ Tag coloreado en el chat'],
+      'plata': ['🪖 Armadura: Casco de plata, Peto de plata, Pantalones de plata, Botas de plata', '⛏️ Herramientas: Pico de plata (Fortuna I), Hacha de plata (Eficiencia I), Espada de plata (Filo I), Pala de plata (Eficiencia I)', '🍞 Comida: 15 chuletas de cerdo cocidas', '📦 Items: 24 antorchas, 1 Cama gris, 1 Mesa de trabajo', '🔮 Acceso a /enderchest'],
+      'bronce': ['🪖 Armadura: Casco de bronce, Peto de bronce, Pantalones de bronce, Botas de bronce', '⛏️ Herramientas: Pico de bronce (Fortuna II), Hacha de bronce (Eficiencia II), Espada de bronce (Filo II), Pala de bronce (Eficiencia II)', '🍞 Comida: 20 filetes de res', '📦 Items: 32 antorchas, 1 Cama naranja, 1 Mesa de encantamientos, 3 Libros', '🏠 Home adicional (3 total)'],
+      'oro': ['🪖 Armadura: Casco de oro, Peto de oro, Pantalones de oro, Botas de oro', '⛏️ Herramientas: Pico de oro (Fortuna III), Hacha de oro (Eficiencia III), Espada de oro (Filo III), Pala de oro (Eficiencia III)', '🍞 Comida: 30 filetes de res, 10 pasteles de calabaza', '📦 Items: 48 antorchas, 1 Cama amarilla, 1 Yunque, 5 Libros encantados', '💰 5 monedas del server'],
+      'diamante': ['🪖 Armadura: Casco de diamante, Peto de diamante, Pantalones de diamante, Botas de diamante', '⛏️ Herramientas: Pico de diamante (Fortuna III), Hacha de diamante (Eficiencia IV), Espada de diamante (Filo IV), Pala de diamante (Eficiencia IV)', '🍞 Comida: 40 filetes de res, 20 pasteles de calabaza', '📦 Items: 64 antorchas, 1 Cama celeste, 1 Cofre de ender, 5 Obsidiana, 1 Perla de ender'],
+      'rubi': ['🪖 Armadura: Casco de rubí, Peto de rubí, Pantalones de rubí, Botas de rubí', '⛏️ Herramientas: Pico de rubí (Fortuna IV), Hacha de rubí (Eficiencia IV), Espada de rubí (Filo V), Pala de rubí (Eficiencia IV)', '🍞 Comida: 50 filetes de res, 20 pasteles de calabaza, 10 manzanas doradas', '📦 Items: 64 antorchas, 1 Cama roja, 1 Cofre de ender, 10 Obsidiana, 3 Perlas de ender'],
+      'esmeralda': ['🪖 Armadura: Casco de esmeralda, Peto de esmeralda, Pantalones de esmeralda, Botas de esmeralda', '⛏️ Herramientas: Pico de esmeralda (Fortuna V), Hacha de esmeralda (Eficiencia V), Espada de esmeralda (Filo V), Pala de esmeralda (Eficiencia V)', '🍞 Comida: 64 filetes de res, 32 pasteles de calabaza, 16 manzanas doradas', '📦 Items: 64 antorchas, 1 Cama verde, 1 Cofre de ender, 16 Obsidiana, 5 Perlas de ender, 1 Huevo de dragón'],
+      'netherite': ['🪖 Armadura: Casco de netherite, Peto de netherite, Pantalones de netherite, Botas de netherite', '⛏️ Herramientas: Pico de netherite (Fortuna V), Hacha de netherite (Eficiencia V), Espada de netherite (Filo V), Pala de netherite (Eficiencia V)', '🍞 Comida: 64 filetes de res, 32 pasteles de calabaza, 32 manzanas doradas', '📦 Items: 64 antorchas, 1 Cama negra, 1 Cofre de ender, 32 Obsidiana, 10 Perlas de ender, 1 Huevo de dragón, 1 Totem de inmortalidad'],
+    };
+    const defaultPerks = ['🪖 Armadura: ...', '⛏️ Herramientas: ...', '🍞 Comida: ...', '📦 Items: ...'];
     kits.forEach(k => {
-      k.perks = [
-        '🪖 Armadura: ...',
-        '⛏️ Herramientas: ...',
-        '🍞 Comida: ...',
-        '📦 Items: ...',
-      ];
+      const key = k.name.toLowerCase().trim();
+      k.perks = perkMap[key] || defaultPerks;
     });
     sd._kitVer = 1;
     changed = true;
