@@ -938,6 +938,21 @@ function showCreatorTab(tab) {
     }
 
     case 'staff-forms': {
+      const modLabels = {
+        'mod-nick': 'Nick Minecraft', 'mod-email': 'Email', 'mod-edad': 'Edad',
+        'mod-tiempo': 'Tiempo en el server', 'mod-porque': 'Motivos',
+        'mod-experiencia': 'Experiencia previa', 'mod-horas': 'Horas/día',
+        'mod-idiomas': 'Idiomas', 'mod-mic': '¿Micrófono?', 'mod-grief': '¿Cómo resolver grief?'
+      };
+      const fdLabels = {
+        'fd-nick': 'Nick Minecraft', 'fd-email': 'Email', 'fd-edad': 'Edad',
+        'fd-pais': 'País / Zona horaria', 'fd-tiempo': 'Tiempo en el server',
+        'fd-porque': 'Motivos', 'fd-liderazgo': 'Experiencia liderando',
+        'fd-aporte': '¿Qué aportaría?', 'fd-costos': '¿Ayudar con costos?',
+        'fd-plugins': 'Experiencia plugins', 'fd-horas': 'Horas semanales',
+        'fd-linkedin': 'LinkedIn / GitHub', 'fd-conflictos': '¿Cómo maneja conflictos?',
+        'fd-referencia': 'Referencia'
+      };
       const forms = JSON.parse(localStorage.getItem('nervalia_staff_forms')) || [];
       const pendingF = forms.filter(f => f.status === 'pending');
       const doneF = forms.filter(f => f.status !== 'pending');
@@ -946,17 +961,27 @@ function showCreatorTab(tab) {
         fhtml += '<div class="line" style="color:#666">No hay solicitudes de staff pendientes.</div>';
       } else {
         pendingF.forEach((f, i) => {
+          const labels = f.type === 'moderador' ? modLabels : fdLabels;
           const label = f.type === 'moderador' ? '🛡️ Moderador' : '👑 Fundador';
+          const entries = Object.entries(f.data).map(([k, v]) =>
+            `<div style="display:flex;gap:0.5rem;padding:0.2rem 0;border-bottom:1px solid rgba(255,255,255,0.03)">
+              <span style="color:#666;min-width:130px;font-size:0.65rem">${labels[k] || k}:</span>
+              <span style="color:#c0c0d0;font-size:0.65rem">${v}</span>
+            </div>`
+          ).join('');
           fhtml += `
-            <div style="border:1px solid rgba(255,255,255,0.05);border-radius:6px;padding:0.5rem;margin-bottom:0.5rem;font-size:0.7rem">
-              <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem">
-                <span style="color:#f0c040;font-weight:600">${label}</span>
-                <span style="color:#888">${f.data['mod-nick'] || f.data['fd-nick'] || '?'}</span>
+            <div style="border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:0.75rem;margin-bottom:0.75rem;background:rgba(255,255,255,0.02)">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;padding-bottom:0.5rem;border-bottom:1px solid rgba(255,255,255,0.06)">
+                <div>
+                  <span style="color:#f0c040;font-weight:700;font-size:0.8rem">${label}</span>
+                  <span style="color:#888;font-size:0.7rem;margin-left:0.5rem">${f.data['mod-nick'] || f.data['fd-nick'] || '?'}</span>
+                </div>
+                <span style="color:#444;font-size:0.6rem">${new Date(f.timestamp).toLocaleString()}</span>
               </div>
-              <div style="color:#444;max-height:100px;overflow-y:auto">${Object.entries(f.data).map(([k,v]) => `<span style="color:#666">${k}:</span> ${v}<br>`).join('')}</div>
-              <div style="margin-top:0.3rem;display:flex;gap:0.4rem">
-                <button class="btn-editor save" onclick="approveStaffForm(${i})" style="font-size:0.65rem;padding:0.2rem 0.5rem">✓ Aprobar</button>
-                <button class="btn-editor danger" onclick="rejectStaffForm(${i})" style="font-size:0.65rem;padding:0.2rem 0.5rem">✕ Rechazar</button>
+              ${entries}
+              <div style="margin-top:0.5rem;display:flex;gap:0.4rem;padding-top:0.5rem;border-top:1px solid rgba(255,255,255,0.06)">
+                <button class="btn-editor save" onclick="approveStaffForm(${i})" style="font-size:0.7rem;padding:0.3rem 0.8rem">✓ Aprobar</button>
+                <button class="btn-editor danger" onclick="rejectStaffForm(${i})" style="font-size:0.7rem;padding:0.3rem 0.8rem">✕ Rechazar</button>
               </div>
             </div>`;
         });
@@ -964,7 +989,12 @@ function showCreatorTab(tab) {
       if (doneF.length > 0) {
         fhtml += '<div class="line" style="color:#666;font-size:0.75rem;margin:1rem 0 0.5rem">Historial</div>';
         fhtml += doneF.map(f => `
-          <div style="font-size:0.6rem;color:#555;padding:0.2rem 0">${f.type === 'moderador' ? '🛡️' : '👑'} ${f.data['mod-nick'] || f.data['fd-nick'] || '?'} — ${f.status === 'approved' ? '✅' : '❌'}</div>
+          <div style="font-size:0.65rem;color:#555;padding:0.3rem 0;display:flex;gap:0.5rem;border-bottom:1px solid rgba(255,255,255,0.02)">
+            <span>${f.type === 'moderador' ? '🛡️' : '👑'}</span>
+            <span style="color:#888;flex:1">${f.data['mod-nick'] || f.data['fd-nick'] || '?'}</span>
+            <span style="color:#444">${new Date(f.timestamp).toLocaleString()}</span>
+            <span style="color:${f.status === 'approved' ? '#43b581' : '#ed4245'}">${f.status === 'approved' ? '✅ Aprobado' : '❌ Rechazado'}</span>
+          </div>
         `).join('');
       }
       content.innerHTML = `
