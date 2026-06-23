@@ -204,6 +204,37 @@ h1 {
   background: #ed4245;
 }
 
+.server-mode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  font-size: 0.85rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.mode-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.mode-dot.activo { background: #43b581; box-shadow: 0 0 8px rgba(67,181,129,0.6); }
+.mode-dot.en-construccion { background: #f0c040; box-shadow: 0 0 8px rgba(240,192,64,0.6); }
+.mode-dot.trabajando { background: #7289da; box-shadow: 0 0 8px rgba(114,137,254,0.6); }
+.mode-dot.cerrado { background: #ed4245; box-shadow: 0 0 8px rgba(237,66,69,0.6); }
+.mode-dot.apagado { background: #555; box-shadow: 0 0 8px rgba(85,85,85,0.6); }
+.mode-dot.mantenimiento { background: #f0a040; box-shadow: 0 0 8px rgba(240,160,64,0.6); }
+
+.mode-text {
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.75rem;
+}
+
 .hero-buttons {
   display: flex;
   gap: 1rem;

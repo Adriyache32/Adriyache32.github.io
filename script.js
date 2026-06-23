@@ -418,6 +418,13 @@ function showCreatorTab(tab) {
           <div class="editor-field"><span class="label">Plugins</span><input class="editor-input" id="e-plugins" value="${sd.plugins || 'VoiceChat, CoreProtect, WorldEdit'}"></div>
           <div class="editor-field"><span class="label">Discord</span><input class="editor-input" id="e-discord" value="${sd.discord || 'https://discord.gg/nervalia'}"></div>
           <div class="editor-field"><span class="label">Icono URL</span><input class="editor-input" id="e-icon" value="${sd.icon || 'https://api.mcstatus.io/v2/icon/nervalia.mc'}"></div>
+          <div class="editor-field"><span class="label">Estado</span>
+            <select class="editor-input" id="e-mode-status" style="flex:0.4">
+              ${['Activo','En construcción','Trabajando','Mantenimiento','Cerrado','Apagado'].map(m =>
+                `<option value="${m}"${sd.modeStatus === m ? ' selected' : ''}>${m}</option>`
+              ).join('')}
+            </select>
+          </div>
           <div class="editor-field" style="align-items:flex-start;padding-top:0.5rem">
             <span class="label">Descripción 1</span>
             <textarea class="editor-textarea" id="e-desc1">${sd.desc1 || 'Server survival privado para amigos y conocidos.'}</textarea>
@@ -722,6 +729,7 @@ function saveServerData() {
   sd.plugins = document.getElementById('e-plugins')?.value;
   sd.discord = document.getElementById('e-discord')?.value;
   sd.icon = document.getElementById('e-icon')?.value;
+  sd.modeStatus = document.getElementById('e-mode-status')?.value;
   sd.desc1 = document.getElementById('e-desc1')?.value;
   sd.desc2 = document.getElementById('e-desc2')?.value;
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
@@ -745,6 +753,17 @@ function applyServerData() {
   }
   const heroImg = document.querySelector('.server-icon img');
   if (heroImg && sd.icon) heroImg.src = sd.icon;
+
+  const modeDot = document.getElementById('mode-dot');
+  const modeText = document.getElementById('mode-text');
+  const modeEl = document.getElementById('server-mode');
+  if (modeDot && modeText && modeEl && sd.modeStatus) {
+    modeDot.className = 'mode-dot ' + sd.modeStatus.toLowerCase().replace(/\s+/g, '-');
+    modeText.textContent = sd.modeStatus;
+    modeEl.style.display = 'flex';
+  } else if (modeEl) {
+    modeEl.style.display = 'none';
+  }
 
   const d1 = document.getElementById('s-desc1');
   const d2 = document.getElementById('s-desc2');
