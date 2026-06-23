@@ -6,7 +6,7 @@
   <title>Nervalia - Minecraft Server</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="bg"></div>
@@ -152,65 +152,113 @@
     </section>
 
     <section id="creator" class="section creator-section">
-      <h2>🔐 Modo Creador</h2>
-      <p class="section-subtitle">Panel privado del creador del server</p>
+      <h2><span class="glitch" data-text="MODO CREADOR">MODO CREADOR</span></h2>
+      <p class="section-subtitle">/// ACCESO RESTRINGIDO ///</p>
 
       <div id="creator-login" class="creator-login">
-        <div class="login-box">
-          <div class="login-icon">🔑</div>
-          <h3>Acceso Restringido</h3>
-          <p>Ingresa tu token personal de GitHub para acceder</p>
-          <div class="login-input-group">
-            <input type="password" id="token-input" placeholder="ghp_..." autocomplete="off">
-            <button class="btn btn-login" onclick="loginCreator()">Ingresar</button>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">nervalia@creator:~</span>
           </div>
-          <p id="login-error" class="login-error"></p>
-          <p class="login-hint">Tu token solo se usa para verificar tu identidad vía la API de GitHub. No se almacena.</p>
+          <div class="terminal-body" id="terminal-body">
+            <div class="line"><span class="prompt">┌──(nervalia㉿creator)-[~/panel]</span></div>
+            <div class="line"><span class="prompt">└─$</span> <span class="cmd" id="typing-line"></span><span class="cursor">█</span></div>
+          </div>
+          <div id="login-input-area" class="terminal-input-area hidden">
+            <div class="line"><span class="prompt">└─$</span> <span class="highlight">Autenticación requerida</span></div>
+            <div class="line" style="color:#666;font-size:0.8rem">[SISTEMA] Se detectó un nuevo dispositivo. Para vincular esta PC como tu estación de creador, ingresa tu token de GitHub.</div>
+            <div class="line" style="margin-top:1rem"><span class="prompt">token ></span> <input type="password" id="token-input" class="terminal-input" placeholder="ghp_..." autocomplete="off" spellcheck="false"></div>
+            <div class="line" style="margin-top:0.5rem">
+              <button class="btn btn-login" onclick="loginCreator()">[VINCULAR]</button>
+              <span id="login-error" class="login-error"></span>
+            </div>
+            <div class="line" style="margin-top:1rem;color:#444;font-size:0.75rem;border-top:1px solid rgba(255,255,255,0.05);padding-top:0.75rem">
+              ───────────────────────────────────────────────<br>
+              El token se guarda LOCALMENTE en tu navegador.<br>
+              Solo se usa para verificar tu identidad vía API de GitHub.<br>
+              Una vez vinculada esta PC, no volverás a necesitarlo.
+            </div>
+          </div>
+          <div id="pc-detected" class="terminal-pc-detected hidden">
+            <div class="line"><span class="prompt">└─$</span> <span class="highlight-green">✔ PC reconozida</span></div>
+            <div class="line" style="margin-top:0.5rem"><span class="prompt">└─$</span> <span id="pc-info" class="cmd"></span></div>
+            <div class="line" style="margin-top:0.5rem"><span class="prompt">└─$</span> <span class="highlight">Acceso concedido. Bienvenido, Creador.</span></div>
+            <div class="line" style="margin-top:0.5rem"><span class="prompt">└─$</span> <span class="cmd">Cargando panel de control...</span></div>
+          </div>
         </div>
       </div>
 
       <div id="creator-panel" class="creator-panel hidden">
-        <div class="creator-header">
-          <h3>Bienvenido, <span id="creator-name">Creador</span></h3>
-          <button class="btn btn-logout" onclick="logoutCreator()">Cerrar sesión</button>
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">nervalia@creator:~/panel</span>
+          </div>
+          <div class="terminal-body">
+            <div class="line"><span class="prompt">┌──(nervalia㉿creator)-[~/panel]</span></div>
+            <div class="line"><span class="prompt">└─$</span> <span class="highlight">Bienvenido, <span id="creator-name">Creador</span></span> <span class="cmd">| PC vinculada ✔</span></div>
+            <div class="line" style="margin-top:0.5rem"><span class="prompt">└─$</span> <span class="cmd">Selecciona un módulo:</span></div>
+          </div>
         </div>
 
         <div class="creator-dashboard">
           <div class="dashboard-card" onclick="showCreatorTab('server-control')">
             <div class="card-icon">🖥️</div>
-            <h4>Control del Server</h4>
-            <p>Iniciar, detener y monitorear</p>
+            <h4>Control</h4>
+            <p>Iniciar / Detener server</p>
           </div>
           <div class="dashboard-card" onclick="showCreatorTab('players')">
             <div class="card-icon">👥</div>
             <h4>Jugadores</h4>
-            <p>Gestionar whitelist y bans</p>
+            <p>Whitelist y bans</p>
           </div>
           <div class="dashboard-card" onclick="showCreatorTab('backups')">
             <div class="card-icon">💾</div>
             <h4>Backups</h4>
-            <p>Crear y restaurar backups</p>
+            <p>Copias de seguridad</p>
           </div>
           <div class="dashboard-card" onclick="showCreatorTab('kits-admin')">
             <div class="card-icon">📦</div>
             <h4>Kits</h4>
-            <p>Administrar kits de paga</p>
+            <p>Gestionar kits de paga</p>
           </div>
           <div class="dashboard-card" onclick="showCreatorTab('logs')">
             <div class="card-icon">📋</div>
             <h4>Logs</h4>
-            <p>Actividad del server</p>
+            <p>Actividad reciente</p>
           </div>
           <div class="dashboard-card" onclick="showCreatorTab('settings')">
             <div class="card-icon">⚙️</div>
-            <h4>Configuración</h4>
-            <p>Ajustes del servidor</p>
+            <h4>Config</h4>
+            <p>Ajustes del server</p>
+          </div>
+          <div class="dashboard-card" onclick="logoutCreator()">
+            <div class="card-icon">🚪</div>
+            <h4>Salir</h4>
+            <p>Desvincular esta PC</p>
           </div>
         </div>
 
-        <div id="creator-tab-content" class="creator-tab-content">
-          <div class="tab-placeholder">
-            <p>Selecciona una opción del panel</p>
+        <div class="terminal tab-terminal">
+          <div class="terminal-header">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">nervalia@creator:~/panel/modulo</span>
+          </div>
+          <div class="terminal-body" id="creator-tab-content">
+            <div class="tab-placeholder">
+              <div class="line"><span class="prompt">└─$</span> <span class="cmd">Esperando selección de módulo...</span></div>
+              <div class="line" style="margin-top:1rem;color:#444;font-size:0.75rem">
+                ───────────────────────────────────────────────<br>
+                Selecciona una opción del panel superior.
+              </div>
+            </div>
           </div>
         </div>
       </div>

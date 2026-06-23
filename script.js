@@ -1,6 +1,7 @@
 const SERVER_IP = 'nervalia.mc';
 const API_URL = `https://api.mcstatus.io/v2/status/java/${SERVER_IP}`;
 const CREATOR_USER = 'Adriyache32';
+const PC_STORAGE_KEY = 'nervalia_pc_id';
 
 function toggleMenu() {
   document.getElementById('nav-menu').classList.toggle('open');
@@ -46,16 +47,160 @@ function copyIP() {
   });
 }
 
+/* ───── PC FINGERPRINT ───── */
+function getPCFingerprint() {
+  const raw = [
+    navigator.userAgent,
+    screen.width,
+    screen.height,
+    screen.colorDepth,
+    Intl.DateTimeFormat().resolvedOptions().timeZone,
+    navigator.language
+  ].join('||');
+  let hash = 0;
+  for (let i = 0; i < raw.length; i++) {
+    const chr = raw.charCodeAt(i);
+    hash = ((hash << 5) - hash) + chr;
+    hash |= 0;
+  }
+  return 'PC-' + Math.abs(hash).toString(16).toUpperCase();
+}
+
+/* ───── TERMINAL TYPEWRITER ───── */
+const typerTexts = [
+  'echo "verificando terminal..."',
+  'whoami',
+  'hostnamectl',
+  'systemctl status nervalia-creator',
+  'scan --fingerprint',
+  '[SISTEMA] Detectando hardware...',
+  '[SISTEMA] Comparando huella digital...',
+  'echo "CONTRASEÑA?"',
+  'echo "CONTRASEÑA?"',
+  'cat /etc/nervalia/creador.key',
+  '[SISTEMA] Señal recibida ✔',
+  '[SISTEMA] Amplificando...',
+];
+
+let typerIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+let typerFinished = false;
+
+function typeEffect() {
+  const el = document.getElementById('typing-line');
+  if (!el) return;
+
+  const currentText = typerTexts[typerIndex];
+
+  if (!isDeleting) {
+    el.textContent = currentText.substring(0, charIndex + 1);
+    charIndex++;
+
+    if (charIndex === currentText.length) {
+      if (typerIndex === typerTexts.length - 1) {
+        typerFinished = true;
+        setTimeout(() => {
+          const cursor = document.querySelector('.cursor');
+          if (cursor) cursor.style.display = 'none';
+          showLoginOrDetect();
+        }, 600);
+        return;
+      }
+      isDeleting = true;
+      setTimeout(typeEffect, 800);
+      return;
+    }
+    setTimeout(typeEffect, 25 + Math.random() * 40);
+  } else {
+    el.textContent = currentText.substring(0, charIndex - 1);
+    charIndex--;
+
+    if (charIndex === 0) {
+      isDeleting = false;
+      typerIndex++;
+      setTimeout(typeEffect, 300);
+      return;
+    }
+    setTimeout(typeEffect, 15 + Math.random() * 20);
+  }
+}
+
+/* ───── PC DETECTION ───── */
+function showLoginOrDetect() {
+  const storedData = localStorage.getItem(PC_STORAGE_KEY);
+
+  if (storedData) {
+    try {
+      const data = JSON.parse(storedData);
+      const fp = getPCFingerprint();
+
+      if (data.fingerprint === fp && data.token) {
+        verifyExistingToken(data.token);
+        return;
+      }
+    } catch {}
+  }
+
+  showTokenInput();
+}
+
+async function verifyExistingToken(token) {
+  try {
+    const res = await fetch('https://api.github.com/user', {
+      headers: { 'Authorization': `token ${token}` }
+    });
+
+    if (!res.ok) {
+      localStorage.removeItem(PC_STORAGE_KEY);
+      showTokenInput();
+      return;
+    }
+
+    const user = await res.json();
+
+    if (user.login !== CREATOR_USER) {
+      localStorage.removeItem(PC_STORAGE_KEY);
+      showTokenInput();
+      return;
+    }
+
+    showPCDetected(user.login);
+  } catch {
+    showTokenInput();
+  }
+}
+
+function showTokenInput() {
+  document.getElementById('login-input-area').classList.remove('hidden');
+  document.getElementById('pc-detected').classList.add('hidden');
+  setTimeout(() => {
+    document.getElementById('token-input')?.focus();
+  }, 100);
+}
+
+function showPCDetected(username) {
+  document.getElementById('login-input-area').classList.add('hidden');
+  const pcDetected = document.getElementById('pc-detected');
+  pcDetected.classList.remove('hidden');
+  document.getElementById('pc-info').textContent = `PC: ${getPCFingerprint()} | user: ${username}`;
+
+  setTimeout(() => {
+    showCreatorPanel(username);
+  }, 2500);
+}
+
+/* ───── LOGIN ───── */
 async function loginCreator() {
   const token = document.getElementById('token-input').value.trim();
   const errorEl = document.getElementById('login-error');
 
   if (!token) {
-    errorEl.textContent = 'Ingresa tu token de GitHub';
+    errorEl.textContent = '[ERROR] Token requerido';
     return;
   }
 
-  errorEl.textContent = 'Verificando...';
+  errorEl.textContent = '[SISTEMA] Verificando...';
 
   try {
     const res = await fetch('https://api.github.com/user', {
@@ -63,144 +208,162 @@ async function loginCreator() {
     });
 
     if (!res.ok) {
-      errorEl.textContent = 'Token inválido o expirado';
+      errorEl.textContent = '[ERROR] Token inválido o expirado';
       return;
     }
 
     const user = await res.json();
 
     if (user.login !== CREATOR_USER) {
-      errorEl.textContent = 'Este token no pertenece al creador';
+      errorEl.textContent = '[ERROR] Este token no pertenece al creador';
       return;
     }
 
-    sessionStorage.setItem('creator_token', token);
-    sessionStorage.setItem('creator_user', user.login);
-    showCreatorPanel(user);
+    const fp = getPCFingerprint();
+    localStorage.setItem(PC_STORAGE_KEY, JSON.stringify({
+      token: token,
+      fingerprint: fp,
+      pairedAt: new Date().toISOString()
+    }));
+
+    showPCDetected(user.login);
   } catch {
-    errorEl.textContent = 'Error de conexión';
+    errorEl.textContent = '[ERROR] Error de conexión';
   }
 }
 
-function showCreatorPanel(user) {
+function showCreatorPanel(username) {
   document.getElementById('creator-login').classList.add('hidden');
   document.getElementById('creator-panel').classList.remove('hidden');
-  document.getElementById('creator-name').textContent = user.login || CREATOR_USER;
+  document.getElementById('creator-name').textContent = username || CREATOR_USER;
 }
 
 function logoutCreator() {
-  sessionStorage.removeItem('creator_token');
-  sessionStorage.removeItem('creator_user');
+  localStorage.removeItem(PC_STORAGE_KEY);
   document.getElementById('creator-panel').classList.add('hidden');
   document.getElementById('creator-login').classList.remove('hidden');
+  document.getElementById('login-input-area').classList.add('hidden');
+  document.getElementById('pc-detected').classList.add('hidden');
   document.getElementById('token-input').value = '';
   document.getElementById('login-error').textContent = '';
+
+  typerFinished = false;
+  typerIndex = 0;
+  charIndex = 0;
+  isDeleting = false;
+
+  const el = document.getElementById('typing-line');
+  if (el) el.textContent = '';
+  const cursor = document.querySelector('.cursor');
+  if (cursor) cursor.style.display = 'inline-block';
+
+  setTimeout(typeEffect, 500);
 }
 
+/* ───── CREATOR TABS ───── */
 function showCreatorTab(tab) {
   const content = document.getElementById('creator-tab-content');
-  const token = sessionStorage.getItem('creator_token');
 
   const tabs = {
     'server-control': `
       <div class="tab-content">
-        <h4>🖥️ Control del Server</h4>
-        <div class="status-item"><span class="label">Estado</span><span class="value" id="ctrl-status">Cargando...</span></div>
-        <div class="status-item"><span class="label">IP</span><span class="value">${SERVER_IP}</span></div>
-        <div class="status-item"><span class="label">Versión</span><span class="value">1.20.4 - 1.21</span></div>
-        <div class="status-item"><span class="label">Jugadores</span><span class="value" id="ctrl-players">-</span></div>
-        <div style="margin-top: 1.5rem; display:flex; gap:1rem">
-          <button class="btn btn-discord" onclick="alert('Comando enviado al server')">Reiniciar</button>
-          <button class="btn btn-kit" onclick="alert('Comando enviado al server')">Detener</button>
+        <div class="line"><span class="prompt">└─$</span> <span class="highlight">Control del Server</span></div>
+        <div class="status-line"><span class="label">Estado</span><span class="value" id="ctrl-status">Consultando...</span></div>
+        <div class="status-line"><span class="label">IP</span><span class="value">${SERVER_IP}</span></div>
+        <div class="status-line"><span class="label">Versión</span><span class="value">1.20.4 - 1.21</span></div>
+        <div class="status-line"><span class="label">Jugadores</span><span class="value" id="ctrl-players">-</span></div>
+        <div class="tab-actions">
+          <button class="btn-term primary" onclick="alert('[SISTEMA] Comando reiniciar enviado')">[ REINICIAR ]</button>
+          <button class="btn-term danger" onclick="alert('[SISTEMA] Comando detener enviado')">[ DETENER ]</button>
         </div>
       </div>`,
     'players': `
       <div class="tab-content">
-        <h4>👥 Gestión de Jugadores</h4>
-        <p>Lista de jugadores con whitelist y estado actual.</p>
-        <div class="status-item"><span class="label">Jugadores online</span><span class="value" id="p-online">-</span></div>
-        <div class="status-item"><span class="label">Whitelist</span><span class="value">Activada</span></div>
-        <div class="status-item"><span class="label">Baneados</span><span class="value">0</span></div>
-        <div style="margin-top: 1.5rem">
-          <button class="btn btn-discord" onclick="alert('Panel de whitelist - abre consola')">Gestionar Whitelist</button>
+        <div class="line"><span class="prompt">└─$</span> <span class="highlight">Gestión de Jugadores</span></div>
+        <div class="status-line"><span class="label">Online</span><span class="value" id="p-online">-</span></div>
+        <div class="status-line"><span class="label">Whitelist</span><span class="value">Activada</span></div>
+        <div class="status-line"><span class="label">Baneados</span><span class="value">0</span></div>
+        <div class="tab-actions">
+          <button class="btn-term primary" onclick="alert('[SISTEMA] Abriendo gestión de whitelist...')">[ GESTIONAR WHITELIST ]</button>
         </div>
       </div>`,
     'backups': `
       <div class="tab-content">
-        <h4>💾 Backups</h4>
-        <p>Gestiona las copias de seguridad del mundo.</p>
-        <div class="status-item"><span class="label">Último backup</span><span class="value">Hoy 03:00 AM</span></div>
-        <div class="status-item"><span class="label">Tamaño</span><span class="value">2.4 GB</span></div>
-        <div class="status-item"><span class="label">Backups totales</span><span class="value">14</span></div>
-        <div style="margin-top: 1.5rem; display:flex; gap:1rem">
-          <button class="btn btn-discord" onclick="alert('Creando backup...')">Crear Backup</button>
-          <button class="btn btn-kit" onclick="alert('Mostrando lista de backups...')">Restaurar</button>
+        <div class="line"><span class="prompt">└─$</span> <span class="highlight">Backups</span></div>
+        <div class="status-line"><span class="label">Último backup</span><span class="value">Hoy 03:00 AM</span></div>
+        <div class="status-line"><span class="label">Tamaño</span><span class="value">2.4 GB</span></div>
+        <div class="status-line"><span class="label">Totales</span><span class="value">14 backups</span></div>
+        <div class="tab-actions">
+          <button class="btn-term primary" onclick="alert('[SISTEMA] Creando backup...')">[ CREAR BACKUP ]</button>
+          <button class="btn-term" onclick="alert('[SISTEMA] Listando backups...')">[ RESTAURAR ]</button>
         </div>
       </div>`,
     'kits-admin': `
       <div class="tab-content">
-        <h4>📦 Administrar Kits</h4>
-        <p>Configura los kits de paga del servidor.</p>
-        <div class="status-item"><span class="label">Bronce</span><span class="value">$5 USD — Activo</span></div>
-        <div class="status-item"><span class="label">Plata</span><span class="value">$10 USD — Activo</span></div>
-        <div class="status-item"><span class="label">Oro</span><span class="value">$20 USD — Activo</span></div>
-        <div style="margin-top: 1.5rem">
-          <button class="btn btn-discord" onclick="alert('Editor de kits abierto')">Editar Kits</button>
+        <div class="line"><span class="prompt">└─$</span> <span class="highlight">Kits de Paga</span></div>
+        <div class="status-line"><span class="label">Bronce</span><span class="value">$5 USD — Activo</span></div>
+        <div class="status-line"><span class="label">Plata</span><span class="value">$10 USD — Activo</span></div>
+        <div class="status-line"><span class="label">Oro</span><span class="value">$20 USD — Activo</span></div>
+        <div class="tab-actions">
+          <button class="btn-term primary" onclick="alert('[SISTEMA] Editor de kits abierto')">[ EDITAR KITS ]</button>
         </div>
       </div>`,
     'logs': `
       <div class="tab-content">
-        <h4>📋 Logs del Server</h4>
-        <p>Actividad reciente del servidor.</p>
-        <div class="status-item"><span class="label">10:23</span><span class="value" style="color:#888">Jugador1 se unió</span></div>
-        <div class="status-item"><span class="label">10:15</span><span class="value" style="color:#888">Auto-backup completado</span></div>
-        <div class="status-item"><span class="label">09:50</span><span class="value" style="color:#888">Jugador2 salió</span></div>
-        <div class="status-item"><span class="label">09:30</span><span class="value" style="color:#888">Server iniciado</span></div>
-        <div style="margin-top: 1.5rem">
-          <button class="btn btn-kit" onclick="alert('Logs completos en consola')">Ver todos</button>
+        <div class="line"><span class="prompt">└─$</span> <span class="highlight">Logs del Server</span></div>
+        <div style="margin-top:0.5rem">
+          <div class="status-line"><span class="label" style="color:#666">10:23</span><span class="value" style="color:#666">Jugador1 se unió</span></div>
+          <div class="status-line"><span class="label" style="color:#666">10:15</span><span class="value" style="color:#666">Auto-backup completado</span></div>
+          <div class="status-line"><span class="label" style="color:#666">09:50</span><span class="value" style="color:#666">Jugador2 salió</span></div>
+          <div class="status-line"><span class="label" style="color:#666">09:30</span><span class="value" style="color:#666">Server iniciado</span></div>
+        </div>
+        <div class="tab-actions">
+          <button class="btn-term" onclick="alert('[SISTEMA] Mostrando logs completos...')">[ VER TODOS ]</button>
         </div>
       </div>`,
     'settings': `
       <div class="tab-content">
-        <h4>⚙️ Configuración</h4>
-        <p>Ajustes generales del servidor.</p>
-        <div class="status-item"><span class="label">Dificultad</span><span class="value">Hard</span></div>
-        <div class="status-item"><span class="label">PVP</span><span class="value">Activado</span></div>
-        <div class="status-item"><span class="label">Whitelist</span><span class="value">Activada</span></div>
-        <div class="status-item"><span class="label">Mensaje de bienvenida</span><span class="value">¡Bienvenido a Nervalia!</span></div>
-        <div style="margin-top: 1.5rem">
-          <button class="btn btn-discord" onclick="alert('Abrir configuración avanzada...')">Configuración Avanzada</button>
+        <div class="line"><span class="prompt">└─$</span> <span class="highlight">Configuración</span></div>
+        <div class="status-line"><span class="label">Dificultad</span><span class="value">Hard</span></div>
+        <div class="status-line"><span class="label">PVP</span><span class="value">Activado</span></div>
+        <div class="status-line"><span class="label">Whitelist</span><span class="value">Activada</span></div>
+        <div class="status-line"><span class="label">Bienvenida</span><span class="value">¡Bienvenido a Nervalia!</span></div>
+        <div class="tab-actions">
+          <button class="btn-term primary" onclick="alert('[SISTEMA] Abriendo configuración avanzada...')">[ CONFIGURACIÓN AVANZADA ]</button>
         </div>
       </div>`
   };
 
-  content.innerHTML = tabs[tab] || '<div class="tab-placeholder"><p>Sección no encontrada</p></div>';
+  content.innerHTML = tabs[tab] || '<div class="tab-placeholder"><div class="line"><span class="prompt">└─$</span> <span class="cmd">Módulo no encontrado</span></div></div>';
 
   if (tab === 'server-control' || tab === 'players') {
     fetch(API_URL).then(r => r.json()).then(data => {
       if (data.online) {
-        const ctrlStatus = document.getElementById('ctrl-status');
-        const ctrlPlayers = document.getElementById('ctrl-players');
-        const pOnline = document.getElementById('p-online');
-        if (ctrlStatus) ctrlStatus.textContent = 'Online';
-        if (ctrlPlayers) ctrlPlayers.textContent = `${data.players.online}/${data.players.max}`;
-        if (pOnline) pOnline.textContent = `${data.players.online}/${data.players.max}`;
+        const el1 = document.getElementById('ctrl-status');
+        const el2 = document.getElementById('ctrl-players');
+        const el3 = document.getElementById('p-online');
+        if (el1) el1.textContent = 'Online';
+        if (el2) el2.textContent = `${data.players.online}/${data.players.max}`;
+        if (el3) el3.textContent = `${data.players.online}/${data.players.max}`;
       }
     }).catch(() => {});
   }
 }
 
+/* ───── INIT ───── */
 document.addEventListener('DOMContentLoaded', () => {
-  const savedToken = sessionStorage.getItem('creator_token');
-  if (savedToken) {
-    fetch('https://api.github.com/user', {
-      headers: { 'Authorization': `token ${savedToken}` }
-    }).then(r => r.json()).then(user => {
-      if (user.login === CREATOR_USER) {
-        showCreatorPanel(user);
+  const section = document.getElementById('creator');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !typerFinished) {
+        setTimeout(typeEffect, 300);
+        observer.disconnect();
       }
-    }).catch(() => {});
-  }
+    });
+  }, { threshold: 0.3 });
+
+  observer.observe(section);
 });
 
 checkStatus();
