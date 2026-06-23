@@ -489,6 +489,54 @@ function showCreatorTab(tab) {
           ${invHtml || '<div class="line" style="color:#444">No hay canjes registrados</div>'}
         </div>`;
       break;
+    case 'mods':
+      const mdata = sd.mods || {
+        mods: [
+          { name: 'Sodium', desc: 'Optimización de rendimiento', version: '1.20.4', url: '#' },
+          { name: 'JourneyMap', desc: 'Mapa minimapa y del mundo', version: '1.20.4', url: '#' },
+          { name: 'SimpleVoiceChat', desc: 'Voice chat de proximidad', version: '1.20.4', url: '#' },
+          { name: 'Litematica', desc: 'Esquemas de construcción', version: '1.20.4', url: '#' },
+        ],
+        modpacks: [
+          { name: 'Nervalia Pack', desc: 'Modpack oficial del server', version: 'v1.0', url: '#' },
+          { name: 'Fabulously Optimized', desc: 'Modpack de optimización', version: 'v5.0', url: '#' },
+        ],
+        shaders: [
+          { name: 'Complementary Shaders', desc: 'Shaders vibrantes y ligeros', version: 'v4.7', url: '#' },
+          { name: 'BSL Shaders', desc: 'Shaders realistas', version: 'v8.2', url: '#' },
+        ],
+        textures: [
+          { name: 'Faithful x64', desc: 'Texturas fieles en 64x', version: '1.20.4', url: '#' },
+          { name: 'Bare Bones', desc: 'Texturas minimalistas', version: '1.20.4', url: '#' },
+        ],
+      };
+      const categories = ['mods', 'modpacks', 'shaders', 'textures'];
+      const catNames = { mods: 'Mods', modpacks: 'Modpacks', shaders: 'Shaders', textures: 'Texture Packs' };
+      let modHtml = categories.map(cat => `
+        <div style="border:1px solid rgba(255,255,255,0.05);border-radius:8px;padding:0.75rem;margin-bottom:0.75rem">
+          <div class="editor-field" style="border:none"><span class="label" style="color:#7289da;font-weight:600;text-transform:uppercase;font-size:0.7rem">${catNames[cat]}</span>
+            <button class="btn-editor" onclick="addModEntry('${cat}')" style="font-size:0.65rem">[ + ]</button>
+          </div>
+          ${(mdata[cat] || []).map((item, i) => `
+            <div class="editor-field" style="padding:0.3rem 0">
+              <input class="editor-input" id="m-${cat}-name-${i}" value="${item.name}" placeholder="Nombre" style="flex:0.3;font-size:0.7rem">
+              <input class="editor-input" id="m-${cat}-desc-${i}" value="${item.desc}" placeholder="Desc" style="flex:0.4;font-size:0.7rem">
+              <input class="editor-input" id="m-${cat}-ver-${i}" value="${item.version}" placeholder="Versión" style="flex:0.15;font-size:0.7rem">
+              <button class="btn-editor danger" onclick="removeModEntry('${cat}', ${i})" style="flex:0;padding:0.2rem 0.4rem;font-size:0.65rem">✕</button>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+      content.innerHTML = `
+        <div class="tab-content">
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">Editar Mods & Recursos</span></div>
+          ${modHtml}
+          <div class="editor-actions">
+            <button class="btn-editor save" onclick="saveMods()">[ GUARDAR TODO ]</button>
+            <span id="e-msg" class="editor-success"></span>
+          </div>
+        </div>`;
+      break;
   }
 }
 
@@ -756,6 +804,82 @@ function applyGaleria() {
   `).join('');
 }
 
+/* ───── MODS ───── */
+function switchModTab(tab, btn) {
+  document.querySelectorAll('.mod-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#mods-content .mods-grid').forEach(g => g.classList.add('hidden'));
+  const grid = document.getElementById(`mods-grid-${tab}`);
+  if (grid) grid.classList.remove('hidden');
+}
+
+function applyMods() {
+  const sd = getSD();
+  const mdata = sd.mods || {};
+  const categories = ['mods', 'modpacks', 'shaders', 'textures'];
+  const catNames = { mods: 'Mods', modpacks: 'Modpacks', shaders: 'Shaders', textures: 'Texture Packs' };
+  const catIcons = { mods: '📦', modpacks: '📦', shaders: '🌅', textures: '🎨' };
+
+  categories.forEach(cat => {
+    const grid = document.getElementById(`mods-grid-${cat}`);
+    if (!grid) return;
+    const items = mdata[cat] || [];
+    if (items.length === 0) {
+      grid.innerHTML = '<div style="text-align:center;color:#444;padding:2rem">Sin contenido aún</div>';
+      return;
+    }
+    grid.innerHTML = items.map(item => `
+      <div class="mod-card">
+        <div class="mod-icon">${catIcons[cat]}</div>
+        <div class="mod-info">
+          <h4>${item.name}</h4>
+          <p>${item.desc}</p>
+          <span class="mod-version">${item.version}</span>
+        </div>
+        <a href="${item.url || '#'}" class="btn-mod-dl" target="_blank">Descargar</a>
+      </div>
+    `).join('');
+  });
+}
+
+function addModEntry(cat) {
+  const sd = getSD();
+  if (!sd.mods) sd.mods = {};
+  if (!sd.mods[cat]) sd.mods[cat] = [];
+  sd.mods[cat].push({ name: 'Nuevo', desc: 'Descripción', version: '1.0', url: '#' });
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  showCreatorTab('mods');
+}
+
+function removeModEntry(cat, index) {
+  const sd = getSD();
+  if (sd.mods && sd.mods[cat]) {
+    sd.mods[cat].splice(index, 1);
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  }
+  showCreatorTab('mods');
+}
+
+function saveMods() {
+  const sd = getSD();
+  const categories = ['mods', 'modpacks', 'shaders', 'textures'];
+  categories.forEach(cat => {
+    const items = sd.mods?.[cat] || [];
+    items.forEach((_, i) => {
+      const n = document.getElementById(`m-${cat}-name-${i}`);
+      const d = document.getElementById(`m-${cat}-desc-${i}`);
+      const v = document.getElementById(`m-${cat}-ver-${i}`);
+      if (n) items[i].name = n.value;
+      if (d) items[i].desc = d.value;
+      if (v) items[i].version = v.value;
+    });
+  });
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  applyMods();
+  const msg = document.getElementById('e-msg');
+  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+}
+
 /* ───── INIT ───── */
 document.addEventListener('DOMContentLoaded', () => {
   setLED('idle');
@@ -767,6 +891,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyReglas();
   applyLogros();
   applyGaleria();
+  applyMods();
 
   const section = document.getElementById('creator');
   const observer = new IntersectionObserver((entries) => {

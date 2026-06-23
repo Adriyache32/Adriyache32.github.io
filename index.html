@@ -22,6 +22,7 @@
         <li><a href="#logros">Logros</a></li>
         <li><a href="#tienda">Tienda</a></li>
         <li><a href="#galeria">Galería</a></li>
+        <li><a href="#mods">Mods</a></li>
         <li><a href="#members">Equipo</a></li>
         <li><a href="#creator" class="nav-creator">Modo Creador</a></li>
       </ul>
@@ -224,6 +225,120 @@
       </div>
     </section>
 
+    <!-- MODS -->
+    <section id="mods" class="section">
+      <h2>Mods & Recursos</h2>
+      <p class="section-subtitle">/// Todo lo que necesitás para jugar ///</p>
+
+      <div class="mods-tabs">
+        <button class="mod-tab active" onclick="switchModTab('mods', this)">Mods</button>
+        <button class="mod-tab" onclick="switchModTab('modpacks', this)">Modpacks</button>
+        <button class="mod-tab" onclick="switchModTab('shaders', this)">Shaders</button>
+        <button class="mod-tab" onclick="switchModTab('textures', this)">Texture Packs</button>
+      </div>
+
+      <div id="mods-content" class="mods-content">
+        <div class="mods-grid" id="mods-grid-mods">
+          <div class="mod-card">
+            <div class="mod-icon">🎒</div>
+            <div class="mod-info">
+              <h4>Sodium</h4>
+              <p>Optimización de rendimiento</p>
+              <span class="mod-version">1.20.4</span>
+            </div>
+            <a href="#" class="btn-mod-dl">Descargar</a>
+          </div>
+          <div class="mod-card">
+            <div class="mod-icon">🗺️</div>
+            <div class="mod-info">
+              <h4>JourneyMap</h4>
+              <p>Mapa minimapa y del mundo</p>
+              <span class="mod-version">1.20.4</span>
+            </div>
+            <a href="#" class="btn-mod-dl">Descargar</a>
+          </div>
+          <div class="mod-card">
+            <div class="mod-icon">📦</div>
+            <div class="mod-info">
+              <h4>SimpleVoiceChat</h4>
+              <p>Voice chat de proximidad</p>
+              <span class="mod-version">1.20.4</span>
+            </div>
+            <a href="#" class="btn-mod-dl">Descargar</a>
+          </div>
+          <div class="mod-card">
+            <div class="mod-icon">🔧</div>
+            <div class="mod-info">
+              <h4>Litematica</h4>
+              <p>Esquemas de construcción</p>
+              <span class="mod-version">1.20.4</span>
+            </div>
+            <a href="#" class="btn-mod-dl">Descargar</a>
+          </div>
+        </div>
+        <div class="mods-grid hidden" id="mods-grid-modpacks">
+          <div class="mod-card">
+            <div class="mod-icon">📦</div>
+            <div class="mod-info">
+              <h4>Nervalia Pack</h4>
+              <p>Modpack oficial del server</p>
+              <span class="mod-version">v1.0</span>
+            </div>
+            <a href="#" class="btn-mod-dl">Descargar</a>
+          </div>
+          <div class="mod-card">
+            <div class="mod-icon">⚡</div>
+            <div class="mod-info">
+              <h4>Fabulously Optimized</h4>
+              <p>Modpack de optimización</p>
+              <span class="mod-version">v5.0</span>
+            </div>
+            <a href="#" class="btn-mod-dl">Descargar</a>
+          </div>
+        </div>
+        <div class="mods-grid hidden" id="mods-grid-shaders">
+          <div class="mod-card">
+            <div class="mod-icon">🌅</div>
+            <div class="mod-info">
+              <h4>Complementary Shaders</h4>
+              <p>Shaders vibrantes y ligeros</p>
+              <span class="mod-version">v4.7</span>
+            </div>
+            <a href="#" class="btn-mod-dl">Descargar</a>
+          </div>
+          <div class="mod-card">
+            <div class="mod-icon">🌙</div>
+            <div class="mod-info">
+              <h4>BSL Shaders</h4>
+              <p>Shaders realistas</p>
+              <span class="mod-version">v8.2</span>
+            </div>
+            <a href="#" class="btn-mod-dl">Descargar</a>
+          </div>
+        </div>
+        <div class="mods-grid hidden" id="mods-grid-textures">
+          <div class="mod-card">
+            <div class="mod-icon">🎨</div>
+            <div class="mod-info">
+              <h4>Faithful x64</h4>
+              <p>Texturas fieles en 64x</p>
+              <span class="mod-version">1.20.4</span>
+            </div>
+            <a href="#" class="btn-mod-dl">Descargar</a>
+          </div>
+          <div class="mod-card">
+            <div class="mod-icon">🖌️</div>
+            <div class="mod-info">
+              <h4>Bare Bones</h4>
+              <p>Texturas minimalistas</p>
+              <span class="mod-version">1.20.4</span>
+            </div>
+            <a href="#" class="btn-mod-dl">Descargar</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- EQUIPO -->
     <section id="members" class="section">
       <h2>Equipo chanchos MC studios</h2>
@@ -339,6 +454,11 @@
             <div class="card-icon">🖼️</div>
             <h4>Galería</h4>
             <p>Agregar imágenes</p>
+          </div>
+          <div class="dashboard-card" onclick="showCreatorTab('mods')">
+            <div class="card-icon">📦</div>
+            <h4>Mods</h4>
+            <p>Mods, shaders, textures</p>
           </div>
           <div class="dashboard-card" onclick="showCreatorTab('coins')">
             <div class="card-icon">🪙</div>

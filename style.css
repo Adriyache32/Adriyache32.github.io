@@ -560,6 +560,108 @@ h1 {
   color: #666;
 }
 
+/* Mods */
+.mods-tabs {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.mod-tab {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #888;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mod-tab:hover {
+  border-color: rgba(114,137,254,0.3);
+  color: #a0a0b0;
+}
+
+.mod-tab.active {
+  background: rgba(114,137,254,0.1);
+  border-color: rgba(114,137,254,0.3);
+  color: #7289da;
+}
+
+.mods-grid {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.mod-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  transition: border-color 0.2s;
+}
+
+.mod-card:hover {
+  border-color: rgba(114,137,254,0.2);
+}
+
+.mod-icon {
+  font-size: 1.5rem;
+  min-width: 2rem;
+  text-align: center;
+}
+
+.mod-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.mod-info h4 {
+  font-size: 0.9rem;
+  color: #c0c0d0;
+  font-weight: 600;
+}
+
+.mod-info p {
+  font-size: 0.8rem;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mod-version {
+  font-size: 0.7rem;
+  color: #444;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.btn-mod-dl {
+  background: rgba(114,137,254,0.1);
+  border: 1px solid rgba(114,137,254,0.2);
+  color: #7289da;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.btn-mod-dl:hover {
+  background: rgba(114,137,254,0.2);
+}
+
 /* Members */
 .members-grid {
   display: flex;
