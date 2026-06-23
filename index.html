@@ -99,7 +99,7 @@
       <h2>Logros</h2>
       <p class="section-subtitle">Gana <span class="coin">0.5 🪙</span> por cada logro completado</p>
       <div class="logros-grid" id="logros-grid">
-        <div class="logro" data-id="logro1" onclick="claimLogro(this)">
+        <div class="logro" data-id="logro1">
           <div class="logro-icon">⛏️</div>
           <div class="logro-info">
             <h4>Minero Inicial</h4>
@@ -107,8 +107,9 @@
           </div>
           <span class="logro-reward">+0.5 🪙</span>
           <span class="logro-badge no-completado">❌</span>
+          <button class="btn-logro-solicitar" onclick="openLogroRequest('logro1','Minero Inicial',this)">Solicitar</button>
         </div>
-        <div class="logro" data-id="logro2" onclick="claimLogro(this)">
+        <div class="logro" data-id="logro2">
           <div class="logro-icon">🌳</div>
           <div class="logro-info">
             <h4>Leñador Novato</h4>
@@ -116,8 +117,9 @@
           </div>
           <span class="logro-reward">+0.5 🪙</span>
           <span class="logro-badge no-completado">❌</span>
+          <button class="btn-logro-solicitar" onclick="openLogroRequest('logro2','Leñador Novato',this)">Solicitar</button>
         </div>
-        <div class="logro" data-id="logro3" onclick="claimLogro(this)">
+        <div class="logro" data-id="logro3">
           <div class="logro-icon">🏠</div>
           <div class="logro-info">
             <h4>Primera Base</h4>
@@ -125,8 +127,9 @@
           </div>
           <span class="logro-reward">+0.5 🪙</span>
           <span class="logro-badge no-completado">❌</span>
+          <button class="btn-logro-solicitar" onclick="openLogroRequest('logro3','Primera Base',this)">Solicitar</button>
         </div>
-        <div class="logro" data-id="logro4" onclick="claimLogro(this)">
+        <div class="logro" data-id="logro4">
           <div class="logro-icon">🌾</div>
           <div class="logro-info">
             <h4>Granjero</h4>
@@ -134,8 +137,9 @@
           </div>
           <span class="logro-reward">+0.5 🪙</span>
           <span class="logro-badge no-completado">❌</span>
+          <button class="btn-logro-solicitar" onclick="openLogroRequest('logro4','Granjero',this)">Solicitar</button>
         </div>
-        <div class="logro" data-id="logro5" onclick="claimLogro(this)">
+        <div class="logro" data-id="logro5">
           <div class="logro-icon">🐉</div>
           <div class="logro-info">
             <h4>Cazador de Dragones</h4>
@@ -143,8 +147,9 @@
           </div>
           <span class="logro-reward">+0.5 🪙</span>
           <span class="logro-badge no-completado">❌</span>
+          <button class="btn-logro-solicitar" onclick="openLogroRequest('logro5','Cazador de Dragones',this)">Solicitar</button>
         </div>
-        <div class="logro" data-id="logro6" onclick="claimLogro(this)">
+        <div class="logro" data-id="logro6">
           <div class="logro-icon">⚔️</div>
           <div class="logro-info">
             <h4>Explorador del Nether</h4>
@@ -152,6 +157,7 @@
           </div>
           <span class="logro-reward">+0.5 🪙</span>
           <span class="logro-badge no-completado">❌</span>
+          <button class="btn-logro-solicitar" onclick="openLogroRequest('logro6','Explorador del Nether',this)">Solicitar</button>
         </div>
       </div>
       <div class="wallet" id="wallet-display">
@@ -414,6 +420,59 @@
           <div class="faq-q" onclick="toggleFaq(this)">¿Cómo creo un equipo/clan?</div>
           <div class="faq-a">Contactá al equipo por Discord con los nombres de los miembros y el nombre del clan. Si es aprobado, se crea un rol privado y un canal para su equipo.</div>
         </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">¿Cómo ser moderador? 🌟</div>
+          <div class="faq-a faq-form">
+            <p style="color:#f0c040;font-size:0.8rem;margin-bottom:1rem">Completá este formulario para postularte como moderador. Será revisado por el equipo.</p>
+            <div class="faq-form-field"><span>Nick Minecraft</span><input class="faq-form-input" id="mod-nick" placeholder="Tu nick"></div>
+            <div class="faq-form-field"><span>Email</span><input class="faq-form-input" id="mod-email" placeholder="tu@email.com"></div>
+            <div class="faq-form-field"><span>Edad</span><input class="faq-form-input" id="mod-edad" placeholder="Tu edad"></div>
+            <div class="faq-form-field"><span>¿Cuánto tiempo llevás en el server?</span><textarea class="faq-form-input faq-form-textarea" id="mod-tiempo" placeholder="Ej: 6 meses"></textarea></div>
+            <div class="faq-form-field"><span>¿Por qué querés ser moderador?</span><textarea class="faq-form-input faq-form-textarea" id="mod-porque" placeholder="Explicá tus motivos..."></textarea></div>
+            <div class="faq-form-field"><span>Experiencia previa como mod</span><textarea class="faq-form-input faq-form-textarea" id="mod-experiencia" placeholder="Contá si moderaste otros servers..."></textarea></div>
+            <div class="faq-form-field"><span>¿Cuántas horas por día te conectás?</span><input class="faq-form-input" id="mod-horas" placeholder="Ej: 4-6 horas"></div>
+            <div class="faq-form-field"><span>Idiomas que manejás</span><input class="faq-form-input" id="mod-idiomas" placeholder="Ej: Español, Inglés"></div>
+            <div class="faq-form-field"><span>¿Tenés micrófono y discord?</span><input class="faq-form-input" id="mod-mic" placeholder="Sí / No"></div>
+            <div class="faq-form-field"><span>¿Cómo resolverías un griefing?</span><textarea class="faq-form-input faq-form-textarea" id="mod-grief" placeholder="Describí tu procedimiento..."></textarea></div>
+            <button class="btn btn-login" onclick="submitModForm()" style="margin-top:0.75rem">[ ENVIAR SOLICITUD ]</button>
+            <span id="mod-msg" class="faq-form-msg"></span>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">¿Cómo ser fundador? 👑</div>
+          <div class="faq-a faq-form">
+            <p style="color:#f0c040;font-size:0.8rem;margin-bottom:1rem">Formulario exclusivo para fundadores. Solo los más comprometidos.</p>
+            <div class="faq-form-field"><span>Nick Minecraft</span><input class="faq-form-input" id="fd-nick" placeholder="Tu nick"></div>
+            <div class="faq-form-field"><span>Email de contacto</span><input class="faq-form-input" id="fd-email" placeholder="tu@email.com"></div>
+            <div class="faq-form-field"><span>Edad real</span><input class="faq-form-input" id="fd-edad" placeholder="Tu edad"></div>
+            <div class="faq-form-field"><span>País / Zona horaria</span><input class="faq-form-input" id="fd-pais" placeholder="Ej: Argentina / GMT-3"></div>
+            <div class="faq-form-field"><span>¿Cuánto tiempo llevás en el server?</span><textarea class="faq-form-input faq-form-textarea" id="fd-tiempo" placeholder="Ej: 1 año"></textarea></div>
+            <div class="faq-form-field"><span>¿Por qué querés ser fundador?</span><textarea class="faq-form-input faq-form-textarea" id="fd-porque" placeholder="Motivos detallados..."></textarea></div>
+            <div class="faq-form-field"><span>Experiencia liderando equipos</span><textarea class="faq-form-input faq-form-textarea" id="fd-liderazgo" placeholder="Contá tu experiencia previa liderando proyectos..."></textarea></div>
+            <div class="faq-form-field"><span>¿Qué aportarías al equipo directivo?</span><textarea class="faq-form-input faq-form-textarea" id="fd-aporte" placeholder="Habilidades, ideas, recursos..."></textarea></div>
+            <div class="faq-form-field"><span>¿Podés ayudar con costos del server?</span><input class="faq-form-input" id="fd-costos" placeholder="Sí / No / Tal vez"></div>
+            <div class="faq-form-field"><span>¿Tenés experiencia con plugins/config?</span><textarea class="faq-form-input faq-form-textarea" id="fd-plugins" placeholder="Ej: Configuré WorldEdit, CoreProtect..."></textarea></div>
+            <div class="faq-form-field"><span>¿Cuántas horas semanales podés dedicar?</span><input class="faq-form-input" id="fd-horas" placeholder="Ej: 20+ horas"></div>
+            <div class="faq-form-field"><span>LinkedIn / GitHub / Portafolio (opcional)</span><input class="faq-form-input" id="fd-linkedin" placeholder="URL"></div>
+            <div class="faq-form-field"><span>¿Cómo manejás situaciones de conflicto?</span><textarea class="faq-form-input faq-form-textarea" id="fd-conflictos" placeholder="Describí un caso y cómo lo resolverías..."></textarea></div>
+            <div class="faq-form-field"><span>Referencia de un miembro actual</span><input class="faq-form-input" id="fd-referencia" placeholder="Nick de quien te refiere"></div>
+            <button class="btn btn-login" onclick="submitFounderForm()" style="margin-top:0.75rem">[ ENVIAR SOLICITUD ]</button>
+            <span id="fd-msg" class="faq-form-msg"></span>
+          </div>
+        </div>
+      </div>
+      <div class="faq-ai-section" id="faq-ai-section">
+        <div class="faq-ai-header">
+          <span class="faq-ai-dot"></span>
+          <span>🤖 IA de Soporte <span style="color:#666;font-size:0.7rem">(en construcción)</span></span>
+        </div>
+        <div class="faq-ai-chat" id="faq-ai-chat">
+          <div class="faq-ai-msg ia">¡Hola! Soy la IA de Nervalia. Todavía estoy en construcción, pero podés escribirme y cuando esté lista te responderé. 🚧</div>
+        </div>
+        <div class="faq-ai-input-area">
+          <input class="faq-ai-input" id="faq-ai-input" placeholder="Escribí tu pregunta..." disabled>
+          <button class="faq-ai-send" id="faq-ai-send" disabled>Enviar</button>
+        </div>
       </div>
     </section>
 
@@ -602,6 +661,16 @@
             <h4>Verificaciones</h4>
             <p>Aprobar cuentas</p>
           </div>
+          <div class="dashboard-card" onclick="showCreatorTab('logros-admin')">
+            <div class="card-icon">📋</div>
+            <h4>Logros 🏆</h4>
+            <p>Revisar solicitudes</p>
+          </div>
+          <div class="dashboard-card" onclick="showCreatorTab('staff-forms')">
+            <div class="card-icon">📝</div>
+            <h4>Staff Forms</h4>
+            <p>Mods y fundadores</p>
+          </div>
           <div class="dashboard-card" onclick="logoutCreator()">
             <div class="card-icon">🚪</div>
             <h4>Salir</h4>
@@ -665,6 +734,26 @@
         </div>
         <div id="modal-error" class="modal-error hidden">No tenés suficientes monedas</div>
         <button class="btn btn-kit modal-btn" id="modal-confirm-btn" onclick="confirmPaywall()">Confirmar Canje</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGRO REQUEST MODAL -->
+  <div id="logro-modal" class="modal hidden">
+    <div class="modal-overlay" onclick="closeLogroModal()"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>🏆 Solicitar Logro</h3>
+        <button class="modal-close" onclick="closeLogroModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-kit-name" id="logro-modal-name">Minero Inicial</p>
+        <p style="color:#666;font-size:0.8rem;margin-bottom:1rem">Adjuntá una captura de pantalla como prueba y envialo al staff.</p>
+        <div class="faq-form-field"><span>Tu nick</span><input class="faq-form-input" id="logro-nick" placeholder="Tu nick de Minecraft"></div>
+        <div class="faq-form-field"><span>Descripción de la prueba</span><textarea class="faq-form-input faq-form-textarea" id="logro-desc" placeholder="Describí cómo completaste el logro..."></textarea></div>
+        <div class="faq-form-field"><span>Link de la captura (imgur, discord, etc)</span><input class="faq-form-input" id="logro-url" placeholder="https://i.imgur.com/ejemplo.png"></div>
+        <div id="logro-modal-error" class="faq-form-msg" style="color:#ed4245"></div>
+        <button class="btn btn-login" onclick="submitLogroRequest()" style="margin-top:0.75rem">[ ENVIAR SOLICITUD ]</button>
       </div>
     </div>
   </div>

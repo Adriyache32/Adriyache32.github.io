@@ -305,6 +305,44 @@ function showAccountStatus() {
   `;
 }
 
+function approveLogro(index) {
+  const requests = JSON.parse(localStorage.getItem('nervalia_logro_requests')) || [];
+  if (!requests[index]) return;
+  requests[index].status = 'approved';
+  localStorage.setItem('nervalia_logro_requests', JSON.stringify(requests));
+  const r = requests[index];
+  const state = JSON.parse(localStorage.getItem(LOGROS_KEY)) || {};
+  state[r.logroId] = true;
+  localStorage.setItem(LOGROS_KEY, JSON.stringify(state));
+  const coins = getCoins() + 0.5;
+  setCoins(coins);
+  showCreatorTab('logros-admin');
+}
+
+function rejectLogro(index) {
+  const requests = JSON.parse(localStorage.getItem('nervalia_logro_requests')) || [];
+  if (!requests[index]) return;
+  requests[index].status = 'rejected';
+  localStorage.setItem('nervalia_logro_requests', JSON.stringify(requests));
+  showCreatorTab('logros-admin');
+}
+
+function approveStaffForm(index) {
+  const forms = JSON.parse(localStorage.getItem('nervalia_staff_forms')) || [];
+  if (!forms[index]) return;
+  forms[index].status = 'approved';
+  localStorage.setItem('nervalia_staff_forms', JSON.stringify(forms));
+  showCreatorTab('staff-forms');
+}
+
+function rejectStaffForm(index) {
+  const forms = JSON.parse(localStorage.getItem('nervalia_staff_forms')) || [];
+  if (!forms[index]) return;
+  forms[index].status = 'rejected';
+  localStorage.setItem('nervalia_staff_forms', JSON.stringify(forms));
+  showCreatorTab('staff-forms');
+}
+
 function verifyAccount(fingerprint, action) {
   const accounts = getAccounts();
   const acc = accounts.find(a => a.fingerprint === fingerprint);
@@ -329,13 +367,58 @@ function updateWallet() {
   if (el) el.textContent = getCoins().toFixed(1);
 }
 
-function claimLogro(el) {
-  if (el.classList.contains('completado')) return;
-  el.classList.add('completado');
-  el.querySelector('.logro-badge').textContent = '✅';
-  const coins = getCoins() + 0.5;
-  setCoins(coins);
-  saveLogroState();
+function openLogroRequest(id, name, btn) {
+  const acc = getAccounts().find(a => a.fingerprint === getPCFingerprint());
+  if (!acc || acc.status !== 'verified') {
+    alert('❌ Necesitás tener una cuenta verificada para solicitar logros. Andá a la sección "Cuenta".');
+    return;
+  }
+  document.getElementById('logro-modal-name').textContent = name;
+  document.getElementById('logro-modal-name').dataset.logroId = id;
+  document.getElementById('logro-nick').value = acc.minecraftUser;
+  document.getElementById('logro-desc').value = '';
+  document.getElementById('logro-url').value = '';
+  document.getElementById('logro-modal-error').textContent = '';
+  document.getElementById('logro-modal').classList.remove('hidden');
+}
+
+function closeLogroModal() {
+  document.getElementById('logro-modal').classList.add('hidden');
+}
+
+function submitLogroRequest() {
+  const nick = document.getElementById('logro-nick').value.trim();
+  const desc = document.getElementById('logro-desc').value.trim();
+  const url = document.getElementById('logro-url').value.trim();
+  const name = document.getElementById('logro-modal-name').textContent;
+  const id = document.getElementById('logro-modal-name').dataset.logroId;
+  const errorEl = document.getElementById('logro-modal-error');
+
+  if (!nick || !desc || !url) {
+    errorEl.textContent = '[ERROR] Completá todos los campos';
+    return;
+  }
+
+  const requests = JSON.parse(localStorage.getItem('nervalia_logro_requests')) || [];
+  const existing = requests.find(r => r.logroId === id && r.fingerprint === getPCFingerprint());
+  if (existing) {
+    errorEl.textContent = '[SISTEMA] Ya enviaste solicitud para este logro. Esperá la revisión.';
+    return;
+  }
+
+  requests.push({
+    logroId: id,
+    logroName: name,
+    nick,
+    desc,
+    screenshotUrl: url,
+    fingerprint: getPCFingerprint(),
+    timestamp: new Date().toISOString(),
+    status: 'pending'
+  });
+  localStorage.setItem('nervalia_logro_requests', JSON.stringify(requests));
+  closeLogroModal();
+  alert('✅ Solicitud enviada. El staff revisará tu prueba.');
 }
 
 function saveLogroState() {
@@ -355,9 +438,51 @@ function restoreLogros() {
       if (state[el.dataset.id]) {
         el.classList.add('completado');
         el.querySelector('.logro-badge').textContent = '✅';
+        const btn = el.querySelector('.btn-logro-solicitar');
+        if (btn) btn.style.display = 'none';
       }
     });
   } catch {}
+}
+
+function submitModForm() {
+  const fields = ['mod-nick','mod-email','mod-edad','mod-tiempo','mod-porque','mod-experiencia','mod-horas','mod-idiomas','mod-mic','mod-grief'];
+  const data = {};
+  for (const id of fields) {
+    const el = document.getElementById(id);
+    if (!el || !el.value.trim()) {
+      document.getElementById('mod-msg').textContent = '[ERROR] Completá todos los campos';
+      document.getElementById('mod-msg').style.color = '#ed4245';
+      return;
+    }
+    data[id] = el.value.trim();
+  }
+  const forms = JSON.parse(localStorage.getItem('nervalia_staff_forms')) || [];
+  forms.push({ type: 'moderador', data, fingerprint: getPCFingerprint(), timestamp: new Date().toISOString(), status: 'pending' });
+  localStorage.setItem('nervalia_staff_forms', JSON.stringify(forms));
+  document.getElementById('mod-msg').textContent = '✅ Solicitud enviada. El equipo la revisará.';
+  document.getElementById('mod-msg').style.color = '#43b581';
+  fields.forEach(id => document.getElementById(id).value = '');
+}
+
+function submitFounderForm() {
+  const fields = ['fd-nick','fd-email','fd-edad','fd-pais','fd-tiempo','fd-porque','fd-liderazgo','fd-aporte','fd-costos','fd-plugins','fd-horas','fd-linkedin','fd-conflictos','fd-referencia'];
+  const data = {};
+  for (const id of fields) {
+    const el = document.getElementById(id);
+    if (!el || !el.value.trim()) {
+      document.getElementById('fd-msg').textContent = '[ERROR] Completá todos los campos';
+      document.getElementById('fd-msg').style.color = '#ed4245';
+      return;
+    }
+    data[id] = el.value.trim();
+  }
+  const forms = JSON.parse(localStorage.getItem('nervalia_staff_forms')) || [];
+  forms.push({ type: 'fundador', data, fingerprint: getPCFingerprint(), timestamp: new Date().toISOString(), status: 'pending' });
+  localStorage.setItem('nervalia_staff_forms', JSON.stringify(forms));
+  document.getElementById('fd-msg').textContent = '✅ Solicitud enviada. El equipo la revisará.';
+  document.getElementById('fd-msg').style.color = '#43b581';
+  fields.forEach(id => document.getElementById(id).value = '');
 }
 
 /* ───── PAYWALL ───── */
@@ -714,6 +839,88 @@ function showCreatorTab(tab) {
         </div>`;
       break;
     }
+
+    case 'logros-admin': {
+      const requests = JSON.parse(localStorage.getItem('nervalia_logro_requests')) || [];
+      const pendingR = requests.filter(r => r.status === 'pending');
+      const doneR = requests.filter(r => r.status !== 'pending');
+      let lhtml = '';
+      if (pendingR.length === 0) {
+        lhtml += '<div class="line" style="color:#666">No hay solicitudes de logros pendientes.</div>';
+      } else {
+        lhtml += '<div class="line" style="color:#f0c040;font-size:0.75rem;margin-bottom:0.5rem">⏳ Solicitudes pendientes</div>';
+        lhtml += pendingR.map((r, i) => `
+          <div style="border:1px solid rgba(255,255,255,0.05);border-radius:6px;padding:0.5rem;margin-bottom:0.4rem;font-size:0.75rem">
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem">
+              <span style="color:#f0c040;font-weight:600">${r.logroName}</span>
+              <span style="color:#888">— ${r.nick}</span>
+            </div>
+            <div style="color:#666;font-size:0.65rem;margin-bottom:0.3rem">${r.desc}</div>
+            <div style="display:flex;align-items:center;gap:0.5rem">
+              <a href="${r.screenshotUrl}" target="_blank" style="color:#7289da;font-size:0.65rem">🔗 Ver captura</a>
+              <span style="color:#444;font-size:0.6rem">${new Date(r.timestamp).toLocaleString()}</span>
+            </div>
+            <div style="margin-top:0.4rem;display:flex;gap:0.4rem">
+              <button class="btn-editor save" onclick="approveLogro('${i}')" style="font-size:0.65rem;padding:0.2rem 0.5rem">✓ Aprobar</button>
+              <button class="btn-editor danger" onclick="rejectLogro('${i}')" style="font-size:0.65rem;padding:0.2rem 0.5rem">✕ Rechazar</button>
+            </div>
+          </div>
+        `).join('');
+      }
+      if (doneR.length > 0) {
+        lhtml += '<div class="line" style="color:#666;font-size:0.75rem;margin:1rem 0 0.5rem">Historial</div>';
+        lhtml += doneR.map(r => `
+          <div style="border:1px solid rgba(255,255,255,0.03);border-radius:4px;padding:0.3rem 0.5rem;margin-bottom:0.2rem;display:flex;align-items:center;gap:0.5rem;font-size:0.65rem">
+            <span style="color:#888;flex:1">${r.logroName} — ${r.nick}</span>
+            <span style="color:${r.status === 'approved' ? '#43b581' : '#ed4245'}">${r.status === 'approved' ? '✓' : '✕'}</span>
+          </div>
+        `).join('');
+      }
+      content.innerHTML = `
+        <div class="tab-content">
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">📋 Solicitudes de Logros</span></div>
+          ${lhtml}
+        </div>`;
+      break;
+    }
+
+    case 'staff-forms': {
+      const forms = JSON.parse(localStorage.getItem('nervalia_staff_forms')) || [];
+      const pendingF = forms.filter(f => f.status === 'pending');
+      const doneF = forms.filter(f => f.status !== 'pending');
+      let fhtml = '';
+      if (pendingF.length === 0) {
+        fhtml += '<div class="line" style="color:#666">No hay solicitudes de staff pendientes.</div>';
+      } else {
+        pendingF.forEach((f, i) => {
+          const label = f.type === 'moderador' ? '🛡️ Moderador' : '👑 Fundador';
+          fhtml += `
+            <div style="border:1px solid rgba(255,255,255,0.05);border-radius:6px;padding:0.5rem;margin-bottom:0.5rem;font-size:0.7rem">
+              <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem">
+                <span style="color:#f0c040;font-weight:600">${label}</span>
+                <span style="color:#888">${f.data['mod-nick'] || f.data['fd-nick'] || '?'}</span>
+              </div>
+              <div style="color:#444;max-height:100px;overflow-y:auto">${Object.entries(f.data).map(([k,v]) => `<span style="color:#666">${k}:</span> ${v}<br>`).join('')}</div>
+              <div style="margin-top:0.3rem;display:flex;gap:0.4rem">
+                <button class="btn-editor save" onclick="approveStaffForm(${i})" style="font-size:0.65rem;padding:0.2rem 0.5rem">✓ Aprobar</button>
+                <button class="btn-editor danger" onclick="rejectStaffForm(${i})" style="font-size:0.65rem;padding:0.2rem 0.5rem">✕ Rechazar</button>
+              </div>
+            </div>`;
+        });
+      }
+      if (doneF.length > 0) {
+        fhtml += '<div class="line" style="color:#666;font-size:0.75rem;margin:1rem 0 0.5rem">Historial</div>';
+        fhtml += doneF.map(f => `
+          <div style="font-size:0.6rem;color:#555;padding:0.2rem 0">${f.type === 'moderador' ? '🛡️' : '👑'} ${f.data['mod-nick'] || f.data['fd-nick'] || '?'} — ${f.status === 'approved' ? '✅' : '❌'}</div>
+        `).join('');
+      }
+      content.innerHTML = `
+        <div class="tab-content">
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">📋 Solicitudes de Staff</span></div>
+          ${fhtml}
+        </div>`;
+      break;
+    }
   }
 }
 
@@ -902,11 +1109,12 @@ function applyLogros() {
     const id = `logro-${i}`;
     const completed = saved[id];
     return `
-      <div class="logro${completed ? ' completado' : ''}" data-id="${id}" onclick="claimLogro(this)">
+      <div class="logro${completed ? ' completado' : ''}" data-id="${id}">
         <div class="logro-icon">${l.icon}</div>
         <div class="logro-info"><h4>${l.name}</h4><p>${l.desc}</p></div>
         <span class="logro-reward">+0.5 🪙</span>
         <span class="logro-badge">${completed ? '✅' : '❌'}</span>
+        ${completed ? '' : `<button class="btn-logro-solicitar" onclick="openLogroRequest('${id}','${l.name}',this)">Solicitar</button>`}
       </div>
     `;
   }).join('');
