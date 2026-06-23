@@ -629,6 +629,7 @@ function showCreatorTab(tab) {
 
     case 'kits': {
       const kdata = sd.kits || [
+        { name: 'Gratis', price: 0, badge: '🎁 GRATIS', perks: ['🪖 Armadura: Set de cuero', '⛏️ Herramientas: Madera', '🍞 Comida: 5 manzanas', '📦 Items: 10 antorchas, 1 cama', '🏷️ Tag coloreado en el chat'] },
         { name: 'Bronce', price: 5, badge: '', perks: ['🪖 Armadura: Set de cuero', '⛏️ Herramientas: Madera/piedra', '🍞 Comida: 10 manzanas', '📦 Items: 10 antorchas, 1 cama', '🎁 Kit inicial especial', '🏷️ Tag coloreado en el chat', '⭐ Acceso a /fly en spawn'] },
         { name: 'Plata', price: 10, badge: '🔥 POPULAR', perks: ['🪖 Armadura: Set de hierro', '⛏️ Herramientas: Hierro encantado', '🍞 Comida: 20 bifes', '📦 Items: 20 antorchas, 1 cama, 5 libros', '🔮 Todo lo de Bronce', '🏠 Home adicional (3 total)', '📦 Acceso a /enderchest'] },
         { name: 'Oro', price: 20, badge: '⭐ RECOMENDADO', perks: ['🪖 Armadura: Set de diamante', '⚔️ Herramientas: Diamante encantado', '🍞 Comida: 32 bifes, 16 pasteles', '📦 Items: 1 cofre de ender, 64 antorchas, 10 obsidiana', '💰 10 monedas del server', '🪄 Todo lo de Plata', '🏠 5 Homes adicionales', '🔑 Acceso a /nick', '🎮 Rol exclusivo en Discord'] },
@@ -1163,9 +1164,9 @@ function applyKits() {
     <div class="kit-card${k.badge ? ' featured' : ''}">
       ${k.badge ? `<div class="kit-badge">${k.badge}</div>` : ''}
       <div class="kit-tier">${k.name}</div>
-      <div class="kit-price">${k.price} 🪙</div>
+      <div class="kit-price">${k.price === 0 ? 'GRATIS' : k.price + ' 🪙'}</div>
       <ul class="kit-perks">${k.perks.map(p => `<li>${p}</li>`).join('')}</ul>
-      <button class="btn btn-kit" onclick="openPaywall('${k.name}', ${k.price})">Canjear</button>
+      <button class="btn btn-kit" onclick="openPaywall('${k.name}', ${k.price})">${k.price === 0 ? 'Obtener' : 'Canjear'}</button>
     </div>
   `).join('');
 }
