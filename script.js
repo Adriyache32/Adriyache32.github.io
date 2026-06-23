@@ -1403,10 +1403,12 @@ const aiResponses = {
   creador: ['acceso restringido al equipo', 'contraseña compartida del staff'],
 };
 
-const aiBlocked = ['tonta', 'tonto', 'estupida', 'estupido', 'idiota', 'puta', 'puto', 'pendejo', 'pendeja', 'basura', 'mierda', 'culo', 'ctm', 'qlo', 'weon', 'weona', 'tonta', 'burro', 'burra', 'imbecil', 'mmg', 'hp', 'hijueputa', 'malparido', 'marica', 'gay', 'tonto'];
+const aiGreetings = ['hola', 'buenas', 'buen dia', 'buen día', 'buenas tardes', 'buenas noches', 'buenos dias', 'buenos días', 'hello', 'hi', 'hey', 'saludos', 'que tal', 'qué tal', 'como estas', 'cómo estás', 'como andas', 'cómo andás'];
+const aiBlocked = ['tonta', 'tonto', 'estupida', 'estupido', 'idiota', 'puta', 'puto', 'pendejo', 'pendeja', 'basura', 'mierda', 'culo', 'ctm', 'qlo', 'weon', 'weona', 'tonta', 'burro', 'burra', 'imbecil', 'mmg', 'hp', 'hijueputa', 'malparido', 'marica', 'gay', 'tonto', 'perra', 'zorra'];
 
 let aiOffended = false;
 let aiWarnings = 0;
+let aiGreeted = false;
 
 function addAIMsg(text, type) {
   const chat = document.getElementById('faq-ai-chat');
@@ -1423,7 +1425,7 @@ function sendAIMessage() {
   if (!text) return;
 
   if (aiOffended) {
-    addAIMsg('⛔ No voy a responder. Se superó el límite de advertencias.', 'ia');
+    addAIMsg('⛔ Ya me cansé. No voy a responder más. Si necesitas ayuda, contactá al staff por Discord. (recargá la página si querés intentar de nuevo)', 'ia');
     input.value = '';
     return;
   }
@@ -1440,15 +1442,24 @@ function sendAIMessage() {
     aiWarnings++;
     if (aiWarnings >= 3) {
       aiOffended = true;
-      addAIMsg('⛔ Se detectaron multiples infracciones. No voy a responder mas. Si necesitas ayuda, contacta al staff por Discord.', 'ia');
+      addAIMsg('⛔ Se detectaron múltiples infracciones. Dejé de responder. Contactá al staff por Discord. (recargá la página si querés intentar de nuevo)', 'ia');
       return;
     }
-    const warns = ['No uses ese lenguaje. Consulta seria o no respondere.', 'Ultima advertencia. Pregunta con respeto o dejo de responder.', ''];
-    addAIMsg('⚠️ ' + warns[aiWarnings - 1], 'ia');
+    const warns = ['⚠️ No uses ese lenguaje. Consultá con respeto o no respondo.', '⚠️ Última advertencia. Una más y dejo de responder del todo.'];
+    addAIMsg(warns[aiWarnings - 1], 'ia');
     return;
   }
 
-  aiWarnings = Math.max(0, aiWarnings - 1);
+  if (!aiGreeted) {
+    const isGreeting = aiGreetings.some(g => lower.includes(g));
+    if (!isGreeting) {
+      addAIMsg('😤 Primero saludá. No soy un bot cualquiera. Hola, buenas, algo... arrancá bien.', 'ia');
+      return;
+    }
+    aiGreeted = true;
+    addAIMsg('👋 Bien. Decime tu consulta y vamos al grano.', 'ia');
+    return;
+  }
 
   let response = null;
   for (const [key, answers] of Object.entries(aiResponses)) {
@@ -1460,7 +1471,7 @@ function sendAIMessage() {
 
   if (!response) {
     const multiWordChecks = [
-      ['como entro', 'ip', 'whitelist'],
+      ['como entro', 'ip'],
       ['como consigo monedas', 'monedas'],
       ['como ser moderador', 'mod'],
       ['como ser fundador', 'fundador'],
@@ -1468,7 +1479,6 @@ function sendAIMessage() {
       ['crear equipo', 'clan'],
       ['que version', 'version'],
       ['como conecto', 'ip'],
-      ['para que sirve', ''],
     ];
     for (const [phrase, tag] of multiWordChecks) {
       if (lower.includes(phrase)) {
@@ -1481,12 +1491,7 @@ function sendAIMessage() {
   }
 
   if (!response) {
-    const dnsWords = ['hola', 'buenas', 'hey', 'oe', 'oye', 'que tal', 'como estas', 'buenos dias', 'buenas tardes', 'buenas noches', 'hello', 'hi'];
-    if (dnsWords.some(w => lower.includes(w))) {
-      response = 'Consulta directa o no hay respuesta. Decime el tema.';
-    } else {
-      response = 'No tengo informacion sobre eso. Consulta en el FAQ o contacta al staff por Discord.';
-    }
+    response = 'No tengo información sobre eso. Consultá el FAQ o contactá al staff por Discord.';
   }
 
   addAIMsg(response, 'ia');

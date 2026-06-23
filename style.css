@@ -860,6 +860,17 @@ h1 {
   overflow: hidden;
 }
 
+.faq-ai-notice {
+  padding: 0.4rem 1rem;
+  font-size: 0.7rem;
+  color: #f0c040;
+  background: rgba(240,192,64,0.06);
+  border-bottom: 1px solid rgba(240,192,64,0.1);
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.5px;
+}
+
 .faq-ai-header {
   display: flex;
   align-items: center;
