@@ -1435,8 +1435,19 @@ function sendAIMessage() {
 
   const lower = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
+  if (!aiGreeted) {
+    const isGreeting = aiGreetings.some(g => lower.includes(g));
+    if (!isGreeting) {
+      addAIMsg('😤 Primero saludá. No soy un bot cualquiera. Hola, buenas, algo... arrancá bien.', 'ia');
+      return;
+    }
+    aiGreeted = true;
+    addAIMsg('👋 Bien. Decime tu consulta y vamos al grano.', 'ia');
+    return;
+  }
+
   const isInsult = aiBlocked.some(w => lower.includes(w));
-  const spamming = lower.length < 3 || /^(.)\1{3,}/.test(lower) || /(ha|ja|aj|he|hi|ho)+/.test(lower);
+  const spamming = lower.length < 3 || /^(.{1,2})\1{2,}$/.test(lower) || /^(j[aeiou]|h[aeiou]){3,}$/.test(lower);
 
   if (isInsult || spamming) {
     aiWarnings++;
@@ -1447,17 +1458,6 @@ function sendAIMessage() {
     }
     const warns = ['⚠️ No uses ese lenguaje. Consultá con respeto o no respondo.', '⚠️ Última advertencia. Una más y dejo de responder del todo.'];
     addAIMsg(warns[aiWarnings - 1], 'ia');
-    return;
-  }
-
-  if (!aiGreeted) {
-    const isGreeting = aiGreetings.some(g => lower.includes(g));
-    if (!isGreeting) {
-      addAIMsg('😤 Primero saludá. No soy un bot cualquiera. Hola, buenas, algo... arrancá bien.', 'ia');
-      return;
-    }
-    aiGreeted = true;
-    addAIMsg('👋 Bien. Decime tu consulta y vamos al grano.', 'ia');
     return;
   }
 
