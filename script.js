@@ -8,6 +8,8 @@ const SERVER_DATA_KEY = 'nervalia_server_data';
 const CREATOR_PASS = '202530';
 const CREATOR_LOG_KEY = 'nervalia_creator_log';
 const ACCOUNTS_KEY = 'nervalia_accounts';
+const VISIT_LOG_KEY = 'nervalia_visit_log';
+const ACTION_LOG_KEY = 'nervalia_action_log';
 
 function toggleMenu() {
   document.getElementById('nav-menu').classList.toggle('open');
@@ -214,6 +216,34 @@ function logoutCreator() {
   const cursor = document.querySelector('.cursor');
   if (cursor) cursor.style.display = 'inline-block';
   setTimeout(typeEffect, 500);
+}
+
+/* ───── VISIT & ACTION LOG ───── */
+function logVisit() {
+  const log = JSON.parse(localStorage.getItem(VISIT_LOG_KEY)) || [];
+  const fp = getPCFingerprint();
+  const existing = log.find(e => e.fingerprint === fp && new Date(e.timestamp).toDateString() === new Date().toDateString());
+  if (existing) return;
+  log.push({
+    type: 'visit',
+    fingerprint: fp,
+    userAgent: navigator.userAgent.substring(0, 60),
+    timestamp: new Date().toISOString()
+  });
+  if (log.length > 500) log.splice(0, log.length - 500);
+  localStorage.setItem(VISIT_LOG_KEY, JSON.stringify(log));
+}
+
+function logCreatorAction(action) {
+  const log = JSON.parse(localStorage.getItem(ACTION_LOG_KEY)) || [];
+  log.push({
+    type: 'action',
+    action,
+    fingerprint: getPCFingerprint(),
+    timestamp: new Date().toISOString()
+  });
+  if (log.length > 200) log.splice(0, log.length - 200);
+  localStorage.setItem(ACTION_LOG_KEY, JSON.stringify(log));
 }
 
 /* ───── CREATOR ACCESS LOG ───── */
@@ -528,6 +558,7 @@ function confirmPaywall() {
 
 /* ───── CREATOR TABS ───── */
 function showCreatorTab(tab) {
+  logCreatorAction('abrió módulo: ' + tab);
   const content = document.getElementById('creator-tab-content');
   const sd = JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {};
 
@@ -782,20 +813,42 @@ function showCreatorTab(tab) {
     }
 
     case 'registro': {
-      const log = JSON.parse(localStorage.getItem(CREATOR_LOG_KEY)) || [];
-      const logHtml = log.length === 0
+      const visits = JSON.parse(localStorage.getItem(VISIT_LOG_KEY)) || [];
+      const actions = JSON.parse(localStorage.getItem(ACTION_LOG_KEY)) || [];
+      const creatorLog = JSON.parse(localStorage.getItem(CREATOR_LOG_KEY)) || [];
+
+      let all = [
+        ...visits.map(v => ({ ...v, _type: 'visit', _label: '🌐 Visita' })),
+        ...creatorLog.map(c => ({ ...c, _type: 'creator', _label: '🔐 Modo Creador', action: 'accedió al panel', username: c.username })),
+        ...actions.map(a => ({ ...a, _type: 'action', _label: '⚡ Acción' })),
+      ];
+      all.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      if (all.length > 100) all = all.slice(0, 100);
+
+      const logHtml = all.length === 0
         ? '<div class="line" style="color:#444">Sin registros aún</div>'
-        : log.reverse().map(entry => `
-          <div class="status-line">
-            <span class="label" style="font-size:0.65rem;min-width:auto">${new Date(entry.timestamp).toLocaleString()}</span>
-            <span class="value" style="font-size:0.65rem">${entry.fingerprint}</span>
-            <span class="value" style="font-size:0.65rem;color:#7289da">${entry.username}</span>
+        : all.map(entry => `
+          <div class="status-line" style="padding:0.25rem 0;border-bottom:1px solid rgba(255,255,255,0.02)">
+            <span style="font-size:0.6rem;color:#444;min-width:120px;display:inline-block">${new Date(entry.timestamp).toLocaleString()}</span>
+            <span style="font-size:0.6rem;color:#555;min-width:80px;display:inline-block">${entry._label}</span>
+            <span style="font-size:0.6rem;color:#888">${entry.action || entry.username || 'Visitante'}</span>
+            <span style="font-size:0.55rem;color:#444;margin-left:0.5rem">${entry.fingerprint ? entry.fingerprint.substring(0, 10)+'…' : ''}</span>
           </div>
         `).join('');
+
+      const stats = `
+        <div style="display:flex;gap:1rem;margin-bottom:0.75rem;font-size:0.65rem;color:#666">
+          <span>🌐 Visitas: <strong style="color:#c0c0d0">${visits.length}</strong></span>
+          <span>🔐 Accesos Creator: <strong style="color:#c0c0d0">${creatorLog.length}</strong></span>
+          <span>⚡ Acciones: <strong style="color:#c0c0d0">${actions.length}</strong></span>
+        </div>
+      `;
+
       content.innerHTML = `
         <div class="tab-content">
-          <div class="line"><span class="prompt">└─$</span> <span class="highlight">Registro de Accesos</span></div>
-          <div class="line" style="color:#666;font-size:0.7rem;margin-bottom:0.5rem">Últimos accesos al Modo Creador</div>
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">Registro Completo</span></div>
+          ${stats}
+          <div class="line" style="color:#666;font-size:0.7rem;margin-bottom:0.5rem">Últimos eventos (máx 100)</div>
           ${logHtml}
         </div>`;
       break;
@@ -928,6 +981,7 @@ function showCreatorTab(tab) {
 function getSD() { return JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {}; }
 
 function saveServerData() {
+  logCreatorAction('guardó Server');
   const sd = getSD();
   sd.title = document.getElementById('e-title')?.value;
   sd.version = document.getElementById('e-version')?.value;
@@ -1000,6 +1054,7 @@ function addTeamMember() {
 }
 
 function saveTeam() {
+  logCreatorAction('guardó Equipo');
   const sd = getSD();
   const team = sd.team || [];
   team.forEach((_, i) => {
@@ -1039,6 +1094,7 @@ function addKit() {
 }
 
 function saveKits() {
+  logCreatorAction('guardó Kits');
   const sd = getSD();
   const kits = sd.kits || [];
   kits.forEach((_, i) => {
@@ -1082,6 +1138,7 @@ function addLogro() {
 }
 
 function saveLogros() {
+  logCreatorAction('guardó Logros');
   const sd = getSD();
   const logros = sd.logros || [];
   logros.forEach((_, i) => {
@@ -1137,6 +1194,7 @@ function removeRegla(index) {
 }
 
 function saveReglas() {
+  logCreatorAction('guardó Reglas');
   const sd = getSD();
   const reglas = sd.reglas || [];
   reglas.forEach((_, i) => {
@@ -1183,6 +1241,7 @@ function removeGaleria(index) {
 }
 
 function saveGaleria() {
+  logCreatorAction('guardó Galería');
   const sd = getSD();
   const galeria = sd.galeria || [];
   galeria.forEach((_, i) => {
@@ -1272,6 +1331,7 @@ function removeModEntry(cat, index) {
 }
 
 function saveMods() {
+  logCreatorAction('guardó Mods');
   const sd = getSD();
   const categories = ['mods', 'modpacks', 'shaders', 'textures'];
   categories.forEach(cat => {
@@ -1312,6 +1372,8 @@ document.addEventListener('DOMContentLoaded', () => {
   applyGaleria();
   applyMods();
   showAccountStatus();
+
+  logVisit();
 
   if (!localStorage.getItem('nervalia_welcomed')) {
     setTimeout(() => {
