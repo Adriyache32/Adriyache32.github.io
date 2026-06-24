@@ -1591,7 +1591,7 @@ function migrateKits() {
   if (!kits) return;
   let changed = false;
   const ver = sd._kitVer || 0;
-  if (ver < 1) {
+  if (ver < 2) {
     const perkMap = {
       'cobre': ['🪖 Armadura: Casco de cobre, Peto de cobre, Pantalones de cobre, Botas de cobre', '⛏️ Herramientas: Pico de cobre, Hacha de cobre, Espada de cobre, Pala de cobre, Azada de cobre', '🍞 Comida: 10 panes, 5 manzanas', '📦 Items: 16 antorchas, 1 Cama marrón', '🏷️ Tag coloreado en el chat'],
       'plata': ['🪖 Armadura: Casco de plata, Peto de plata, Pantalones de plata, Botas de plata', '⛏️ Herramientas: Pico de plata (Fortuna I), Hacha de plata (Eficiencia I), Espada de plata (Filo I), Pala de plata (Eficiencia I)', '🍞 Comida: 15 chuletas de cerdo cocidas', '📦 Items: 24 antorchas, 1 Cama gris, 1 Mesa de trabajo', '🔮 Acceso a /enderchest'],
