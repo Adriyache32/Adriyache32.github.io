@@ -781,9 +781,9 @@ function showCreatorTab(tab) {
     }
     case 'membresias': {
       const mdata = sd.membresias || [
-        { name: 'Semanal', price: 30, dailyCoins: 1, badge: '', perks: ['Tag especial en el chat', '1 home adicional', 'Acceso a /fly en spawn'] },
-        { name: 'Mensual', price: 80, dailyCoins: 3, badge: '🔥 POPULAR', perks: ['Tag especial + color', '3 homes adicionales', 'Acceso a /fly y /nick', 'Rol exclusivo en Discord'] },
-        { name: 'Vitalicio', price: 300, dailyCoins: 5, badge: '👑 VIP', perks: ['Tag especial + color + brillo', '5 homes adicionales', 'Acceso a /fly, /nick, /enderchest', 'Rol VIP en Discord', '+50 monedas iniciales'] },
+        { name: 'Semanal', price: 30, dailyCoins: 1, badge: '', perks: ['Tag especial en el chat', '1 home adicional'] },
+        { name: 'Mensual', price: 80, dailyCoins: 3, badge: '🔥 POPULAR', perks: ['Tag especial + color', '3 homes adicionales', 'Rol exclusivo en Discord'] },
+        { name: 'Vitalicio', price: 300, dailyCoins: 5, badge: '👑 VIP', perks: ['Tag especial + color + brillo', '5 homes adicionales', 'Rol VIP en Discord', '+50 monedas iniciales'] },
       ];
       let mHtml = mdata.map((m, i) => `
         <div style="border:1px solid rgba(255,255,255,0.05);padding:0.75rem;border-radius:6px;margin-bottom:0.5rem">
