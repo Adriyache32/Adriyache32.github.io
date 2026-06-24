@@ -1052,10 +1052,252 @@ function showCreatorTab(tab) {
         </div>`;
       break;
     }
+    case 'ai-terminal': {
+      content.innerHTML = `
+        <div class="tab-content">
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">🤖 AI Terminal</span></div>
+          <div class="line" style="color:#888;font-size:0.7rem;margin-bottom:0.5rem">Escribí en lenguaje natural lo que querés cambiar:</div>
+          <div class="ai-chat" id="ai-chat" style="background:#06060e;border:1px solid rgba(255,255,255,0.05);border-radius:8px;padding:0.75rem;max-height:300px;overflow-y:auto;margin-bottom:0.5rem;font-size:0.75rem">
+            <div class="ai-msg ai-bot" style="margin-bottom:0.5rem;color:#888">🤖 Hola! Decime qué querés modificar del server. Ej: "cambia el título a Nervalia 2.0", "agrega un kit Diamante con precio 40", "cambia la IP a nervalia.mc"</div>
+          </div>
+          <div style="display:flex;gap:0.5rem">
+            <input id="ai-input" class="editor-input" placeholder="Escribí tu orden..." style="flex:1;font-size:0.75rem" onkeydown="if(event.key==='Enter')sendAICommand()">
+            <button class="btn-editor save" onclick="sendAICommand()" style="font-size:0.7rem">[ ENVIAR ]</button>
+          </div>
+          <div class="line" style="margin-top:0.5rem;font-size:0.65rem;color:#444">Los cambios se aplican automáticamente a la web.</div>
+        </div>`;
+      break;
+    }
   }
 }
 
-/* ───── EXPORT CONFIG ───── */
+/* ───── AI TERMINAL ───── */
+function sendAICommand() {
+  const input = document.getElementById('ai-input');
+  const chat = document.getElementById('ai-chat');
+  if (!input || !chat || !input.value.trim()) return;
+
+  const cmd = input.value.trim();
+  input.value = '';
+  addAIMessage('user', cmd);
+  processAICommand(cmd);
+}
+
+function addAIMessage(role, text) {
+  const chat = document.getElementById('ai-chat');
+  if (!chat) return;
+  const div = document.createElement('div');
+  div.className = `ai-msg ai-${role}`;
+  div.style.marginBottom = '0.5rem';
+  div.style.padding = '0.3rem 0.5rem';
+  div.style.borderRadius = '6px';
+  div.style.fontSize = '0.75rem';
+  if (role === 'user') {
+    div.style.color = '#7289da';
+    div.style.textAlign = 'right';
+    div.style.background = 'rgba(114,137,254,0.08)';
+    div.textContent = `👤 ${text}`;
+  } else {
+    div.style.color = '#c0c0d0';
+    div.style.background = 'rgba(255,255,255,0.02)';
+    div.textContent = `🤖 ${text}`;
+  }
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function processAICommand(cmd) {
+  const lower = cmd.toLowerCase();
+  const sd = getSD();
+
+  // ── TITLE ──
+  const titleMatch = lower.match(/cambia?\s*(el\s+)?t[ií]tulo\s+(a\s+)?(.+)/i) ||
+                     lower.match(/t[ií]tulo\s*[:=]\s*(.+)/i);
+  if (titleMatch) {
+    const val = titleMatch[3] || titleMatch[1];
+    sd.title = val.trim().replace(/^["']|["']$/g, '');
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+    applyServerData();
+    addAIMessage('bot', `✅ Título cambiado a "${sd.title}"`);
+    return;
+  }
+
+  // ── IP ──
+  const ipMatch = lower.match(/cambia?\s*((la\s+)?ip\s+(a\s+)?|server\s+ip\s+(a\s+)?)(.+)/i) ||
+                  lower.match(/ip\s*[:=]\s*(.+)/i);
+  if (ipMatch) {
+    const val = ipMatch[5] || ipMatch[1];
+    sd.serverIP = val.trim().replace(/^["']|["']$/g, '');
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+    applyServerData();
+    addAIMessage('bot', `✅ IP cambiada a "${sd.serverIP}"`);
+    return;
+  }
+
+  // ── DISCORD ──
+  const discordMatch = lower.match(/cambia?\s*(el\s+)?discord\s+(a\s+)?(.+)/i) ||
+                        lower.match(/discord\s*[:=]\s*(.+)/i);
+  if (discordMatch) {
+    const val = discordMatch[3] || discordMatch[1];
+    sd.discord = val.trim().replace(/^["']|["']$/g, '');
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+    applyServerData();
+    addAIMessage('bot', `✅ Discord cambiado a "${sd.discord}"`);
+    return;
+  }
+
+  // ── VERSION ──
+  const verMatch = lower.match(/cambia?\s*(la\s+)?versi[oó]n\s+(a\s+)?(.+)/i) ||
+                   lower.match(/versi[oó]n\s*[:=]\s*(.+)/i);
+  if (verMatch) {
+    const val = verMatch[3] || verMatch[1];
+    sd.version = val.trim().replace(/^["']|["']$/g, '');
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+    applyServerData();
+    addAIMessage('bot', `✅ Versión cambiada a "${sd.version}"`);
+    return;
+  }
+
+  // ── ICON ──
+  const iconMatch = lower.match(/cambia?\s*(el\s+)?i[co]n[o]?\s+(a\s+)?(.+)/i) ||
+                    lower.match(/icono?\s*[:=]\s*(.+)/i);
+  if (iconMatch) {
+    const val = iconMatch[3] || iconMatch[1];
+    sd.icon = val.trim().replace(/^["']|["']$/g, '');
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+    applyServerData();
+    addAIMessage('bot', `✅ Icono cambiado`);
+    return;
+  }
+
+  // ── ADD KIT ──
+  const addKitMatch = lower.match(/agrega?\s*(un\s+)?kit\s+(.+?)\s+con\s+precio\s+(\d+)/i);
+  if (addKitMatch) {
+    const name = addKitMatch[2].trim();
+    const price = parseInt(addKitMatch[3]);
+    if (!sd.kits) sd.kits = [];
+    sd.kits.push({ name, price, badge: '', perks: ['Beneficio 1', 'Beneficio 2'] });
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+    applyKits();
+    addAIMessage('bot', `✅ Kit "${name}" creado con precio ${price} 🪙`);
+    return;
+  }
+
+  // ── DELETE KIT ──
+  const delKitMatch = lower.match(/elimina?\s*(el\s+)?kit\s+(.+)/i) ||
+                      lower.match(/borra?\s*(el\s+)?kit\s+(.+)/i);
+  if (delKitMatch) {
+    const name = (delKitMatch[2] || delKitMatch[3] || '').trim().toLowerCase();
+    if (sd.kits) {
+      const before = sd.kits.length;
+      sd.kits = sd.kits.filter(k => k.name.toLowerCase() !== name);
+      if (sd.kits.length < before) {
+        localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+        applyKits();
+        addAIMessage('bot', `✅ Kit eliminado`);
+        return;
+      }
+    }
+    addAIMessage('bot', `❌ No encontré un kit llamado "${name}"`);
+    return;
+  }
+
+  // ── CHANGE KIT PRICE ──
+  const priceMatch = lower.match(/(\w[\w\s]+?)\s+(pase?|cueste?|valga?|precio)\s+(a\s+)?(\d+)/i);
+  if (priceMatch) {
+    const name = priceMatch[1].trim().toLowerCase();
+    const newPrice = parseInt(priceMatch[4]);
+    if (sd.kits) {
+      const kit = sd.kits.find(k => k.name.toLowerCase() === name);
+      if (kit) {
+        kit.price = newPrice;
+        localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+        applyKits();
+        addAIMessage('bot', `✅ Precio de "${kit.name}" cambiado a ${newPrice} 🪙`);
+        return;
+      }
+    }
+    addAIMessage('bot', `❌ No encontré un kit llamado "${priceMatch[1].trim()}"`);
+    return;
+  }
+
+  // ── ADD BADGE ──
+  const badgeMatch = lower.match(/pon(le)?\s*badge\s+(a\s+)?(\w[\w\s]*?)\s*(con\s+)?["'](.+?)["']/i) ||
+                     lower.match(/(\w[\w\s]+?)\s*badge\s*[:=]\s*["'](.+?)["']/i);
+  if (badgeMatch) {
+    const name = (badgeMatch[3] || badgeMatch[1]).trim().toLowerCase();
+    const badge = (badgeMatch[5] || badgeMatch[2]).trim();
+    if (sd.kits) {
+      const kit = sd.kits.find(k => k.name.toLowerCase() === name);
+      if (kit) {
+        kit.badge = badge;
+        localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+        applyKits();
+        addAIMessage('bot', `✅ Badge "${badge}" puesto en "${kit.name}"`);
+        return;
+      }
+    }
+    addAIMessage('bot', `❌ No encontré ese kit`);
+    return;
+  }
+
+  // ── ADD / REMOVE PERK ──
+  const perkMatch = lower.match(/agrega?\s*(el\s+)?perk\s+["'](.+?)["']\s*(a\s+)?(\w[\w\s]+)/i);
+  if (perkMatch) {
+    const perk = perkMatch[2].trim();
+    const name = perkMatch[4].trim().toLowerCase();
+    if (sd.kits) {
+      const kit = sd.kits.find(k => k.name.toLowerCase() === name);
+      if (kit) {
+        if (!kit.perks) kit.perks = [];
+        kit.perks.push(perk);
+        localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+        applyKits();
+        addAIMessage('bot', `✅ Perk agregado a "${kit.name}"`);
+        return;
+      }
+    }
+    addAIMessage('bot', `❌ No encontré ese kit`);
+    return;
+  }
+
+  // ── DESCRIPTION ──
+  const desc1Match = lower.match(/cambia?\s*(la\s+)?desc(ripci[oó]n)?\s*1\s+(a\s+)?(.+)/i);
+  if (desc1Match) {
+    sd.desc1 = desc1Match[4] || desc1Match[3];
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+    applyServerData();
+    addAIMessage('bot', `✅ Descripción 1 actualizada`);
+    return;
+  }
+
+  const desc2Match = lower.match(/cambia?\s*(la\s+)?desc(ripci[oó]n)?\s*2\s+(a\s+)?(.+)/i);
+  if (desc2Match) {
+    sd.desc2 = desc2Match[4] || desc2Match[3];
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+    applyServerData();
+    addAIMessage('bot', `✅ Descripción 2 actualizada`);
+    return;
+  }
+
+  // ── MODE ──
+  const modeMatch = lower.match(/cambia?\s*(el\s+)?modo?\s+(a\s+)?(.+)/i);
+  if (modeMatch) {
+    sd.mode = modeMatch[3].trim();
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+    applyServerData();
+    addAIMessage('bot', `✅ Modo cambiado a "${sd.mode}"`);
+    return;
+  }
+
+  // ── HELP ──
+  if (/ayuda|help|qu[eé] puedes? hacer|comandos/i.test(lower)) {
+    addAIMessage('bot', `Comandos disponibles:\n• "cambia el título a ..."\n• "cambia la ip a ..."\n• "cambia el discord a ..."\n• "cambia la versión a ..."\n• "cambia el icono a ..."\n• "agrega un kit NOMBRE con precio N"\n• "elimina el kit NOMBRE"\n• "NOMBRE pase a PRECIO"\n• "pon badge a NOMBRE con 'TEXTO'"\n• "agrega el perk 'TEXTO' a NOMBRE"\n• "cambia la desc 1 a ..."\n• "cambia el modo a ..."`);
+    return;
+  }
+
+  addAIMessage('bot', '❌ No entendí el comando. Escribí "ayuda" para ver los comandos disponibles.');
+}
 function exportConfig() {
   const sd = JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {};
   const json = JSON.stringify(sd, null, 2);
