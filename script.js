@@ -1138,264 +1138,286 @@ function buildAIContext() {
 }
 
 function processAICommand(cmd) {
-  const lower = cmd.toLowerCase();
   const sd = getSD();
 
-  // ── TITLE ──
-  const titleMatch = lower.match(/cambia?\s*(el\s+)?t[ií]tulo\s+(a\s+)?(.+)/i) ||
-                     lower.match(/t[ií]tulo\s*[:=]\s*(.+)/i);
-  if (titleMatch) {
-    const val = titleMatch[3] || titleMatch[1];
-    sd.title = val.trim().replace(/^["']|["']$/g, '');
-    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-    applyServerData();
-    addAIMessage('bot', `✅ Título cambiado a "${sd.title}"`);
-    return;
-  }
+  function norm(t) { return t.toLowerCase().replace(/[¿?¡!,.;:]/g, '').trim(); }
 
-  // ── IP ──
-  const ipMatch = lower.match(/cambia?\s*((la\s+)?ip\s+(a\s+)?|server\s+ip\s+(a\s+)?)(.+)/i) ||
-                  lower.match(/ip\s*[:=]\s*(.+)/i);
-  if (ipMatch) {
-    const val = ipMatch[5] || ipMatch[1];
-    sd.serverIP = val.trim().replace(/^["']|["']$/g, '');
-    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-    applyServerData();
-    addAIMessage('bot', `✅ IP cambiada a "${sd.serverIP}"`);
-    return;
-  }
-
-  // ── DISCORD ──
-  const discordMatch = lower.match(/cambia?\s*(el\s+)?discord\s+(a\s+)?(.+)/i) ||
-                        lower.match(/discord\s*[:=]\s*(.+)/i);
-  if (discordMatch) {
-    const val = discordMatch[3] || discordMatch[1];
-    sd.discord = val.trim().replace(/^["']|["']$/g, '');
-    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-    applyServerData();
-    addAIMessage('bot', `✅ Discord cambiado a "${sd.discord}"`);
-    return;
-  }
-
-  // ── VERSION ──
-  const verMatch = lower.match(/cambia?\s*(la\s+)?versi[oó]n\s+(a\s+)?(.+)/i) ||
-                   lower.match(/versi[oó]n\s*[:=]\s*(.+)/i);
-  if (verMatch) {
-    const val = verMatch[3] || verMatch[1];
-    sd.version = val.trim().replace(/^["']|["']$/g, '');
-    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-    applyServerData();
-    addAIMessage('bot', `✅ Versión cambiada a "${sd.version}"`);
-    return;
-  }
-
-  // ── ICON ──
-  const iconMatch = lower.match(/cambia?\s*(el\s+)?i[co]n[o]?\s+(a\s+)?(.+)/i) ||
-                    lower.match(/icono?\s*[:=]\s*(.+)/i);
-  if (iconMatch) {
-    const val = iconMatch[3] || iconMatch[1];
-    sd.icon = val.trim().replace(/^["']|["']$/g, '');
-    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-    applyServerData();
-    addAIMessage('bot', `✅ Icono cambiado`);
-    return;
-  }
-
-  // ── ADD KIT ──
-  const addKitMatch = lower.match(/agrega?\s*(un\s+)?kit\s+(.+?)\s+con\s+precio\s+(\d+)/i);
-  if (addKitMatch) {
-    const name = addKitMatch[2].trim();
-    const price = parseInt(addKitMatch[3]);
-    if (!sd.kits) sd.kits = [];
-    sd.kits.push({ name, price, badge: '', perks: ['Beneficio 1', 'Beneficio 2'] });
-    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-    applyKits();
-    addAIMessage('bot', `✅ Kit "${name}" creado con precio ${price} 🪙`);
-    return;
-  }
-
-  // ── DELETE KIT ──
-  const delKitMatch = lower.match(/elimina?\s*(el\s+)?kit\s+(.+)/i) ||
-                      lower.match(/borra?\s*(el\s+)?kit\s+(.+)/i);
-  if (delKitMatch) {
-    const name = (delKitMatch[2] || delKitMatch[3] || '').trim().toLowerCase();
-    if (sd.kits) {
-      const before = sd.kits.length;
-      sd.kits = sd.kits.filter(k => k.name.toLowerCase() !== name);
-      if (sd.kits.length < before) {
-        localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-        applyKits();
-        addAIMessage('bot', `✅ Kit eliminado`);
-        return;
-      }
+  function after(words) {
+    const n = norm(cmd);
+    for (const w of Array.isArray(words) ? words : [words]) {
+      const idx = n.indexOf(w);
+      if (idx !== -1) return n.slice(idx + w.length).trim().replace(/^(a\s+)/, '').replace(/^["']|["']$/g, '').trim();
     }
-    addAIMessage('bot', `❌ No encontré un kit llamado "${name}"`);
-    return;
+    return null;
   }
 
-  // ── CHANGE KIT PRICE ──
-  const priceMatch = lower.match(/(\w[\w\s]+?)\s+(pase?|cueste?|valga?|precio)\s+(a\s+)?(\d+)/i);
-  if (priceMatch) {
-    const name = priceMatch[1].trim().toLowerCase();
-    const newPrice = parseInt(priceMatch[4]);
-    if (sd.kits) {
-      const kit = sd.kits.find(k => k.name.toLowerCase() === name);
-      if (kit) {
-        kit.price = newPrice;
-        localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-        applyKits();
-        addAIMessage('bot', `✅ Precio de "${kit.name}" cambiado a ${newPrice} 🪙`);
-        return;
-      }
+  function has(words) {
+    const n = norm(cmd);
+    for (const w of Array.isArray(words) ? words : [words]) {
+      if (n.includes(w)) return true;
     }
-    addAIMessage('bot', `❌ No encontré un kit llamado "${priceMatch[1].trim()}"`);
-    return;
+    return false;
   }
 
-  // ── ADD BADGE ──
-  const badgeMatch = lower.match(/pon(le)?\s*badge\s+(a\s+)?(\w[\w\s]*?)\s*(con\s+)?["'](.+?)["']/i) ||
-                     lower.match(/(\w[\w\s]+?)\s*badge\s*[:=]\s*["'](.+?)["']/i);
-  if (badgeMatch) {
-    const name = (badgeMatch[3] || badgeMatch[1]).trim().toLowerCase();
-    const badge = (badgeMatch[5] || badgeMatch[2]).trim();
-    if (sd.kits) {
-      const kit = sd.kits.find(k => k.name.toLowerCase() === name);
-      if (kit) {
-        kit.badge = badge;
-        localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-        applyKits();
-        addAIMessage('bot', `✅ Badge "${badge}" puesto en "${kit.name}"`);
-        return;
-      }
-    }
-    addAIMessage('bot', `❌ No encontré ese kit`);
-    return;
+  function findItem(list, name) {
+    const nn = norm(name);
+    return list.find(i => norm(i.name) === nn || norm(i.name).includes(nn) || nn.includes(norm(i.name)));
   }
 
-  // ── ADD / REMOVE PERK ──
-  const perkMatch = lower.match(/agrega?\s*(el\s+)?perk\s+["'](.+?)["']\s*(a\s+)?(\w[\w\s]+)/i);
-  if (perkMatch) {
-    const perk = perkMatch[2].trim();
-    const name = perkMatch[4].trim().toLowerCase();
-    if (sd.kits) {
-      const kit = sd.kits.find(k => k.name.toLowerCase() === name);
-      if (kit) {
-        if (!kit.perks) kit.perks = [];
-        kit.perks.push(perk);
-        localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-        applyKits();
-        addAIMessage('bot', `✅ Perk agregado a "${kit.name}"`);
-        return;
-      }
-    }
-    addAIMessage('bot', `❌ No encontré ese kit`);
-    return;
-  }
-
-  // ── DESCRIPTION ──
-  const desc1Match = lower.match(/cambia?\s*(la\s+)?desc(ripci[oó]n)?\s*1\s+(a\s+)?(.+)/i);
-  if (desc1Match) {
-    sd.desc1 = desc1Match[4] || desc1Match[3];
-    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-    applyServerData();
-    addAIMessage('bot', `✅ Descripción 1 actualizada`);
-    return;
-  }
-
-  const desc2Match = lower.match(/cambia?\s*(la\s+)?desc(ripci[oó]n)?\s*2\s+(a\s+)?(.+)/i);
-  if (desc2Match) {
-    sd.desc2 = desc2Match[4] || desc2Match[3];
-    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-    applyServerData();
-    addAIMessage('bot', `✅ Descripción 2 actualizada`);
-    return;
-  }
-
-  // ── MODE ──
-  const modeMatch = lower.match(/cambia?\s*(el\s+)?modo?\s+(a\s+)?(.+)/i);
-  if (modeMatch) {
-    sd.mode = modeMatch[3].trim();
-    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-    applyServerData();
-    addAIMessage('bot', `✅ Modo cambiado a "${sd.mode}"`);
-    return;
+  function extractPriceAndDaily(text) {
+    const nums = text.match(/\d+/g);
+    if (!nums) return [null, null];
+    if (nums.length >= 2) return [parseInt(nums[0]), parseInt(nums[1])];
+    return [parseInt(nums[0]), null];
   }
 
   // ── HELP ──
-  if (/ayuda|help|qu[eé] puedes? hacer|comandos/i.test(lower)) {
-    addAIMessage('bot', `Comandos disponibles:
-• "cambia el título a ..."
-• "cambia la ip a ..."
-• "cambia el discord a ..."
-• "cambia la versión a ..."
-• "cambia el icono a ..."
-• "cambia la desc 1 a ..." / "cambia la desc 2 a ..."
-• "cambia el modo a ..."
-• "agrega un kit NOMBRE con precio N"
-• "elimina el kit NOMBRE"
-• "NOMBRE pase a PRECIO" (ej: "Oro pase a 25")
-• "pon badge a NOMBRE con 'TEXTO'"
-• "agrega el perk 'TEXTO' a NOMBRE"
-• "agrega una membresía NOMBRE con precio N y N monedas/día"
-• "elimina la membresía NOMBRE"
-• "mostrame la config"`);
+  if (has(['ayuda', 'help', 'que puedes hacer', 'que podes hacer', 'comandos', 'que haces', 'funciona'])) {
+    addAIMessage('bot', `Podés decirme cosas como:
+• "cambia el título a ..." — cambiá el título del server
+• "pone la ip ..." — cambiá la IP
+• "discord ..." — cambiá el Discord
+• "versión ..." — cambiá la versión
+• "icono ..." — cambiá la imagen del server
+• "descripción 1 ..." o "descripción 2 ..."
+• "modo ..." — cambiá el modo de juego
+• "creá un kit NOMBRE precio N" — nuevo kit
+• "agregá un kit NOMBRE con precio N"
+• "borrá el kit NOMBRE" / "eliminá el kit NOMBRE"
+• "NOMBRE que cueste N" / "NOMBRE pase a N" — cambiar precio
+• "ponéle badge a NOMBRE TEXTO" / "NOMBRE badge TEXTO"
+• "agregá el beneficio TEXTO a NOMBRE"
+• "creá una membresía NOMBRE precio N monedas N"
+• "eliminá la membresía NOMBRE"
+• "sacále los comandos a las membresías"
+• "mostrame la config" — resumen actual
+• "qué hay" / "cómo está la web"`);
     return;
   }
 
   // ── SHOW CONFIG ──
-  if (/mostrame\s*(la\s+)?config|c[oó]mo\s+est[aá]\s+(la\s+)?web|que\s+(hay|tengo)/i.test(lower)) {
+  if (has(['mostrame', 'config', 'como esta la web', 'como esta', 'que hay', 'que tengo', 'resumen', 'que datos'])) {
     addAIMessage('bot', buildAIContext());
     return;
   }
 
-  // ── ADD MEMBRESIA ──
-  const addMembMatch = lower.match(/agrega?\s*(una\s+)?membres[ií]a\s+(.+?)\s+con\s+precio\s+(\d+)\s+(y\s+)?(\d+)?\s*monedas/i);
-  if (addMembMatch) {
-    const name = addMembMatch[2].trim();
-    const price = parseInt(addMembMatch[3]);
-    const daily = parseInt(addMembMatch[5]) || 1;
-    if (!sd.membresias) sd.membresias = [];
-    sd.membresias.push({ name, price, dailyCoins: daily, badge: '', perks: ['Beneficio 1', 'Beneficio 2'] });
-    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-    applyMembresias();
-    addAIMessage('bot', `✅ Membresía "${name}" creada (${price}🪙, ${daily}🪙/día)`);
-    return;
+  // ── DETECTAR INTENCIÓN GENÉRICA DE CAMBIO ──
+  const changing = has(['cambia', 'cambie', 'cambio', 'pone', 'poné', 'poner', 'actualiza', 'actualice', 'modifica', 'modifique', 'edita', 'edite']);
+
+  // ── TITLE ──
+  if (has(['titulo', 'título']) && (changing || has(['a', 'nuevo', 'nuev']) || after(['titulo', 'título']))) {
+    const val = after(['titulo', 'título']);
+    if (val) { sd.title = val; saveAndReload('Título', sd.title); return; }
   }
 
-  // ── DELETE MEMBRESIA ──
-  const delMembMatch = lower.match(/elimina?\s*(la\s+)?membres[ií]a\s+(.+)/i);
-  if (delMembMatch) {
-    const name = delMembMatch[2].trim().toLowerCase();
-    if (sd.membresias) {
-      const before = sd.membresias.length;
-      sd.membresias = sd.membresias.filter(m => m.name.toLowerCase() !== name);
-      if (sd.membresias.length < before) {
-        localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-        applyMembresias();
-        addAIMessage('bot', '✅ Membresía eliminada');
+  // ── IP ──
+  if ((has(['ip', 'server ip']) && (changing || has(['a']) || after(['ip', 'server ip'])))) {
+    const val = after(['server ip', 'ip']);
+    if (val) { sd.serverIP = val; saveAndReload('IP', sd.serverIP); return; }
+  }
+
+  // ── DISCORD ──
+  if (has(['discord']) && (changing || after(['discord']))) {
+    const val = after(['discord']);
+    if (val) { sd.discord = val; saveAndReload('Discord', sd.discord); return; }
+  }
+
+  // ── VERSION ──
+  if (has(['version', 'versión']) && (changing || after(['version', 'versión']))) {
+    const val = after(['version', 'versión']);
+    if (val) { sd.version = val; saveAndReload('Versión', sd.version); return; }
+  }
+
+  // ── ICON ──
+  if (has(['icono', 'icon']) && (changing || after(['icono', 'icon']))) {
+    const val = after(['icono', 'icon']);
+    if (val) { sd.icon = val; saveAndReload('Icono'); return; }
+  }
+
+  // ── DESCRIPTION ──
+  if (has(['desc', 'descripcion', 'descripción', 'desc 1', 'desc1', 'desc 2', 'desc2'])) {
+    const is2 = has(['desc 2', 'desc2', 'descripcion 2', 'descripción 2']);
+    const key = is2 ? 'desc2' : 'desc1';
+    let val = after(is2 ? ['descripcion 2', 'descripción 2', 'desc 2', 'desc2'] : ['descripcion', 'descripción', 'desc 1', 'desc1', 'desc']);
+    if (val) { sd[key] = val; saveAndReload(is2 ? 'Descripción 2' : 'Descripción 1'); return; }
+  }
+
+  // ── MODE ──
+  if (has(['modo', 'mode', 'gamemode', 'modo de juego']) && (changing || after(['modo de juego', 'modo', 'mode']))) {
+    const val = after(['modo de juego', 'modo', 'mode']);
+    if (val) { sd.mode = val; saveAndReload('Modo', sd.mode); return; }
+  }
+
+  // ── DELETE KIT ──
+  if (has(['borra', 'borre', 'borrar', 'elimina', 'elimine', 'eliminar', 'saca', 'saque', 'sacale', 'quitale', 'quita', 'quite'])) {
+    const nm = after(['borra', 'borre', 'borrar', 'elimina', 'elimine', 'eliminar', 'saca', 'saque', 'sacale', 'quitale', 'quita', 'quite', 'kit']);
+    if (nm && has(['kit', 'membres', 'membresia', 'membresía'])) {
+      const isMemb = has(['membres', 'membresia', 'membresía']);
+      const list = isMemb ? sd.membresias : sd.kits;
+      const key = isMemb ? 'membresias' : 'kits';
+      if (list) {
+        const item = findItem(list, nm);
+        if (item) {
+          sd[key] = list.filter(i => i !== item);
+          saveToLS(sd);
+          (isMemb ? applyMembresias : applyKits)();
+          addAIMessage('bot', `✅ ${isMemb ? 'Membresía' : 'Kit'} "${item.name}" eliminada.`);
+          return;
+        }
+      }
+      addAIMessage('bot', `❌ No encontré ${isMemb ? 'una membresía' : 'un kit'} "${nm}"`);
+      return;
+    }
+  }
+
+  // ── ADD KIT ──
+  if (has(['crea', 'creá', 'agrega', 'agregá', 'añade', 'nuev']) && has(['kit'])) {
+    const rest = after(['crea', 'creá', 'agrega', 'agregá', 'añade', 'nuev', 'kit', 'un', 'una']);
+    if (rest) {
+      const [price] = extractPriceAndDaily(rest);
+      const name = rest.replace(/\s*(con\s+)?precio\s*\d+\s*(🪙)?\s*monedas?.*/i, '').trim().replace(/^(el\s+)?(kit\s+)?/i, '').trim();
+      if (name && price) {
+        if (!sd.kits) sd.kits = [];
+        sd.kits.push({ name: name.charAt(0).toUpperCase() + name.slice(1), price, badge: '', perks: ['Beneficio 1', 'Beneficio 2'] });
+        saveToLS(sd); applyKits();
+        addAIMessage('bot', `✅ Kit "${name}" creado (${price}🪙)`);
         return;
       }
     }
-    addAIMessage('bot', `❌ No encontré una membresía llamada "${name}"`);
-    return;
+  }
+
+  // ── ADD MEMBRESIA ──
+  if (has(['crea', 'creá', 'agrega', 'agregá', 'añade', 'nuev']) && has(['membres', 'membresia', 'membresía'])) {
+    const rest = after(['crea', 'creá', 'agrega', 'agregá', 'añade', 'nuev', 'membresia', 'membresía', 'membres', 'una', 'un']);
+    if (rest) {
+      const [price, daily] = extractPriceAndDaily(rest);
+      const name = rest.replace(/\s*(con\s+)?precio\s*\d+.*/i, '').trim().replace(/^(la\s+)?(membres[ií]a\s+)?/i, '').trim();
+      if (name && price) {
+        if (!sd.membresias) sd.membresias = [];
+        sd.membresias.push({ name: name.charAt(0).toUpperCase() + name.slice(1), price, dailyCoins: daily || 1, badge: '', perks: ['Beneficio 1', 'Beneficio 2'] });
+        saveToLS(sd); applyMembresias();
+        addAIMessage('bot', `✅ Membresía "${name}" creada (${price}🪙, ${daily || 1}🪙/día)`);
+        return;
+      }
+    }
+  }
+
+  // ── CHANGE PRICE (kit o membresia) ──
+  {
+    const nums = cmd.match(/\d+/g);
+    if (nums && nums.length >= 1) {
+      const potentialPrice = parseInt(nums[nums.length - 1]);
+      const n = norm(cmd).replace(/\s*\d+\s*$/g, '').replace(/^(cambia|pone|poné|modifica|actualiza|edita|pase|cueste|valga|precio)\s*(a\s+)?(el\s+)?(precio\s+)?(del\s+)?(kit\s+)?(la\s+)?(membres[ií]a\s+)?/i, '').trim();
+      if (n && potentialPrice > 0 && potentialPrice < 10000) {
+        const kit = findItem(sd.kits || [], n);
+        if (kit) { kit.price = potentialPrice; saveToLS(sd); applyKits(); addAIMessage('bot', `✅ Precio de "${kit.name}" → ${potentialPrice}🪙`); return; }
+        const memb = findItem(sd.membresias || [], n);
+        if (memb) { memb.price = potentialPrice; saveToLS(sd); applyMembresias(); addAIMessage('bot', `✅ Precio de "${memb.name}" → ${potentialPrice}🪙`); return; }
+      }
+    }
+  }
+
+  // ── BADGE ──
+  if (has(['badge'])) {
+    const rest = cmd.replace(/^(ponle|ponéle|ponele|pon|poner|agrega|agregá|sacale|quitale|quita|saca)\s*(le\s+)?(un\s+)?(badge\s+)?(a\s+)?/i, '');
+    const parts = rest.split(/\s+(?:con|de|es)\s+/i);
+    let name = '', badge = '';
+    if (parts.length >= 2) { name = norm(parts[1]).replace(/^["']|["']$/g, ''); badge = parts[0].replace(/^["']|["']$/g, '').trim(); }
+    else { name = norm(parts[0].replace(/^["']|["']$/g, '')); }
+    if (name && sd.kits) {
+      const kit = findItem(sd.kits, name);
+      if (kit) { kit.badge = badge || '⭐'; saveToLS(sd); applyKits(); addAIMessage('bot', `✅ Badge "${kit.badge}" en "${kit.name}"`); return; }
+    }
+  }
+
+  // ── PERK —─
+  if (has(['perk', 'beneficio', 'perks', 'beneficios'])) {
+    const rest = after(['perk', 'perks', 'beneficio', 'beneficios', 'agrega', 'agregá', 'añade', 'pon', 'poné']);
+    if (rest) {
+      const parts = rest.split(/\s+(?:a|en|al|para)\s+/i);
+      if (parts.length >= 2) {
+        const perkText = parts[0].replace(/^["']|["']$/g, '').trim();
+        const targetName = norm(parts[1]).replace(/^["']|["']$/g, '');
+        const kit = findItem(sd.kits || [], targetName);
+        const memb = findItem(sd.membresias || [], targetName);
+        if (kit) {
+          if (!kit.perks) kit.perks = [];
+          kit.perks.push(perkText);
+          saveToLS(sd); applyKits();
+          addAIMessage('bot', `✅ Perk agregado a "${kit.name}"`);
+          return;
+        }
+        if (memb) {
+          if (!memb.perks) memb.perks = [];
+          memb.perks.push(perkText);
+          saveToLS(sd); applyMembresias();
+          addAIMessage('bot', `✅ Beneficio agregado a "${memb.name}"`);
+          return;
+        }
+      }
+    }
   }
 
   // ── QUITAR COMANDOS DE MEMBRESIAS ──
-  if (/quita?\s*(les?\s+)?(los\s+)?comandos?\s*(de\s+)?(las?\s+)?membres[ií]as/i.test(lower)) {
+  if (has(['comando', 'comandos']) && has(['membres', 'membresia', 'membresía', 'quita', 'quitale', 'saca', 'sacale', 'borra', 'elimina'])) {
     if (sd.membresias) {
-      sd.membresias.forEach(m => {
-        m.perks = m.perks.filter(p => !p.match(/\/\w+/));
-      });
-      localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
-      applyMembresias();
+      sd.membresias.forEach(m => { m.perks = m.perks.filter(p => !p.match(/\/\w+/)); });
+      saveToLS(sd); applyMembresias();
       addAIMessage('bot', '✅ Comandos quitados de todas las membresías');
       return;
     }
-    addAIMessage('bot', '❌ No hay membresías');
-    return;
   }
 
-  addAIMessage('bot', '❌ No entendí el comando. Escribí "ayuda" para ver los comandos disponibles.');
+  // ── SETTINGS GENÉRICOS (cambiar cosa por valor) ──
+  {
+    const n = norm(cmd).replace(/^(cambia|cambie|cambio|pone|poné|poner|modifica|edita|actualiza)\s*(el\s+|la\s+|lo\s+)?/i, '').trim();
+    const parts = n.split(/\s+(?:a|por|para|con\s+valor|a\s+ser|que\s+sea)\s+/i);
+    if (parts.length >= 2) {
+      const field = norm(parts[0]);
+      const val = parts.slice(1).join(' ').trim().replace(/^["']|["']$/g, '');
+      if (field.includes('titulo') || field.includes('título')) { sd.title = val; saveAndReload('Título', sd.title); return; }
+      if (field.includes('ip')) { sd.serverIP = val; saveAndReload('IP', sd.serverIP); return; }
+      if (field.includes('discord')) { sd.discord = val; saveAndReload('Discord', sd.discord); return; }
+      if (field.includes('version') || field.includes('versión')) { sd.version = val; saveAndReload('Versión', sd.version); return; }
+      if (field.includes('icono') || field.includes('icon')) { sd.icon = val; saveAndReload('Icono'); return; }
+      if (field.includes('modo') || field.includes('mode')) { sd.mode = val; saveAndReload('Modo', sd.mode); return; }
+      if (field.includes('desc') && field.includes('1')) { sd.desc1 = val; saveAndReload('Descripción 1'); return; }
+      if (field.includes('desc') && field.includes('2')) { sd.desc2 = val; saveAndReload('Descripción 2'); return; }
+    }
+  }
+
+  // ── ÚLTIMO RECURSO: si tiene "cambia" o "pone" + algo + valor ──
+  if (changing) {
+    const rest = norm(cmd).replace(/^(cambia|cambie|cambio|pone|poné|poner|modifica|edita|actualiza)\s*(el\s+|la\s+|lo\s+)?/i, '').trim();
+    if (rest) {
+      // Buscar "X a Y" pattern
+      const xy = rest.match(/^(.+?)\s+(?:a|por|para)\s+(.+)$/i);
+      if (xy) {
+        const field = norm(xy[1]).replace(/^(el\s+|la\s+|lo\s+)?/i, '').trim();
+        const val = xy[2].replace(/^["']|["']$/g, '').trim();
+        if (/titulo|título/.test(field)) { sd.title = val; saveAndReload('Título', sd.title); return; }
+        if (/^ip/.test(field)) { sd.serverIP = val; saveAndReload('IP', sd.serverIP); return; }
+        if (/discord/.test(field)) { sd.discord = val; saveAndReload('Discord', sd.discord); return; }
+        if (/vers/.test(field)) { sd.version = val; saveAndReload('Versión', sd.version); return; }
+        if (/icon/.test(field)) { sd.icon = val; saveAndReload('Icono'); return; }
+        if (/modo|mode/.test(field)) { sd.mode = val; saveAndReload('Modo', sd.mode); return; }
+        if (/desc.*1|descripcion.*1/.test(field)) { sd.desc1 = val; saveAndReload('Descripción 1'); return; }
+        if (/desc.*2|descripcion.*2/.test(field)) { sd.desc2 = val; saveAndReload('Descripción 2'); return; }
+      }
+    }
+  }
+
+  addAIMessage('bot', '❌ No entendí. Decilo de otra forma o escribí "ayuda" para ver ejemplos.');
+
+  function saveToLS(sd2) {
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd2));
+  }
+
+  function saveAndReload(label, val) {
+    saveToLS(sd);
+    applyServerData();
+    addAIMessage('bot', `✅ ${label}${val ? ' cambiado a "' + val + '"' : ' actualizado'}`);
+  }
 }
 function exportConfig() {
   const sd = JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {};
