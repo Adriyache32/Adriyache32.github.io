@@ -255,95 +255,17 @@
         <button class="mod-tab" onclick="switchModTab('textures', this)">Texture Packs</button>
       </div>
 
+      <div class="mods-search">
+        <span class="mods-search-icon">🔍</span>
+        <input class="mods-search-input" id="mods-search" type="text" placeholder="Buscar mods, shaders, texture packs..." oninput="filterMods(this.value)">
+        <span class="mods-count" id="mods-count">0</span>
+      </div>
+
       <div id="mods-content" class="mods-content">
-        <div class="mods-grid" id="mods-grid-mods">
-          <div class="mod-card">
-            <div class="mod-img-placeholder">🎒</div>
-            <div class="mod-info">
-              <h4>Sodium</h4>
-              <div class="mod-desc">Optimización de rendimiento</div>
-              <a href="#" class="mod-cf-link" target="_blank">CurseForge →</a>
-            </div>
-          </div>
-          <div class="mod-card">
-            <div class="mod-img-placeholder">🗺️</div>
-            <div class="mod-info">
-              <h4>JourneyMap</h4>
-              <div class="mod-desc">Mapa minimapa y del mundo</div>
-              <a href="#" class="mod-cf-link" target="_blank">CurseForge →</a>
-            </div>
-          </div>
-          <div class="mod-card">
-            <div class="mod-img-placeholder">📦</div>
-            <div class="mod-info">
-              <h4>SimpleVoiceChat</h4>
-              <div class="mod-desc">Voice chat de proximidad</div>
-              <a href="#" class="mod-cf-link" target="_blank">CurseForge →</a>
-            </div>
-          </div>
-          <div class="mod-card">
-            <div class="mod-img-placeholder">🔧</div>
-            <div class="mod-info">
-              <h4>Litematica</h4>
-              <div class="mod-desc">Esquemas de construcción</div>
-              <a href="#" class="mod-cf-link" target="_blank">CurseForge →</a>
-            </div>
-          </div>
-        </div>
-        <div class="mods-grid hidden" id="mods-grid-modpacks">
-          <div class="mod-card">
-            <div class="mod-img-placeholder">📦</div>
-            <div class="mod-info">
-              <h4>Nervalia Pack</h4>
-              <div class="mod-desc">Modpack oficial del server</div>
-              <a href="#" class="mod-cf-link" target="_blank">CurseForge →</a>
-            </div>
-          </div>
-          <div class="mod-card">
-            <div class="mod-img-placeholder">⚡</div>
-            <div class="mod-info">
-              <h4>Fabulously Optimized</h4>
-              <div class="mod-desc">Modpack de optimización</div>
-              <a href="#" class="mod-cf-link" target="_blank">CurseForge →</a>
-            </div>
-          </div>
-        </div>
-        <div class="mods-grid hidden" id="mods-grid-shaders">
-          <div class="mod-card">
-            <div class="mod-img-placeholder">🌅</div>
-            <div class="mod-info">
-              <h4>Complementary Shaders</h4>
-              <div class="mod-desc">Shaders vibrantes y ligeros</div>
-              <a href="#" class="mod-cf-link" target="_blank">CurseForge →</a>
-            </div>
-          </div>
-          <div class="mod-card">
-            <div class="mod-img-placeholder">🌙</div>
-            <div class="mod-info">
-              <h4>BSL Shaders</h4>
-              <div class="mod-desc">Shaders realistas</div>
-              <a href="#" class="mod-cf-link" target="_blank">CurseForge →</a>
-            </div>
-          </div>
-        </div>
-        <div class="mods-grid hidden" id="mods-grid-textures">
-          <div class="mod-card">
-            <div class="mod-img-placeholder">🎨</div>
-            <div class="mod-info">
-              <h4>Faithful x64</h4>
-              <div class="mod-desc">Texturas fieles en 64x</div>
-              <a href="#" class="mod-cf-link" target="_blank">CurseForge →</a>
-            </div>
-          </div>
-          <div class="mod-card">
-            <div class="mod-img-placeholder">🖌️</div>
-            <div class="mod-info">
-              <h4>Bare Bones</h4>
-              <div class="mod-desc">Texturas minimalistas</div>
-              <a href="#" class="mod-cf-link" target="_blank">CurseForge →</a>
-            </div>
-          </div>
-        </div>
+        <div class="mods-grid" id="mods-grid-mods"></div>
+        <div class="mods-grid hidden" id="mods-grid-modpacks"></div>
+        <div class="mods-grid hidden" id="mods-grid-shaders"></div>
+        <div class="mods-grid hidden" id="mods-grid-textures"></div>
       </div>
     </section>
 
@@ -779,6 +701,24 @@
   </div>
 
 
+
+  <div id="sysmon">
+    <div class="sysmon-bar">
+      <span class="sysmon-label">CPU</span>
+      <span class="sysmon-track"><span class="sysmon-fill cpu-fill" id="cpu-fill"></span></span>
+      <span class="sysmon-pct" id="cpu-pct">0%</span>
+    </div>
+    <div class="sysmon-bar">
+      <span class="sysmon-label">RAM</span>
+      <span class="sysmon-track"><span class="sysmon-fill ram-fill" id="ram-fill"></span></span>
+      <span class="sysmon-pct" id="ram-pct">0%</span>
+    </div>
+    <div class="sysmon-bar">
+      <span class="sysmon-label">SWAP</span>
+      <span class="sysmon-track"><span class="sysmon-fill swap-fill" id="swap-fill"></span></span>
+      <span class="sysmon-pct" id="swap-pct">0%</span>
+    </div>
+  </div>
 
   <footer>
     <p>Nervalia &mdash; chanchos MC studios &mdash; hecho con 💚</p>
