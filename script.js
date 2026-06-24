@@ -1741,6 +1741,7 @@ function applyLogros() {
     6: '★★★★★★ Nivel 6 — Leyenda',
   };
   const tierRewards = { 1: 0.25, 2: 0.5, 3: 1, 4: 2, 5: 3, 6: 5 };
+  const tierColors = ['', '#888', '#4fc3f7', '#66bb6a', '#ffa726', '#ef5350', '#ab47bc'];
 
   const grouped = {};
   logros.forEach(l => {
@@ -1755,26 +1756,27 @@ function applyLogros() {
     if (!items || items.length === 0) continue;
     const done = items.filter(l => saved[`logro-${logros.indexOf(l)}`]).length;
     const total = items.length;
+    const isFirst = t === 1;
     html += `
-      <div class="tier-section" style="margin-bottom:1.5rem">
-        <div class="tier-header" style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:0.5rem;border-left:3px solid ${['','#888','#4fc3f7','#66bb6a','#ffa726','#ef5350','#ab47bc'][t]}">
+      <div class="tier-section" style="margin-bottom:1rem">
+        <div class="tier-header" onclick="toggleTier(this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid ${tierColors[t]};user-select:none">
           <div>
             <span style="font-size:0.8rem;font-weight:600;color:#c0c0d0">${tierNames[t]}</span>
-            <span style="font-size:0.65rem;color:#666;display:block">Completados: ${done}/${total} · Recompensa por logro: ${tierRewards[t] || 0.5} 🪙</span>
+            <span style="font-size:0.65rem;color:#666;display:block">${done}/${total} · ${tierRewards[t] || 0.5}🪙 c/u</span>
           </div>
-          <span style="font-size:0.65rem;color:#444">Límite: ${done}/${total}</span>
+          <span style="font-size:0.7rem;color:#444">${isFirst ? '▼' : '▶'} ${done}/${total}</span>
         </div>
-        <div style="display:flex;flex-direction:column;gap:0.4rem">
+        <div class="tier-body" style="display:${isFirst ? 'flex' : 'none'};flex-direction:column;gap:0.35rem;margin-top:0.4rem">
         ${items.map(l => {
           const id = `logro-${logros.indexOf(l)}`;
           const completed = saved[id];
           return `
-            <div class="logro${completed ? ' completado' : ''}" data-id="${id}" style="display:flex;align-items:center;gap:0.6rem;padding:0.4rem 0.6rem;border-radius:6px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04)">
-              <span style="font-size:1.1rem">${l.icon}</span>
-              <div style="flex:1;min-width:0"><h4 style="font-size:0.8rem;color:#c0c0d0;margin:0">${l.name}</h4><p style="font-size:0.65rem;color:#666;margin:0">${l.desc}</p></div>
-              <span style="font-size:0.7rem;color:#f0c040;white-space:nowrap">+${l.reward || tierRewards[t] || 0.5} 🪙</span>
-              <span style="font-size:0.8rem">${completed ? '✅' : '❌'}</span>
-              ${completed ? '' : `<button class="btn-logro-solicitar" onclick="openLogroRequest('${id}','${l.name}',this)" style="font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px;background:rgba(114,137,254,0.15);border:1px solid rgba(114,137,254,0.2);color:#7289da;cursor:pointer">Solicitar</button>`}
+            <div class="logro${completed ? ' completado' : ''}" data-id="${id}" style="display:flex;align-items:center;gap:0.6rem;padding:0.35rem 0.6rem;border-radius:6px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04)">
+              <span style="font-size:1rem">${l.icon}</span>
+              <div style="flex:1;min-width:0"><h4 style="font-size:0.75rem;color:#c0c0d0;margin:0">${l.name}</h4><p style="font-size:0.6rem;color:#666;margin:0">${l.desc}</p></div>
+              <span style="font-size:0.65rem;color:#f0c040;white-space:nowrap">+${l.reward || tierRewards[t] || 0.5}🪙</span>
+              <span style="font-size:0.75rem">${completed ? '✅' : '❌'}</span>
+              ${completed ? '' : `<button class="btn-logro-solicitar" onclick="openLogroRequest('${id}','${l.name}',this)" style="font-size:0.55rem;padding:0.15rem 0.4rem;border-radius:4px;background:rgba(114,137,254,0.15);border:1px solid rgba(114,137,254,0.2);color:#7289da;cursor:pointer">Solicitar</button>`}
             </div>
           `;
         }).join('')}
@@ -1783,6 +1785,15 @@ function applyLogros() {
   }
 
   grid.innerHTML = html || '<div style="text-align:center;color:#444;padding:2rem;font-size:0.8rem">No hay logros disponibles todavía.</div>';
+}
+
+function toggleTier(header) {
+  const body = header.nextElementSibling;
+  if (!body) return;
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'flex';
+  const arrow = header.querySelector('span:last-child');
+  if (arrow) arrow.textContent = arrow.textContent.replace('▶', '▼').replace('▼', '▶');
 }
 
 function addRegla() {
