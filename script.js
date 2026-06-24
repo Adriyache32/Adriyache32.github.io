@@ -563,7 +563,7 @@ function confirmPaywall() {
 function showCreatorTab(tab) {
   logCreatorAction('abrió módulo: ' + tab);
   const content = document.getElementById('creator-tab-content');
-  const sd = JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {};
+  const sd = getEffectiveSD();
 
   switch (tab) {
     case 'server':
@@ -1041,8 +1041,25 @@ function copyConfig() {
   });
 }
 
+let CONFIG_DEFAULTS = {};
+
 /* ───── SAVE HELPERS ───── */
 function getSD() { return JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {}; }
+function getEffectiveSD() {
+  const ls = getSD();
+  if (Object.keys(CONFIG_DEFAULTS).length === 0) return ls;
+  if (Object.keys(ls).length === 0) return JSON.parse(JSON.stringify(CONFIG_DEFAULTS));
+  const merged = JSON.parse(JSON.stringify(CONFIG_DEFAULTS));
+  Object.keys(ls).forEach(k => {
+    if (k === 'kits' && Array.isArray(ls.kits) && ls.kits.length > 0) {
+      merged.kits = ls.kits;
+    } else {
+      merged[k] = ls[k];
+    }
+  });
+  merged._fromConfig = true;
+  return merged;
+}
 
 function saveServerData() {
   logCreatorAction('guardó Server');
@@ -1065,7 +1082,7 @@ function saveServerData() {
 }
 
 function applyServerData() {
-  const sd = getSD();
+  const sd = getEffectiveSD();
   const title = document.getElementById('s-title');
   if (title && sd.title) title.textContent = sd.title;
 
@@ -1140,7 +1157,7 @@ function saveTeam() {
 }
 
 function applyTeam() {
-  const sd = getSD();
+  const sd = getEffectiveSD();
   const team = sd.team;
   const grid = document.getElementById('members-grid');
   if (!team || !grid) return;
@@ -1184,7 +1201,7 @@ function saveKits() {
 }
 
 function applyKits() {
-  const sd = getSD();
+  const sd = getEffectiveSD();
   const kits = sd.kits;
   const grid = document.querySelector('#tienda .kits-grid');
   if (!kits || !grid) return;
@@ -1228,7 +1245,7 @@ function saveLogros() {
 }
 
 function applyLogros() {
-  const sd = getSD();
+  const sd = getEffectiveSD();
   const logros = sd.logros;
   const grid = document.getElementById('logros-grid');
   if (!logros || !grid) return;
@@ -1280,7 +1297,7 @@ function saveReglas() {
 }
 
 function applyReglas() {
-  const sd = getSD();
+  const sd = getEffectiveSD();
   const reglas = sd.reglas;
   const list = document.querySelector('#reglas .reglas-list');
   if (!reglas || !list) return;
@@ -1329,7 +1346,7 @@ function saveGaleria() {
 }
 
 function applyGaleria() {
-  const sd = getSD();
+  const sd = getEffectiveSD();
   const galeria = sd.galeria;
   const grid = document.querySelector('#galeria .galeria-grid');
   if (!galeria || !grid) return;
@@ -1351,7 +1368,7 @@ function switchModTab(tab, btn) {
 }
 
 function applyMods() {
-  const sd = getSD();
+  const sd = getEffectiveSD();
   const mdata = sd.mods || {};
   const categories = ['mods', 'modpacks', 'shaders', 'textures'];
   const catNames = { mods: 'Mods', modpacks: 'Modpacks', shaders: 'Shaders', textures: 'Texture Packs' };
@@ -1609,7 +1626,7 @@ function migrateKits() {
       k.perks = perkMap[key] || defaultPerks;
       if (priceMap[key] !== undefined) k.price = priceMap[key];
     });
-    sd._kitVer = 1;
+    sd._kitVer = 2;
     changed = true;
   }
   kits.forEach(k => {
@@ -1628,7 +1645,11 @@ function migrateKits() {
 }
 
 /* ───── INIT ───── */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const res = await fetch('config.json?v=6');
+    if (res.ok) CONFIG_DEFAULTS = await res.json();
+  } catch {}
   migrateKits();
   setLED('idle');
   updateWallet();
