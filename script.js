@@ -555,8 +555,14 @@ function confirmPaywall() {
   let inv = JSON.parse(localStorage.getItem(INVENTORY_KEY)) || [];
   inv.push({ kit: paywallKit, date: new Date().toISOString() });
   localStorage.setItem(INVENTORY_KEY, JSON.stringify(inv));
+  const sd = getSD();
+  const isMemb = (sd.membresias || []).find(m => m.name === paywallKit);
+  if (isMemb) {
+    localStorage.setItem(MEMBERSHIP_KEY, JSON.stringify({ type: paywallKit, lastClaim: '' }));
+  }
   closePaywall();
-  alert(`✅ Kit ${paywallKit} canjeado con éxito!`);
+  alert(`✅ ${isMemb ? 'Membresía' : 'Kit'} ${paywallKit} canjeado con éxito!`);
+  if (isMemb) applyMembresias();
 }
 
 /* ───── CREATOR TABS ───── */
@@ -770,6 +776,36 @@ function showCreatorTab(tab) {
           </div>
           <div class="line" style="margin-top:1rem"><span class="prompt">└─$</span> <span class="highlight">Inventario canjeado</span></div>
           ${invHtml || '<div class="line" style="color:#444">No hay canjes registrados</div>'}
+        </div>`;
+      break;
+    }
+    case 'membresias': {
+      const mdata = sd.membresias || [
+        { name: 'Semanal', price: 30, dailyCoins: 1, badge: '', perks: ['Tag especial en el chat', '1 home adicional', 'Acceso a /fly en spawn'] },
+        { name: 'Mensual', price: 80, dailyCoins: 3, badge: '🔥 POPULAR', perks: ['Tag especial + color', '3 homes adicionales', 'Acceso a /fly y /nick', 'Rol exclusivo en Discord'] },
+        { name: 'Vitalicio', price: 300, dailyCoins: 5, badge: '👑 VIP', perks: ['Tag especial + color + brillo', '5 homes adicionales', 'Acceso a /fly, /nick, /enderchest', 'Rol VIP en Discord', '+50 monedas iniciales'] },
+      ];
+      let mHtml = mdata.map((m, i) => `
+        <div style="border:1px solid rgba(255,255,255,0.05);padding:0.75rem;border-radius:6px;margin-bottom:0.5rem">
+          <div class="editor-field"><span class="label">#${i+1}</span>
+            <input class="editor-input" id="memb-name-${i}" value="${m.name}" placeholder="Nombre" style="flex:0.25">
+            <input class="editor-input" id="memb-price-${i}" value="${m.price}" placeholder="Precio" style="flex:0.1;font-family:monospace">
+            <input class="editor-input" id="memb-daily-${i}" value="${m.dailyCoins}" placeholder="Monedas/día" style="flex:0.12;font-family:monospace">
+            <input class="editor-input" id="memb-badge-${i}" value="${m.badge || ''}" placeholder="Badge" style="flex:0.25;font-size:0.7rem">
+          </div>
+          <textarea class="editor-textarea" id="memb-perks-${i}" style="min-height:40px">${(m.perks || []).join('\n')}</textarea>
+          <button class="btn-editor danger" onclick="removeMembresia(${i})" style="font-size:0.65rem;margin-top:0.3rem">✕ Eliminar</button>
+        </div>
+      `).join('');
+      content.innerHTML = `
+        <div class="tab-content">
+          <div class="line"><span class="prompt">└─$</span> <span class="highlight">Editar Membresías</span></div>
+          ${mHtml}
+          <div class="editor-actions">
+            <button class="btn-editor" onclick="addMembresia()">[ + AGREGAR ]</button>
+            <button class="btn-editor save" onclick="saveMembresias()">[ GUARDAR ]</button>
+            <span id="e-msg" class="editor-success"></span>
+          </div>
         </div>`;
       break;
     }
@@ -1212,7 +1248,88 @@ function applyKits() {
   `).join('');
 }
 
-function addLogro() {
+/* ───── MEMBRESÍAS ───── */
+const MEMBERSHIP_KEY = 'nervalia_membership';
+
+function applyMembresias() {
+  const sd = getSD();
+  const mems = sd.membresias;
+  const grid = document.getElementById('membresias-grid');
+  if (!mems || !grid) return;
+  const active = JSON.parse(localStorage.getItem(MEMBERSHIP_KEY)) || {};
+  const today = new Date().toDateString();
+  const canClaim = active.type && active.lastClaim !== today;
+  grid.innerHTML = mems.map((m, i) => `
+    <div class="kit-card${m.badge ? ' featured' : ''}">
+      ${m.badge ? `<div class="kit-badge">${m.badge}</div>` : ''}
+      <div class="kit-tier">${m.name}</div>
+      <div class="kit-price">${m.price} 🪙</div>
+      <ul class="kit-perks">
+        ${m.perks.map(p => `<li>${p}</li>`).join('')}
+        <li>💰 ${m.dailyCoins} monedas por día</li>
+      </ul>
+      ${active.type === m.name
+        ? `<button class="btn btn-kit" onclick="claimDaily()" style="background:#2d7d46;margin-bottom:0.3rem">${canClaim ? '📥 Reclamar diarias' : '✅ Ya reclamaste hoy'}</button>
+           <div style="font-size:0.65rem;color:#888">Activa</div>`
+        : `<button class="btn btn-kit" onclick="openPaywall('${m.name}', ${m.price})">Comprar</button>`}
+    </div>
+  `).join('');
+}
+
+function claimDaily() {
+  const active = JSON.parse(localStorage.getItem(MEMBERSHIP_KEY)) || {};
+  if (!active.type) return alert('No tenés ninguna membresía activa.');
+  const today = new Date().toDateString();
+  if (active.lastClaim === today) return alert('Ya reclamaste tus monedas hoy.');
+  const sd = getSD();
+  const mems = sd.membresias || [];
+  const m = mems.find(x => x.name === active.type);
+  if (!m) return alert('Error: membresía no encontrada.');
+  setCoins(getCoins() + m.dailyCoins);
+  active.lastClaim = today;
+  localStorage.setItem(MEMBERSHIP_KEY, JSON.stringify(active));
+  applyMembresias();
+  alert(`✅ Reclamaste ${m.dailyCoins} 🪙 diarias. Volvé mañana por más.`);
+}
+
+function addMembresia() {
+  const sd = getSD();
+  const mems = sd.membresias || [];
+  mems.push({ name: 'Nueva Membresía', price: 50, dailyCoins: 2, badge: '', perks: ['Beneficio 1', 'Beneficio 2'] });
+  sd.membresias = mems;
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  showCreatorTab('membresias');
+}
+
+function saveMembresias() {
+  logCreatorAction('guardó Membresías');
+  const sd = getSD();
+  const mems = sd.membresias || [];
+  mems.forEach((_, i) => {
+    const n = document.getElementById(`memb-name-${i}`);
+    const p = document.getElementById(`memb-price-${i}`);
+    const d = document.getElementById(`memb-daily-${i}`);
+    const b = document.getElementById(`memb-badge-${i}`);
+    const perks = document.getElementById(`memb-perks-${i}`);
+    if (n) mems[i].name = n.value;
+    if (p) mems[i].price = parseFloat(p.value) || 0;
+    if (d) mems[i].dailyCoins = parseFloat(d.value) || 0;
+    if (b) mems[i].badge = b.value;
+    if (perks) mems[i].perks = perks.value.split('\n').filter(Boolean);
+  });
+  sd.membresias = mems;
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  applyMembresias();
+  const msg = document.getElementById('e-msg');
+  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+}
+
+function removeMembresia(index) {
+  const sd = getSD();
+  sd.membresias = (sd.membresias || []).filter((_, i) => i !== index);
+  localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  showCreatorTab('membresias');
+}
   const sd = getSD();
   const logros = sd.logros || [];
   logros.push({ name: 'Nuevo Logro', desc: 'Descripción', icon: '⭐' });
@@ -1669,6 +1786,11 @@ document.addEventListener('DOMContentLoaded', () => {
         { "name": "Rubi", "price": 160, "badge": "🆕 NUEVO", "perks": ["🪖 Armadura: Casco de diamante (Protección III), Peto de diamante (Protección III), Pantalones de diamante (Protección III), Botas de diamante (Protección III)", "⛏️ Herramientas: Pico de diamante (Fortuna IV, Eficiencia IV), Hacha de diamante (Eficiencia IV, Filo IV), Espada de diamante (Filo IV, Saqueo II), Pala de diamante (Eficiencia IV)", "🍞 Comida: 50 filetes de res, 20 pasteles de calabaza, 10 manzanas doradas", "📦 Items: 64 antorchas, 1 Cama roja, 1 Cofre de ender, 10 Obsidiana, 3 Perlas de ender"] },
         { "name": "Netherite", "price": 320, "badge": "🆕 NUEVO", "perks": ["🪖 Armadura: Casco de netherite, Peto de netherite, Pantalones de netherite, Botas de netherite", "⛏️ Herramientas: Pico de netherite (Fortuna V), Hacha de netherite (Eficiencia V), Espada de netherite (Filo V), Pala de netherite (Eficiencia V)", "🍞 Comida: 64 filetes de res, 32 pasteles de calabaza, 32 manzanas doradas", "📦 Items: 64 antorchas, 1 Cama negra, 1 Cofre de ender, 32 Obsidiana, 10 Perlas de ender, 1 Huevo de dragón, 1 Totem de inmortalidad"] },
         { "name": "Super Netherite", "price": 640, "badge": "👑 SUPREMO", "perks": ["🪖 Armadura: Casco de netherite (Protección V, Casco de acuático), Peto de netherite (Protección V), Pantalones de netherite (Protección V, Caída de pluma IV), Botas de netherite (Protección V, Caída de pluma IV, Agilidad acuática)", "⛏️ Herramientas: Pico de netherite (Fortuna V, Eficiencia V, Irrompibilidad III), Hacha de netherite (Eficiencia V, Filo V, Irrompibilidad III), Espada de netherite (Filo V, Aspecto ígneo II, Saqueo III, Barrido III, Irrompibilidad III), Pala de netherite (Eficiencia V, Irrompibilidad III), Azada de netherite (Eficiencia V, Irrompibilidad III)", "🍞 Comida: 64 chuletas de res, 32 pasteles de calabaza, 64 manzanas doradas notches", "📦 Items: 64 antorchas, 1 Cama negra, 1 Cofre de ender, 64 Obsidiana, 16 Perlas de ender, 1 Huevo de dragón, 1 Totem de inmortalidad, 1 Élitatra (Reparación III, Protección IV), 1 Escudo (Reparación III), 1 Ballesta (Multidisparo, Perforación IV, Velocidad de cargado III)", "💰 50 monedas del server"] }
+      ],
+      "membresias": [
+        { "name": "Semanal", "price": 30, "dailyCoins": 1, "badge": "", "perks": ["Tag especial en el chat", "1 home adicional", "Acceso a /fly en spawn"] },
+        { "name": "Mensual", "price": 80, "dailyCoins": 3, "badge": "🔥 POPULAR", "perks": ["Tag especial + color", "3 homes adicionales", "Acceso a /fly y /nick", "Rol exclusivo en Discord"] },
+        { "name": "Vitalicio", "price": 300, "dailyCoins": 5, "badge": "👑 VIP", "perks": ["Tag especial + color + brillo", "5 homes adicionales", "Acceso a /fly, /nick, /enderchest", "Rol VIP en Discord", "+50 monedas iniciales"] }
       ]
     }));
   }
@@ -1679,6 +1801,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyServerData();
   applyTeam();
   applyKits();
+  applyMembresias();
   applyReglas();
   applyLogros();
   applyGaleria();

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nervalia - chanchos MC studios</title>
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -205,6 +205,9 @@
           <button class="btn btn-kit" onclick="openPaywall('Oro', 20)">Canjear</button>
         </div>
       </div>
+      <h3 style="margin-top:3rem;margin-bottom:0.5rem;font-size:1.1rem;color:#f0c040">👑 Membresías</h3>
+      <p class="section-subtitle" style="margin-bottom:1.5rem">Recibí monedas todos los días</p>
+      <div class="kits-grid" id="membresias-grid"></div>
     </section>
 
     <!-- GALERÍA -->
@@ -652,6 +655,11 @@
             <h4>Monedas</h4>
             <p>Dar/quitar monedas</p>
           </div>
+          <div class="dashboard-card" onclick="showCreatorTab('membresias')">
+            <div class="card-icon">👑</div>
+            <h4>Membresías</h4>
+            <p>Suscripciones premium</p>
+          </div>
           <div class="dashboard-card" onclick="showCreatorTab('registro')">
             <div class="card-icon">📋</div>
             <h4>Registro</h4>
@@ -768,6 +776,6 @@
     <p>Nervalia &mdash; chanchos MC studios &mdash; hecho con 💚</p>
   </footer>
 
-  <script src="script.js?v=11"></script>
+  <script src="script.js?v=12"></script>
 </body>
 </html>
