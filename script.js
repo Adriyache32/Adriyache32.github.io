@@ -2654,7 +2654,7 @@ document.addEventListener('DOMContentLoaded', () => {
       "discord": "https://discord.gg/dG5hyxkca",
       "icon": "https://i.pinimg.com/736x/e8/5b/4d/e85b4d17e58cd4b24e0e886b2ad1a9c7.jpg",
       "modeStatus": "Trabajando",
-      "serverIP": "-------",
+      "serverIP": "o fundador a color amarillo",
       "kits": [
         { "name": "Cobre", "price": 0, "badge": "GRATIS", "perks": ["🪖 Armadura: Casco de cuero, Peto de cuero, Pantalones de cuero, Botas de cuero", "⛏️ Herramientas: Pico de madera, Hacha de madera, Espada de madera, Pala de madera", "🍞 Comida: 10 panes, 5 manzanas", "📦 Items: 16 antorchas, 1 Cama marrón", "🏷️ Tag coloreado en el chat"] },
         { "name": "Bronce", "price": 5, "badge": "", "perks": ["🪖 Armadura: Casco de cota de malla, Peto de cota de malla, Pantalones de cota de malla, Botas de cota de malla", "⛏️ Herramientas: Pico de piedra, Hacha de piedra, Espada de piedra, Pala de piedra", "🍞 Comida: 20 filetes de res", "📦 Items: 32 antorchas, 1 Cama naranja, 1 Mesa de trabajo", "🏠 Home adicional (2 total)"] },
@@ -2673,7 +2673,74 @@ document.addEventListener('DOMContentLoaded', () => {
         { "name": "Semanal", "price": 30, "dailyCoins": 1, "badge": "", "perks": ["Tag especial en el chat", "1 home adicional", "Acceso a /fly en spawn"] },
         { "name": "Mensual", "price": 80, "dailyCoins": 3, "badge": "🔥 POPULAR", "perks": ["Tag especial + color", "3 homes adicionales", "Acceso a /fly y /nick", "Rol exclusivo en Discord"] },
         { "name": "Vitalicio", "price": 300, "dailyCoins": 5, "badge": "👑 VIP", "perks": ["Tag especial + color + brillo", "5 homes adicionales", "Acceso a /fly, /nick, /enderchest", "Rol VIP en Discord", "+50 monedas iniciales"] }
-      ]
+      ],
+      "logros": [],
+      "mods": {
+        "mods": [
+          { "name": "🔧 Embeddium", "desc": "Render optimizado (Sodium para Forge). +100 FPS", "url": "https://www.curseforge.com/minecraft/mc-mods/embeddium", "image": "" },
+          { "name": "🔧 Oculus", "desc": "Shaders compatibles con Forge (Iris port)", "url": "https://www.curseforge.com/minecraft/mc-mods/oculus", "image": "" },
+          { "name": "🔧 Starlight", "desc": "Motor de iluminación reescrito, más rápido", "url": "https://www.curseforge.com/minecraft/mc-mods/starlight", "image": "" },
+          { "name": "🔧 Radium", "desc": "Optimización del motor de luz", "url": "https://www.curseforge.com/minecraft/mc-mods/radium", "image": "" },
+          { "name": "🔧 FerriteCore", "desc": "Reduce el uso de RAM hasta un 50%", "url": "https://www.curseforge.com/minecraft/mc-mods/ferritecore", "image": "" },
+          { "name": "🔧 ModernFix", "desc": "Arregla bugs de rendimiento y memoria", "url": "https://www.curseforge.com/minecraft/mc-mods/modernfix", "image": "" },
+          { "name": "🔧 ImmediatelyFast", "desc": "Optimiza la interfaz y el rendering inmediato", "url": "https://www.curseforge.com/minecraft/mc-mods/immediatelyfast", "image": "" },
+          { "name": "🔧 EntityCulling", "desc": "Deja de renderizar entidades tapadas", "url": "https://www.curseforge.com/minecraft/mc-mods/entityculling", "image": "" },
+          { "name": "🔧 CullLessLeaves", "desc": "Optimiza el render de hojas de árboles", "url": "https://www.curseforge.com/minecraft/mc-mods/cull-less-leaves", "image": "" },
+          { "name": "🔧 FastAsyncWorldSave", "desc": "Guardado del mundo asíncrono y rápido", "url": "https://www.curseforge.com/minecraft/mc-mods/fastasyncworldsave", "image": "" },
+          { "name": "🔧 Chunksending", "desc": "Envío de chunks optimizado", "url": "https://www.curseforge.com/minecraft/mc-mods/chunksending", "image": "" },
+          { "name": "🔧 BetterChunkLoading", "desc": "Carga de chunks más eficiente", "url": "https://www.curseforge.com/minecraft/mc-mods/better-chunk-loading", "image": "" },
+          { "name": "🔧 Chunky", "desc": "Pre-genera chunks para reducir lag", "url": "https://www.curseforge.com/minecraft/mc-mods/chunky-pregenerator", "image": "" },
+          { "name": "🔧 Connectivity", "desc": "Arregla problemas de conexión y timeouts", "url": "https://www.curseforge.com/minecraft/mc-mods/connectivity", "image": "" },
+          { "name": "🔧 Alternate Current", "desc": "Redstone optimizada, menos lag", "url": "https://www.curseforge.com/minecraft/mc-mods/alternate-current", "image": "" },
+          { "name": "🔧 FastItemFrames", "desc": "Item frames optimizados, zero lag", "url": "https://www.curseforge.com/minecraft/mc-mods/fast-item-frames", "image": "" },
+          { "name": "🔧 FastPaintings", "desc": "Cuadros optimizados, sin lag", "url": "https://www.curseforge.com/minecraft/mc-mods/fastpaintings", "image": "" },
+          { "name": "🔧 Clumps", "desc": "Junta orbes de XP en uno solo", "url": "https://www.curseforge.com/minecraft/mc-mods/clumps", "image": "" },
+          { "name": "🔧 Get It Together Drops", "desc": "Junta items en el piso", "url": "https://www.curseforge.com/minecraft/mc-mods/get-it-together-drops", "image": "" },
+          { "name": "🔧 Cupboard", "desc": "Librería de optimización para otros mods", "url": "https://www.curseforge.com/minecraft/mc-mods/cupboard", "image": "" },
+          { "name": "🔧 Immersive Optimization", "desc": "Optimización general del juego", "url": "https://www.curseforge.com/minecraft/mc-mods/immersive-optimization", "image": "" },
+          { "name": "🔧 AI Improvements", "desc": "IA de mobs más eficiente", "url": "https://www.curseforge.com/minecraft/mc-mods/ai-improvements", "image": "" },
+          { "name": "🔧 AllTheLeaks", "desc": "Arregla memory leaks comunes", "url": "https://www.curseforge.com/minecraft/mc-mods/alltheleaks", "image": "" },
+          { "name": "🔧 GPUMemLeakFix", "desc": "Arregla memory leaks de la GPU", "url": "https://www.curseforge.com/minecraft/mc-mods/gpumemleakfix", "image": "" },
+          { "name": "🔧 Leaky", "desc": "Detecta y reporta memory leaks", "url": "https://www.curseforge.com/minecraft/mc-mods/leaky", "image": "" },
+          { "name": "🔧 KryptonReforged", "desc": "Optimiza la red del juego", "url": "https://www.curseforge.com/minecraft/mc-mods/krypton-reforged", "image": "" },
+          { "name": "🔧 Let Me Despawn", "desc": "Mobs desaparecen más rápido para reducir lag", "url": "https://www.curseforge.com/minecraft/mc-mods/let-me-despawn", "image": "" },
+          { "name": "🔧 LimitedChunks", "desc": "Controla los límites de carga de chunks", "url": "https://www.curseforge.com/minecraft/mc-mods/limitedchunks", "image": "" },
+          { "name": "🔧 Log Begone", "desc": "Reduce el spam de logs", "url": "https://www.curseforge.com/minecraft/mc-mods/log-begone", "image": "" },
+          { "name": "🔧 RecipeEssentials", "desc": "Optimiza el sistema de recetas", "url": "https://www.curseforge.com/minecraft/mc-mods/recipeessentials", "image": "" },
+          { "name": "🔧 ServerCore", "desc": "Optimización para servidores", "url": "https://www.curseforge.com/minecraft/mc-mods/servercore", "image": "" },
+          { "name": "🔧 SmoothBoot Reloaded", "desc": "Inicio más rápido del juego", "url": "https://www.curseforge.com/minecraft/mc-mods/smoothboot-reloaded", "image": "" },
+          { "name": "🔧 StructureEssentials", "desc": "Optimiza la generación de estructuras", "url": "https://www.curseforge.com/minecraft/mc-mods/structureessentials", "image": "" },
+          { "name": "🔧 CrashAssistant", "desc": "Reportes de crash más claros", "url": "https://www.curseforge.com/minecraft/mc-mods/crash-assistant", "image": "" },
+          { "name": "🔧 Flerovium", "desc": "Optimización general de rendimiento", "url": "https://www.curseforge.com/minecraft/mc-mods/flerovium", "image": "" },
+          { "name": "🔧 Rubidium Extra", "desc": "Extras visuales para Rubidium/Embeddium", "url": "https://www.curseforge.com/minecraft/mc-mods/rubidium-extra", "image": "" },
+          { "name": "🔧 SodiumOptionsAPI", "desc": "API para opciones de Sodium en Forge", "url": "https://www.curseforge.com/minecraft/mc-mods/sodium-options-api", "image": "" },
+          { "name": "🔧 Chloride", "desc": "Extras visuales y fixes para Embeddium", "url": "https://www.curseforge.com/minecraft/mc-mods/chloride", "image": "" },
+          { "name": "🔧 Vanillin", "desc": "Mejoras vanilla sin cambiar mecánicas", "url": "https://www.curseforge.com/minecraft/mc-mods/vanillin", "image": "" },
+          { "name": "🔧 LMFT", "desc": "Arregla el input del mouse", "url": "https://www.curseforge.com/minecraft/mc-mods/lazy-mouse-fix-tweaks", "image": "" },
+          { "name": "🔧 ModFixer", "desc": "Arregla compatibilidad entre mods", "url": "https://www.curseforge.com/minecraft/mc-mods/modfixer", "image": "" },
+          { "name": "🔧 Fastload", "desc": "Carga el mundo más rápido", "url": "https://www.curseforge.com/minecraft/mc-mods/fastload", "image": "" },
+          { "name": "📦 Artifacts", "desc": "Accesorios mágicos y objetos únicos para equipar", "url": "https://www.curseforge.com/minecraft/mc-mods/artifacts", "image": "" },
+          { "name": "📦 Curios API", "desc": "Slots extras para accesorios (necesario para Artifacts)", "url": "https://www.curseforge.com/minecraft/mc-mods/curios", "image": "" },
+          { "name": "📦 Effortless Building", "desc": "Herramientas de construcción rápida sin perder vanilla", "url": "https://www.curseforge.com/minecraft/mc-mods/effortless-building", "image": "" },
+          { "name": "📦 Sophisticated Backpacks", "desc": "Mochilas avanzadas con upgrades", "url": "https://www.curseforge.com/minecraft/mc-mods/sophisticated-backpacks", "image": "" },
+          { "name": "📦 Almanac", "desc": "Libro con información de cultivos y mobs", "url": "https://www.curseforge.com/minecraft/mc-mods/almanac", "image": "" },
+          { "name": "🗺️ Xaero's Minimap", "desc": "Minimapa con waypoints y radar", "url": "https://www.curseforge.com/minecraft/mc-mods/xaeros-minimap", "image": "" },
+          { "name": "ℹ️ Jade", "desc": "Muestra info del bloque que estás mirando", "url": "https://www.curseforge.com/minecraft/mc-mods/jade", "image": "" },
+          { "name": "ℹ️ JEI (Just Enough Items)", "desc": "Recetario completo del juego", "url": "https://www.curseforge.com/minecraft/mc-mods/jei", "image": "" },
+          { "name": "ℹ️ Just Enough Resources", "desc": "Muestra drops de mobs y generación de minerales", "url": "https://www.curseforge.com/minecraft/mc-mods/just-enough-resources-jer", "image": "" }
+        ],
+        "modpacks": [
+          { "name": "📦 Pack de optimización", "desc": "Pack con todos los mods de optimización pre-seleccionados", "url": "#", "image": "" }
+        ],
+        "shaders": [
+          { "name": "Complementary Shaders", "desc": "Shaders vibrantes y ligeros", "url": "#", "image": "" },
+          { "name": "BSL Shaders", "desc": "Shaders realistas", "url": "#", "image": "" }
+        ],
+        "textures": [
+          { "name": "Faithful x64", "desc": "Texturas fieles en 64x", "url": "#", "image": "" },
+          { "name": "Bare Bones", "desc": "Texturas minimalistas", "url": "#", "image": "" }
+        ]
+      }
     }));
   }
   migrateKits();
