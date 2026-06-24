@@ -13,6 +13,27 @@ const CREATOR_LOG_KEY = 'nervalia_creator_log';
 const ACCOUNTS_KEY = 'nervalia_accounts';
 const VISIT_LOG_KEY = 'nervalia_visit_log';
 const ACTION_LOG_KEY = 'nervalia_action_log';
+let unsavedChanges = false;
+let unsavedDot = null;
+
+function setUnsaved() {
+  unsavedChanges = true;
+  if (!unsavedDot) unsavedDot = document.getElementById('unsaved-indicator');
+  if (unsavedDot) unsavedDot.style.display = 'inline';
+}
+
+function markSaved() {
+  unsavedChanges = false;
+  if (!unsavedDot) unsavedDot = document.getElementById('unsaved-indicator');
+  if (unsavedDot) unsavedDot.style.display = 'none';
+}
+
+window.addEventListener('beforeunload', e => {
+  if (unsavedChanges) {
+    e.preventDefault();
+    e.returnValue = 'Tenés cambios sin guardar en el Modo Creador.';
+  }
+});
 
 function toggleMenu() {
   document.getElementById('nav-menu').classList.toggle('open');
@@ -601,7 +622,7 @@ function showCreatorTab(tab) {
           </div>
           <div class="editor-actions">
             <button class="btn-editor save" onclick="saveServerData()">[ GUARDAR ]</button>
-            <span id="e-msg" class="editor-success"></span>
+            <span id="e-msg" class="editor-success"></span><span id="unsaved-indicator" class="unsaved-dot" style="display:none;color:#e74c3c;font-size:0.65rem;margin-left:0.5rem">⚠️ Sin guardar</span>
           </div>
         </div>`;
       break;
@@ -627,7 +648,7 @@ function showCreatorTab(tab) {
           <div class="editor-actions">
             <button class="btn-editor" onclick="addTeamMember()">[ + AGREGAR ]</button>
             <button class="btn-editor save" onclick="saveTeam()">[ GUARDAR ]</button>
-            <span id="e-msg" class="editor-success"></span>
+            <span id="e-msg" class="editor-success"></span><span id="unsaved-indicator" class="unsaved-dot" style="display:none;color:#e74c3c;font-size:0.65rem;margin-left:0.5rem">⚠️ Sin guardar</span>
           </div>
         </div>`;
       break;
@@ -663,7 +684,7 @@ function showCreatorTab(tab) {
             <button class="btn-editor" onclick="addKit()">[ + AGREGAR KIT ]</button>
             <button class="btn-editor save" onclick="saveKits()">[ GUARDAR ]</button>
             <button class="btn-editor" onclick="refreshKits()">[ 🔄 ACTUALIZAR ]</button>
-            <span id="e-msg" class="editor-success"></span>
+            <span id="e-msg" class="editor-success"></span><span id="unsaved-indicator" class="unsaved-dot" style="display:none;color:#e74c3c;font-size:0.65rem;margin-left:0.5rem">⚠️ Sin guardar</span>
           </div>
         </div>`;
       break;
@@ -695,7 +716,7 @@ function showCreatorTab(tab) {
           <div class="editor-actions">
             <button class="btn-editor" onclick="addLogro()">[ + AGREGAR ]</button>
             <button class="btn-editor save" onclick="saveLogros()">[ GUARDAR ]</button>
-            <span id="e-msg" class="editor-success"></span>
+            <span id="e-msg" class="editor-success"></span><span id="unsaved-indicator" class="unsaved-dot" style="display:none;color:#e74c3c;font-size:0.65rem;margin-left:0.5rem">⚠️ Sin guardar</span>
           </div>
         </div>`;
       break;
@@ -724,7 +745,7 @@ function showCreatorTab(tab) {
           <div class="editor-actions">
             <button class="btn-editor" onclick="addRegla()">[ + AGREGAR ]</button>
             <button class="btn-editor save" onclick="saveReglas()">[ GUARDAR ]</button>
-            <span id="e-msg" class="editor-success"></span>
+            <span id="e-msg" class="editor-success"></span><span id="unsaved-indicator" class="unsaved-dot" style="display:none;color:#e74c3c;font-size:0.65rem;margin-left:0.5rem">⚠️ Sin guardar</span>
           </div>
         </div>`;
       break;
@@ -754,7 +775,7 @@ function showCreatorTab(tab) {
           <div class="editor-actions">
             <button class="btn-editor" onclick="addGaleria()">[ + AGREGAR ]</button>
             <button class="btn-editor save" onclick="saveGaleria()">[ GUARDAR ]</button>
-            <span id="e-msg" class="editor-success"></span>
+            <span id="e-msg" class="editor-success"></span><span id="unsaved-indicator" class="unsaved-dot" style="display:none;color:#e74c3c;font-size:0.65rem;margin-left:0.5rem">⚠️ Sin guardar</span>
           </div>
         </div>`;
       break;
@@ -804,7 +825,7 @@ function showCreatorTab(tab) {
           <div class="editor-actions">
             <button class="btn-editor" onclick="addMembresia()">[ + AGREGAR ]</button>
             <button class="btn-editor save" onclick="saveMembresias()">[ GUARDAR ]</button>
-            <span id="e-msg" class="editor-success"></span>
+            <span id="e-msg" class="editor-success"></span><span id="unsaved-indicator" class="unsaved-dot" style="display:none;color:#e74c3c;font-size:0.65rem;margin-left:0.5rem">⚠️ Sin guardar</span>
           </div>
         </div>`;
       break;
@@ -854,7 +875,7 @@ function showCreatorTab(tab) {
           ${modHtml}
           <div class="editor-actions">
             <button class="btn-editor save" onclick="saveMods()">[ GUARDAR TODO ]</button>
-            <span id="e-msg" class="editor-success"></span>
+            <span id="e-msg" class="editor-success"></span><span id="unsaved-indicator" class="unsaved-dot" style="display:none;color:#e74c3c;font-size:0.65rem;margin-left:0.5rem">⚠️ Sin guardar</span>
           </div>
         </div>`;
       break;
@@ -1053,12 +1074,13 @@ function showCreatorTab(tab) {
       break;
     }
     case 'ai-terminal': {
+      const sysCtx = buildAIContext();
       content.innerHTML = `
         <div class="tab-content">
           <div class="line"><span class="prompt">└─$</span> <span class="highlight">🤖 AI Terminal</span></div>
           <div class="line" style="color:#888;font-size:0.7rem;margin-bottom:0.5rem">Escribí en lenguaje natural lo que querés cambiar:</div>
           <div class="ai-chat" id="ai-chat" style="background:#06060e;border:1px solid rgba(255,255,255,0.05);border-radius:8px;padding:0.75rem;max-height:300px;overflow-y:auto;margin-bottom:0.5rem;font-size:0.75rem">
-            <div class="ai-msg ai-bot" style="margin-bottom:0.5rem;color:#888">🤖 Hola! Decime qué querés modificar del server. Ej: "cambia el título a Nervalia 2.0", "agrega un kit Diamante con precio 40", "cambia la IP a nervalia.mc"</div>
+            <div class="ai-msg ai-bot" style="margin-bottom:0.5rem;color:#888">🤖 Conozco toda la config del server. Decime qué modificar. Escribí "ayuda" para ver comandos.<br><span style="font-size:0.65rem;color:#555">${sysCtx}</span></div>
           </div>
           <div style="display:flex;gap:0.5rem">
             <input id="ai-input" class="editor-input" placeholder="Escribí tu orden..." style="flex:1;font-size:0.75rem" onkeydown="if(event.key==='Enter')sendAICommand()">
@@ -1104,6 +1126,15 @@ function addAIMessage(role, text) {
   }
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
+}
+
+function buildAIContext() {
+  const sd = getSD();
+  const kits = (sd.kits || []).map(k => `${k.name} (${k.price}🪙)`).join(', ');
+  const mems = (sd.membresias || []).map(m => `${m.name} (${m.price}🪙, ${m.dailyCoins}🪙/día)`).join(', ');
+  return `📋 Título: "${sd.title}" | IP: ${sd.serverIP} | Versión: ${sd.version} | Modo: ${sd.mode} | Discord: ${sd.discord}
+📦 Kits: ${kits || 'ninguno'}
+👑 Membresías: ${mems || 'ninguna'}`;
 }
 
 function processAICommand(cmd) {
@@ -1292,7 +1323,75 @@ function processAICommand(cmd) {
 
   // ── HELP ──
   if (/ayuda|help|qu[eé] puedes? hacer|comandos/i.test(lower)) {
-    addAIMessage('bot', `Comandos disponibles:\n• "cambia el título a ..."\n• "cambia la ip a ..."\n• "cambia el discord a ..."\n• "cambia la versión a ..."\n• "cambia el icono a ..."\n• "agrega un kit NOMBRE con precio N"\n• "elimina el kit NOMBRE"\n• "NOMBRE pase a PRECIO"\n• "pon badge a NOMBRE con 'TEXTO'"\n• "agrega el perk 'TEXTO' a NOMBRE"\n• "cambia la desc 1 a ..."\n• "cambia el modo a ..."`);
+    addAIMessage('bot', `Comandos disponibles:
+• "cambia el título a ..."
+• "cambia la ip a ..."
+• "cambia el discord a ..."
+• "cambia la versión a ..."
+• "cambia el icono a ..."
+• "cambia la desc 1 a ..." / "cambia la desc 2 a ..."
+• "cambia el modo a ..."
+• "agrega un kit NOMBRE con precio N"
+• "elimina el kit NOMBRE"
+• "NOMBRE pase a PRECIO" (ej: "Oro pase a 25")
+• "pon badge a NOMBRE con 'TEXTO'"
+• "agrega el perk 'TEXTO' a NOMBRE"
+• "agrega una membresía NOMBRE con precio N y N monedas/día"
+• "elimina la membresía NOMBRE"
+• "mostrame la config"`);
+    return;
+  }
+
+  // ── SHOW CONFIG ──
+  if (/mostrame\s*(la\s+)?config|c[oó]mo\s+est[aá]\s+(la\s+)?web|que\s+(hay|tengo)/i.test(lower)) {
+    addAIMessage('bot', buildAIContext());
+    return;
+  }
+
+  // ── ADD MEMBRESIA ──
+  const addMembMatch = lower.match(/agrega?\s*(una\s+)?membres[ií]a\s+(.+?)\s+con\s+precio\s+(\d+)\s+(y\s+)?(\d+)?\s*monedas/i);
+  if (addMembMatch) {
+    const name = addMembMatch[2].trim();
+    const price = parseInt(addMembMatch[3]);
+    const daily = parseInt(addMembMatch[5]) || 1;
+    if (!sd.membresias) sd.membresias = [];
+    sd.membresias.push({ name, price, dailyCoins: daily, badge: '', perks: ['Beneficio 1', 'Beneficio 2'] });
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+    applyMembresias();
+    addAIMessage('bot', `✅ Membresía "${name}" creada (${price}🪙, ${daily}🪙/día)`);
+    return;
+  }
+
+  // ── DELETE MEMBRESIA ──
+  const delMembMatch = lower.match(/elimina?\s*(la\s+)?membres[ií]a\s+(.+)/i);
+  if (delMembMatch) {
+    const name = delMembMatch[2].trim().toLowerCase();
+    if (sd.membresias) {
+      const before = sd.membresias.length;
+      sd.membresias = sd.membresias.filter(m => m.name.toLowerCase() !== name);
+      if (sd.membresias.length < before) {
+        localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+        applyMembresias();
+        addAIMessage('bot', '✅ Membresía eliminada');
+        return;
+      }
+    }
+    addAIMessage('bot', `❌ No encontré una membresía llamada "${name}"`);
+    return;
+  }
+
+  // ── QUITAR COMANDOS DE MEMBRESIAS ──
+  if (/quita?\s*(les?\s+)?(los\s+)?comandos?\s*(de\s+)?(las?\s+)?membres[ií]as/i.test(lower)) {
+    if (sd.membresias) {
+      sd.membresias.forEach(m => {
+        m.perks = m.perks.filter(p => !p.match(/\/\w+/));
+      });
+      localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+      applyMembresias();
+      addAIMessage('bot', '✅ Comandos quitados de todas las membresías');
+      return;
+    }
+    addAIMessage('bot', '❌ No hay membresías');
     return;
   }
 
@@ -1310,7 +1409,7 @@ function exportConfig() {
       <div class="editor-actions">
         <button class="btn-editor save" onclick="copyConfig()" style="font-size:0.7rem">📋 Copiar al portapapeles</button>
         <button class="btn-editor" onclick="showCreatorTab('server')" style="font-size:0.7rem">← Volver</button>
-        <span id="e-msg" class="editor-success"></span>
+        <span id="e-msg" class="editor-success"></span><span id="unsaved-indicator" class="unsaved-dot" style="display:none;color:#e74c3c;font-size:0.65rem;margin-left:0.5rem">⚠️ Sin guardar</span>
       </div>
     </div>`;
 }
@@ -1345,7 +1444,7 @@ function saveServerData() {
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   applyServerData();
   const msg = document.getElementById('e-msg');
-  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+  if (msg) { markSaved(); msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
 }
 
 function applyServerData() {
@@ -1420,7 +1519,7 @@ function saveTeam() {
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   applyTeam();
   const msg = document.getElementById('e-msg');
-  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+  if (msg) { markSaved(); msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
 }
 
 function applyTeam() {
@@ -1472,7 +1571,7 @@ function saveKits() {
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   applyKits();
   const msg = document.getElementById('e-msg');
-  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+  if (msg) { markSaved(); msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
 }
 
 function applyKits() {
@@ -1564,7 +1663,7 @@ function saveMembresias() {
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   applyMembresias();
   const msg = document.getElementById('e-msg');
-  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+  if (msg) { markSaved(); msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
 }
 
 function removeMembresia(index) {
@@ -1599,7 +1698,7 @@ function saveLogros() {
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   applyLogros();
   const msg = document.getElementById('e-msg');
-  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+  if (msg) { markSaved(); msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
 }
 
 function applyLogros() {
@@ -1651,7 +1750,7 @@ function saveReglas() {
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   applyReglas();
   const msg = document.getElementById('e-msg');
-  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+  if (msg) { markSaved(); msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
 }
 
 function applyReglas() {
@@ -1700,7 +1799,7 @@ function saveGaleria() {
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   applyGaleria();
   const msg = document.getElementById('e-msg');
-  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+  if (msg) { markSaved(); msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
 }
 
 function applyGaleria() {
@@ -1796,7 +1895,7 @@ function saveMods() {
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   applyMods();
   const msg = document.getElementById('e-msg');
-  if (msg) { msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+  if (msg) { markSaved(); msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
 }
 
 /* ───── AI SOPORTE ───── */
@@ -2045,9 +2144,9 @@ document.addEventListener('DOMContentLoaded', () => {
         { "name": "Super Netherite", "price": 640, "badge": "👑 SUPREMO", "perks": ["🪖 Armadura: Casco de netherite (Protección V, Casco de acuático), Peto de netherite (Protección V), Pantalones de netherite (Protección V, Caída de pluma IV), Botas de netherite (Protección V, Caída de pluma IV, Agilidad acuática)", "⛏️ Herramientas: Pico de netherite (Fortuna V, Eficiencia V, Irrompibilidad III), Hacha de netherite (Eficiencia V, Filo V, Irrompibilidad III), Espada de netherite (Filo V, Aspecto ígneo II, Saqueo III, Barrido III, Irrompibilidad III), Pala de netherite (Eficiencia V, Irrompibilidad III), Azada de netherite (Eficiencia V, Irrompibilidad III)", "🍞 Comida: 64 chuletas de res, 32 pasteles de calabaza, 64 manzanas doradas notches", "📦 Items: 64 antorchas, 1 Cama negra, 1 Cofre de ender, 64 Obsidiana, 16 Perlas de ender, 1 Huevo de dragón, 1 Totem de inmortalidad, 1 Élitatra (Reparación III, Protección IV), 1 Escudo (Reparación III), 1 Ballesta (Multidisparo, Perforación IV, Velocidad de cargado III)", "💰 50 monedas del server"] }
       ],
       "membresias": [
-        { "name": "Semanal", "price": 30, "dailyCoins": 1, "badge": "", "perks": ["Tag especial en el chat", "1 home adicional", "Acceso a /fly en spawn"] },
-        { "name": "Mensual", "price": 80, "dailyCoins": 3, "badge": "🔥 POPULAR", "perks": ["Tag especial + color", "3 homes adicionales", "Acceso a /fly y /nick", "Rol exclusivo en Discord"] },
-        { "name": "Vitalicio", "price": 300, "dailyCoins": 5, "badge": "👑 VIP", "perks": ["Tag especial + color + brillo", "5 homes adicionales", "Acceso a /fly, /nick, /enderchest", "Rol VIP en Discord", "+50 monedas iniciales"] }
+        { "name": "Semanal", "price": 30, "dailyCoins": 1, "badge": "", "perks": ["Tag especial en el chat", "1 home adicional"] },
+        { "name": "Mensual", "price": 80, "dailyCoins": 3, "badge": "🔥 POPULAR", "perks": ["Tag especial + color", "3 homes adicionales", "Rol exclusivo en Discord"] },
+        { "name": "Vitalicio", "price": 300, "dailyCoins": 5, "badge": "👑 VIP", "perks": ["Tag especial + color + brillo", "5 homes adicionales", "Rol VIP en Discord", "+50 monedas iniciales"] }
       ]
     }));
   }
@@ -2067,6 +2166,8 @@ document.addEventListener('DOMContentLoaded', () => {
   showAccountStatus();
 
   logVisit();
+
+  document.getElementById('creator-tab-content')?.addEventListener('input', () => setUnsaved());
 
   if (!localStorage.getItem('nervalia_welcomed')) {
     setTimeout(() => {
