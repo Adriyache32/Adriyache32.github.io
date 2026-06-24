@@ -1756,7 +1756,7 @@ function applyLogros() {
     if (!items || items.length === 0) continue;
     const done = items.filter(l => saved[`logro-${logros.indexOf(l)}`]).length;
     const total = items.length;
-    const isFirst = t === 1;
+    const isFirst = false;
     html += `
       <div class="tier-section" style="margin-bottom:1rem">
         <div class="tier-header" onclick="toggleTier(this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid ${tierColors[t]};user-select:none">
@@ -1764,9 +1764,9 @@ function applyLogros() {
             <span style="font-size:0.8rem;font-weight:600;color:#c0c0d0">${tierNames[t]}</span>
             <span style="font-size:0.65rem;color:#666;display:block">${done}/${total} · ${tierRewards[t] || 0.5}🪙 c/u</span>
           </div>
-          <span style="font-size:0.7rem;color:#444">${isFirst ? '▼' : '▶'} ${done}/${total}</span>
+          <span style="font-size:0.7rem;color:#444">▶ ${done}/${total}</span>
         </div>
-        <div class="tier-body" style="display:${isFirst ? 'flex' : 'none'};flex-direction:column;gap:0.35rem;margin-top:0.4rem">
+        <div class="tier-body" style="display:none;flex-direction:column;gap:0.35rem;margin-top:0.4rem">
         ${items.map(l => {
           const id = `logro-${logros.indexOf(l)}`;
           const completed = saved[id];
