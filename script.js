@@ -927,6 +927,7 @@ function showCreatorTab(tab) {
           ${modHtml}
           <div class="editor-actions">
             <button class="btn-editor save" onclick="saveMods()">[ GUARDAR TODO ]</button>
+            <button class="btn-editor" onclick="restoreMods()">[ RESTAURAR MODS ]</button>
             <span id="e-msg" class="editor-success"></span><span id="unsaved-indicator" class="unsaved-dot" style="display:none;color:#e74c3c;font-size:0.65rem;margin-left:0.5rem">⚠️ Sin guardar</span>
           </div>
         </div>`;
@@ -2088,6 +2089,14 @@ function saveMods() {
   if (msg) { markSaved(); msg.textContent = '✓ Guardado'; setTimeout(() => msg.textContent = '', 2000); }
 }
 
+function restoreMods() {
+  const sd = getSD();
+  migrateMods();
+  showCreatorTab('mods');
+  const msg = document.getElementById('e-msg');
+  if (msg) { msg.textContent = '✓ Mods restaurados'; setTimeout(() => msg.textContent = '', 2000); }
+}
+
 /* ───── AI SOPORTE ───── */
 const aiResponses = {
   ip: ['nervalia.mc', 'la ip es nervalia.mc', 'conectate a nervalia.mc'],
@@ -2641,7 +2650,11 @@ function migrateLogros() {
 
 function migrateMods() {
   const sd = JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {};
-  if (sd.mods) return;
+  if (sd.mods) {
+    const cats = ['mods', 'modpacks', 'shaders', 'textures'];
+    const allEmpty = cats.every(c => !sd.mods[c] || sd.mods[c].length === 0);
+    if (!allEmpty) return;
+  }
   sd.mods = {
     mods: [
       { name: '🔧 Embeddium', desc: 'Render optimizado (Sodium para Forge). +100 FPS', url: 'https://www.curseforge.com/minecraft/mc-mods/embeddium', image: '' },
