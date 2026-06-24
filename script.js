@@ -692,26 +692,39 @@ function showCreatorTab(tab) {
 
     case 'logros': {
       const ldata = sd.logros || [
-        { name: 'Minero Inicial', desc: 'Consigue 10 bloques de piedra', icon: '⛏️' },
-        { name: 'Leñador Novato', desc: 'Corta 10 árboles', icon: '🌳' },
-        { name: 'Primera Base', desc: 'Construye tu primera casa', icon: '🏠' },
-        { name: 'Granjero', desc: 'Planta y cosecha 20 cultivos', icon: '🌾' },
-        { name: 'Cazador de Dragones', desc: 'Derrota al Ender Dragon', icon: '🐉' },
-        { name: 'Explorador del Nether', desc: 'Visita el Nether', icon: '⚔️' },
+        { name: 'Minero Inicial', desc: 'Consigue 10 bloques de piedra', icon: '⛏️', tier: 1, reward: 0.25 },
+        { name: 'Leñador Novato', desc: 'Corta 10 árboles', icon: '🌳', tier: 1, reward: 0.25 },
+        { name: 'Primera Base', desc: 'Construye tu primera casa', icon: '🏠', tier: 2, reward: 0.5 },
+        { name: 'Granjero', desc: 'Planta y cosecha 20 cultivos', icon: '🌾', tier: 2, reward: 0.5 },
+        { name: 'Explorador del Nether', desc: 'Visita el Nether', icon: '⚔️', tier: 3, reward: 1 },
+        { name: 'Cazador de Dragones', desc: 'Derrota al Ender Dragon', icon: '🐉', tier: 4, reward: 2 },
+        { name: 'Maestro Encantador', desc: 'Consigue un encantamiento nivel 30', icon: '✨', tier: 3, reward: 1 },
+        { name: 'Constructor', desc: 'Construye 5 estructuras', icon: '🏗️', tier: 3, reward: 1 },
+        { name: 'Comerciante', desc: 'Comercia con aldeanos 50 veces', icon: '💎', tier: 4, reward: 2 },
+        { name: 'Pescador', desc: 'Pesca 30 items', icon: '🎣', tier: 2, reward: 0.5 },
+        { name: 'Herrero', desc: 'Repara items 20 veces', icon: '🔨', tier: 3, reward: 1 },
+        { name: 'Asesino de Wither', desc: 'Derrota al Wither', icon: '💀', tier: 5, reward: 3 },
+        { name: 'Explorador del End', desc: 'Encuentra una ciudad del End', icon: '🏰', tier: 5, reward: 3 },
+        { name: 'Leyenda', desc: 'Completa todos los logros anteriores', icon: '👑', tier: 6, reward: 5 },
       ];
       let lHtml = ldata.map((l, i) => `
         <div style="border:1px solid rgba(255,255,255,0.05);padding:0.5rem;border-radius:6px;margin-bottom:0.4rem">
           <div class="editor-field">
             <span class="label">#${i+1}</span>
-            <input class="editor-input" id="l-name-${i}" value="${l.name}" style="flex:0.4">
+            <input class="editor-input" id="l-name-${i}" value="${l.name}" style="flex:0.3">
             <input class="editor-input" id="l-desc-${i}" value="${l.desc}" style="flex:0.5">
-            <input class="editor-input" id="l-icon-${i}" value="${l.icon}" style="flex:0.1;text-align:center">
+            <input class="editor-input" id="l-icon-${i}" value="${l.icon}" style="flex:0.08;text-align:center">
+            <select class="editor-input" id="l-tier-${i}" style="flex:0.08;font-size:0.65rem">
+              ${[1,2,3,4,5,6].map(t => `<option value="${t}"${(l.tier||1)===t?' selected':''}>N${t}</option>`).join('')}
+            </select>
+            <input class="editor-input" id="l-reward-${i}" value="${l.reward || 0.5}" style="flex:0.1;font-family:monospace">
           </div>
         </div>
       `).join('');
       content.innerHTML = `
         <div class="tab-content">
           <div class="line"><span class="prompt">└─$</span> <span class="highlight">Editar Logros</span></div>
+          <div style="color:#888;font-size:0.65rem;margin-bottom:0.5rem">Cada logro tiene un <b>Nivel</b> (1-6) y una <b>Recompensa</b> en 🪙. A mayor nivel, más difícil y más da.</div>
           ${lHtml}
           <div class="editor-actions">
             <button class="btn-editor" onclick="addLogro()">[ + AGREGAR ]</button>
@@ -1698,7 +1711,7 @@ function removeMembresia(index) {
 function addLogro() {
   const sd = getSD();
   const logros = sd.logros || [];
-  logros.push({ name: 'Nuevo Logro', desc: 'Descripción', icon: '⭐' });
+  logros.push({ name: 'Nuevo Logro', desc: 'Descripción', icon: '⭐', tier: 1, reward: 0.5 });
   sd.logros = logros;
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   showCreatorTab('logros');
@@ -1712,9 +1725,13 @@ function saveLogros() {
     const n = document.getElementById(`l-name-${i}`);
     const d = document.getElementById(`l-desc-${i}`);
     const icon = document.getElementById(`l-icon-${i}`);
+    const tier = document.getElementById(`l-tier-${i}`);
+    const reward = document.getElementById(`l-reward-${i}`);
     if (n) logros[i].name = n.value;
     if (d) logros[i].desc = d.value;
     if (icon) logros[i].icon = icon.value;
+    if (tier) logros[i].tier = parseInt(tier.value) || 1;
+    if (reward) logros[i].reward = parseFloat(reward.value) || 0.5;
   });
   sd.logros = logros;
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
@@ -1729,19 +1746,58 @@ function applyLogros() {
   const grid = document.getElementById('logros-grid');
   if (!logros || !grid) return;
   const saved = JSON.parse(localStorage.getItem(LOGROS_KEY)) || {};
-  grid.innerHTML = logros.map((l, i) => {
-    const id = `logro-${i}`;
-    const completed = saved[id];
-    return `
-      <div class="logro${completed ? ' completado' : ''}" data-id="${id}">
-        <div class="logro-icon">${l.icon}</div>
-        <div class="logro-info"><h4>${l.name}</h4><p>${l.desc}</p></div>
-        <span class="logro-reward">+0.5 🪙</span>
-        <span class="logro-badge">${completed ? '✅' : '❌'}</span>
-        ${completed ? '' : `<button class="btn-logro-solicitar" onclick="openLogroRequest('${id}','${l.name}',this)">Solicitar</button>`}
-      </div>
-    `;
-  }).join('');
+
+  const tierNames = {
+    1: '★ Nivel 1 — Fácil',
+    2: '★★ Nivel 2 — Normal',
+    3: '★★★ Nivel 3 — Intermedio',
+    4: '★★★★ Nivel 4 — Difícil',
+    5: '★★★★★ Nivel 5 — Experto',
+    6: '★★★★★★ Nivel 6 — Leyenda',
+  };
+  const tierRewards = { 1: 0.25, 2: 0.5, 3: 1, 4: 2, 5: 3, 6: 5 };
+
+  const grouped = {};
+  logros.forEach(l => {
+    const t = l.tier || 1;
+    if (!grouped[t]) grouped[t] = [];
+    grouped[t].push(l);
+  });
+
+  let html = '';
+  for (let t = 1; t <= 6; t++) {
+    const items = grouped[t];
+    if (!items || items.length === 0) continue;
+    const done = items.filter(l => saved[`logro-${logros.indexOf(l)}`]).length;
+    const total = items.length;
+    html += `
+      <div class="tier-section" style="margin-bottom:1.5rem">
+        <div class="tier-header" style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:0.5rem;border-left:3px solid ${['','#888','#4fc3f7','#66bb6a','#ffa726','#ef5350','#ab47bc'][t]}">
+          <div>
+            <span style="font-size:0.8rem;font-weight:600;color:#c0c0d0">${tierNames[t]}</span>
+            <span style="font-size:0.65rem;color:#666;display:block">Completados: ${done}/${total} · Recompensa por logro: ${tierRewards[t] || 0.5} 🪙</span>
+          </div>
+          <span style="font-size:0.65rem;color:#444">Límite: ${done}/${total}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.4rem">
+        ${items.map(l => {
+          const id = `logro-${logros.indexOf(l)}`;
+          const completed = saved[id];
+          return `
+            <div class="logro${completed ? ' completado' : ''}" data-id="${id}" style="display:flex;align-items:center;gap:0.6rem;padding:0.4rem 0.6rem;border-radius:6px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04)">
+              <span style="font-size:1.1rem">${l.icon}</span>
+              <div style="flex:1;min-width:0"><h4 style="font-size:0.8rem;color:#c0c0d0;margin:0">${l.name}</h4><p style="font-size:0.65rem;color:#666;margin:0">${l.desc}</p></div>
+              <span style="font-size:0.7rem;color:#f0c040;white-space:nowrap">+${l.reward || tierRewards[t] || 0.5} 🪙</span>
+              <span style="font-size:0.8rem">${completed ? '✅' : '❌'}</span>
+              ${completed ? '' : `<button class="btn-logro-solicitar" onclick="openLogroRequest('${id}','${l.name}',this)" style="font-size:0.6rem;padding:0.2rem 0.5rem;border-radius:4px;background:rgba(114,137,254,0.15);border:1px solid rgba(114,137,254,0.2);color:#7289da;cursor:pointer">Solicitar</button>`}
+            </div>
+          `;
+        }).join('')}
+        </div>
+      </div>`;
+  }
+
+  grid.innerHTML = html || '<div style="text-align:center;color:#444;padding:2rem;font-size:0.8rem">No hay logros disponibles todavía.</div>';
 }
 
 function addRegla() {
@@ -2130,12 +2186,25 @@ function migrateMembresias() {
   const sd = JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {};
   if (!sd.membresias || !Array.isArray(sd.membresias) || sd.membresias.length === 0) {
     sd.membresias = [
-      { name: 'Semanal', price: 30, dailyCoins: 1, badge: '', perks: ['Tag especial en el chat', '1 home adicional', 'Acceso a /fly en spawn'] },
-      { name: 'Mensual', price: 80, dailyCoins: 3, badge: '🔥 POPULAR', perks: ['Tag especial + color', '3 homes adicionales', 'Acceso a /fly y /nick', 'Rol exclusivo en Discord'] },
-      { name: 'Vitalicio', price: 300, dailyCoins: 5, badge: '👑 VIP', perks: ['Tag especial + color + brillo', '5 homes adicionales', 'Acceso a /fly, /nick, /enderchest', 'Rol VIP en Discord', '+50 monedas iniciales'] },
+      { name: 'Semanal', price: 30, dailyCoins: 1, badge: '', perks: ['Tag especial en el chat', '1 home adicional'] },
+      { name: 'Mensual', price: 80, dailyCoins: 3, badge: '🔥 POPULAR', perks: ['Tag especial + color', '3 homes adicionales', 'Rol exclusivo en Discord'] },
+      { name: 'Vitalicio', price: 300, dailyCoins: 5, badge: '👑 VIP', perks: ['Tag especial + color + brillo', '5 homes adicionales', 'Rol VIP en Discord', '+50 monedas iniciales'] },
     ];
     localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   }
+}
+
+function migrateLogros() {
+  const sd = JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {};
+  const logros = sd.logros;
+  if (!logros) return;
+  let changed = false;
+  const tierDefaults = [0.25, 0.5, 1, 2, 3, 5];
+  logros.forEach(l => {
+    if (!l.tier) { l.tier = 1; changed = true; }
+    if (!l.reward && l.reward !== 0) { l.reward = tierDefaults[(l.tier || 1) - 1]; changed = true; }
+  });
+  if (changed) localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
 }
 
 /* ───── INIT ───── */
@@ -2174,6 +2243,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   migrateKits();
   migrateMembresias();
+  migrateLogros();
   setLED('idle');
   updateWallet();
   restoreLogros();
