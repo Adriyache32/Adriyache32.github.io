@@ -563,7 +563,7 @@ function confirmPaywall() {
 function showCreatorTab(tab) {
   logCreatorAction('abrió módulo: ' + tab);
   const content = document.getElementById('creator-tab-content');
-  const sd = getEffectiveSD();
+  const sd = getSD();
 
   switch (tab) {
     case 'server':
@@ -651,6 +651,7 @@ function showCreatorTab(tab) {
           <div class="editor-actions">
             <button class="btn-editor" onclick="addKit()">[ + AGREGAR KIT ]</button>
             <button class="btn-editor save" onclick="saveKits()">[ GUARDAR ]</button>
+            <button class="btn-editor" onclick="refreshKits()">[ 🔄 ACTUALIZAR ]</button>
             <span id="e-msg" class="editor-success"></span>
           </div>
         </div>`;
@@ -1041,25 +1042,8 @@ function copyConfig() {
   });
 }
 
-let CONFIG_DEFAULTS = {};
-
 /* ───── SAVE HELPERS ───── */
 function getSD() { return JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {}; }
-function getEffectiveSD() {
-  const ls = getSD();
-  if (Object.keys(CONFIG_DEFAULTS).length === 0) return ls;
-  if (Object.keys(ls).length === 0) return JSON.parse(JSON.stringify(CONFIG_DEFAULTS));
-  const merged = JSON.parse(JSON.stringify(CONFIG_DEFAULTS));
-  Object.keys(ls).forEach(k => {
-    if (k === 'kits' && Array.isArray(ls.kits) && ls.kits.length > 0) {
-      merged.kits = ls.kits;
-    } else {
-      merged[k] = ls[k];
-    }
-  });
-  merged._fromConfig = true;
-  return merged;
-}
 
 function saveServerData() {
   logCreatorAction('guardó Server');
@@ -1082,7 +1066,7 @@ function saveServerData() {
 }
 
 function applyServerData() {
-  const sd = getEffectiveSD();
+  const sd = getSD();
   const title = document.getElementById('s-title');
   if (title && sd.title) title.textContent = sd.title;
 
@@ -1157,7 +1141,7 @@ function saveTeam() {
 }
 
 function applyTeam() {
-  const sd = getEffectiveSD();
+  const sd = getSD();
   const team = sd.team;
   const grid = document.getElementById('members-grid');
   if (!team || !grid) return;
@@ -1177,6 +1161,13 @@ function addKit() {
   sd.kits = kits;
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   showCreatorTab('kits');
+}
+
+function refreshKits() {
+  migrateKits();
+  showCreatorTab('kits');
+  const msg = document.getElementById('e-msg');
+  if (msg) { msg.textContent = '✓ Perks actualizados'; setTimeout(() => msg.textContent = '', 2000); }
 }
 
 function saveKits() {
@@ -1201,7 +1192,7 @@ function saveKits() {
 }
 
 function applyKits() {
-  const sd = getEffectiveSD();
+  const sd = getSD();
   const kits = sd.kits;
   const grid = document.querySelector('#tienda .kits-grid');
   if (!kits || !grid) return;
@@ -1245,7 +1236,7 @@ function saveLogros() {
 }
 
 function applyLogros() {
-  const sd = getEffectiveSD();
+  const sd = getSD();
   const logros = sd.logros;
   const grid = document.getElementById('logros-grid');
   if (!logros || !grid) return;
@@ -1297,7 +1288,7 @@ function saveReglas() {
 }
 
 function applyReglas() {
-  const sd = getEffectiveSD();
+  const sd = getSD();
   const reglas = sd.reglas;
   const list = document.querySelector('#reglas .reglas-list');
   if (!reglas || !list) return;
@@ -1346,7 +1337,7 @@ function saveGaleria() {
 }
 
 function applyGaleria() {
-  const sd = getEffectiveSD();
+  const sd = getSD();
   const galeria = sd.galeria;
   const grid = document.querySelector('#galeria .galeria-grid');
   if (!galeria || !grid) return;
@@ -1368,7 +1359,7 @@ function switchModTab(tab, btn) {
 }
 
 function applyMods() {
-  const sd = getEffectiveSD();
+  const sd = getSD();
   const mdata = sd.mods || {};
   const categories = ['mods', 'modpacks', 'shaders', 'textures'];
   const catNames = { mods: 'Mods', modpacks: 'Modpacks', shaders: 'Shaders', textures: 'Texture Packs' };
@@ -1607,28 +1598,30 @@ function migrateKits() {
   const kits = sd.kits;
   if (!kits) return;
   let changed = false;
-  const ver = sd._kitVer || 0;
-  if (ver < 2) {
-    const perkMap = {
-      'cobre': ['🪖 Armadura: Casco de cobre, Peto de cobre, Pantalones de cobre, Botas de cobre', '⛏️ Herramientas: Pico de cobre, Hacha de cobre, Espada de cobre, Pala de cobre, Azada de cobre', '🍞 Comida: 10 panes, 5 manzanas', '📦 Items: 16 antorchas, 1 Cama marrón', '🏷️ Tag coloreado en el chat'],
-      'plata': ['🪖 Armadura: Casco de plata, Peto de plata, Pantalones de plata, Botas de plata', '⛏️ Herramientas: Pico de plata (Fortuna I), Hacha de plata (Eficiencia I), Espada de plata (Filo I), Pala de plata (Eficiencia I)', '🍞 Comida: 15 chuletas de cerdo cocidas', '📦 Items: 24 antorchas, 1 Cama gris, 1 Mesa de trabajo', '🔮 Acceso a /enderchest'],
-      'bronce': ['🪖 Armadura: Casco de bronce, Peto de bronce, Pantalones de bronce, Botas de bronce', '⛏️ Herramientas: Pico de bronce (Fortuna II), Hacha de bronce (Eficiencia II), Espada de bronce (Filo II), Pala de bronce (Eficiencia II)', '🍞 Comida: 20 filetes de res', '📦 Items: 32 antorchas, 1 Cama naranja, 1 Mesa de encantamientos, 3 Libros', '🏠 Home adicional (3 total)'],
-      'oro': ['🪖 Armadura: Casco de oro, Peto de oro, Pantalones de oro, Botas de oro', '⛏️ Herramientas: Pico de oro (Fortuna III), Hacha de oro (Eficiencia III), Espada de oro (Filo III), Pala de oro (Eficiencia III)', '🍞 Comida: 30 filetes de res, 10 pasteles de calabaza', '📦 Items: 48 antorchas, 1 Cama amarilla, 1 Yunque, 5 Libros encantados', '💰 5 monedas del server'],
-      'diamante': ['🪖 Armadura: Casco de diamante, Peto de diamante, Pantalones de diamante, Botas de diamante', '⛏️ Herramientas: Pico de diamante (Fortuna III), Hacha de diamante (Eficiencia IV), Espada de diamante (Filo IV), Pala de diamante (Eficiencia IV)', '🍞 Comida: 40 filetes de res, 20 pasteles de calabaza', '📦 Items: 64 antorchas, 1 Cama celeste, 1 Cofre de ender, 5 Obsidiana, 1 Perla de ender'],
-      'rubi': ['🪖 Armadura: Casco de rubí, Peto de rubí, Pantalones de rubí, Botas de rubí', '⛏️ Herramientas: Pico de rubí (Fortuna IV), Hacha de rubí (Eficiencia IV), Espada de rubí (Filo V), Pala de rubí (Eficiencia IV)', '🍞 Comida: 50 filetes de res, 20 pasteles de calabaza, 10 manzanas doradas', '📦 Items: 64 antorchas, 1 Cama roja, 1 Cofre de ender, 10 Obsidiana, 3 Perlas de ender'],
-      'esmeralda': ['🪖 Armadura: Casco de esmeralda, Peto de esmeralda, Pantalones de esmeralda, Botas de esmeralda', '⛏️ Herramientas: Pico de esmeralda (Fortuna V), Hacha de esmeralda (Eficiencia V), Espada de esmeralda (Filo V), Pala de esmeralda (Eficiencia V)', '🍞 Comida: 64 filetes de res, 32 pasteles de calabaza, 16 manzanas doradas', '📦 Items: 64 antorchas, 1 Cama verde, 1 Cofre de ender, 16 Obsidiana, 5 Perlas de ender, 1 Huevo de dragón'],
-      'netherite': ['🪖 Armadura: Casco de netherite, Peto de netherite, Pantalones de netherite, Botas de netherite', '⛏️ Herramientas: Pico de netherite (Fortuna V), Hacha de netherite (Eficiencia V), Espada de netherite (Filo V), Pala de netherite (Eficiencia V)', '🍞 Comida: 64 filetes de res, 32 pasteles de calabaza, 32 manzanas doradas', '📦 Items: 64 antorchas, 1 Cama negra, 1 Cofre de ender, 32 Obsidiana, 10 Perlas de ender, 1 Huevo de dragón, 1 Totem de inmortalidad'],
-    };
-    const priceMap = { 'cobre': 0 };
-    const defaultPerks = ['🪖 Armadura: ...', '⛏️ Herramientas: ...', '🍞 Comida: ...', '📦 Items: ...'];
-    kits.forEach(k => {
-      const key = k.name.toLowerCase().trim();
-      k.perks = perkMap[key] || defaultPerks;
-      if (priceMap[key] !== undefined) k.price = priceMap[key];
-    });
-    sd._kitVer = 2;
-    changed = true;
-  }
+  const perkMap = {
+    'cobre': ['🪖 Armadura: Casco de cobre, Peto de cobre, Pantalones de cobre, Botas de cobre', '⛏️ Herramientas: Pico de cobre, Hacha de cobre, Espada de cobre, Pala de cobre, Azada de cobre', '🍞 Comida: 10 panes, 5 manzanas', '📦 Items: 16 antorchas, 1 Cama marrón', '🏷️ Tag coloreado en el chat'],
+    'plata': ['🪖 Armadura: Casco de plata, Peto de plata, Pantalones de plata, Botas de plata', '⛏️ Herramientas: Pico de plata (Fortuna I), Hacha de plata (Eficiencia I), Espada de plata (Filo I), Pala de plata (Eficiencia I)', '🍞 Comida: 15 chuletas de cerdo cocidas', '📦 Items: 24 antorchas, 1 Cama gris, 1 Mesa de trabajo', '🔮 Acceso a /enderchest'],
+    'bronce': ['🪖 Armadura: Casco de bronce, Peto de bronce, Pantalones de bronce, Botas de bronce', '⛏️ Herramientas: Pico de bronce (Fortuna II), Hacha de bronce (Eficiencia II), Espada de bronce (Filo II), Pala de bronce (Eficiencia II)', '🍞 Comida: 20 filetes de res', '📦 Items: 32 antorchas, 1 Cama naranja, 1 Mesa de encantamientos, 3 Libros', '🏠 Home adicional (3 total)'],
+    'oro': ['🪖 Armadura: Casco de oro, Peto de oro, Pantalones de oro, Botas de oro', '⛏️ Herramientas: Pico de oro (Fortuna III), Hacha de oro (Eficiencia III), Espada de oro (Filo III), Pala de oro (Eficiencia III)', '🍞 Comida: 30 filetes de res, 10 pasteles de calabaza', '📦 Items: 48 antorchas, 1 Cama amarilla, 1 Yunque, 5 Libros encantados', '💰 5 monedas del server'],
+    'diamante': ['🪖 Armadura: Casco de diamante, Peto de diamante, Pantalones de diamante, Botas de diamante', '⛏️ Herramientas: Pico de diamante (Fortuna III), Hacha de diamante (Eficiencia IV), Espada de diamante (Filo IV), Pala de diamante (Eficiencia IV)', '🍞 Comida: 40 filetes de res, 20 pasteles de calabaza', '📦 Items: 64 antorchas, 1 Cama celeste, 1 Cofre de ender, 5 Obsidiana, 1 Perla de ender'],
+    'rubi': ['🪖 Armadura: Casco de rubí, Peto de rubí, Pantalones de rubí, Botas de rubí', '⛏️ Herramientas: Pico de rubí (Fortuna IV), Hacha de rubí (Eficiencia IV), Espada de rubí (Filo V), Pala de rubí (Eficiencia IV)', '🍞 Comida: 50 filetes de res, 20 pasteles de calabaza, 10 manzanas doradas', '📦 Items: 64 antorchas, 1 Cama roja, 1 Cofre de ender, 10 Obsidiana, 3 Perlas de ender'],
+    'esmeralda': ['🪖 Armadura: Casco de esmeralda, Peto de esmeralda, Pantalones de esmeralda, Botas de esmeralda', '⛏️ Herramientas: Pico de esmeralda (Fortuna V), Hacha de esmeralda (Eficiencia V), Espada de esmeralda (Filo V), Pala de esmeralda (Eficiencia V)', '🍞 Comida: 64 filetes de res, 32 pasteles de calabaza, 16 manzanas doradas', '📦 Items: 64 antorchas, 1 Cama verde, 1 Cofre de ender, 16 Obsidiana, 5 Perlas de ender, 1 Huevo de dragón'],
+    'netherite': ['🪖 Armadura: Casco de netherite, Peto de netherite, Pantalones de netherite, Botas de netherite', '⛏️ Herramientas: Pico de netherite (Fortuna V), Hacha de netherite (Eficiencia V), Espada de netherite (Filo V), Pala de netherite (Eficiencia V)', '🍞 Comida: 64 filetes de res, 32 pasteles de calabaza, 32 manzanas doradas', '📦 Items: 64 antorchas, 1 Cama negra, 1 Cofre de ender, 32 Obsidiana, 10 Perlas de ender, 1 Huevo de dragón, 1 Totem de inmortalidad'],
+  };
+  const priceMap = { 'cobre': 0 };
+  const defaultPerks = ['🪖 Armadura: ...', '⛏️ Herramientas: ...', '🍞 Comida: ...', '📦 Items: ...'];
+  kits.forEach(k => {
+    const key = k.name.toLowerCase().trim();
+    const pk = perkMap[key];
+    if (pk) {
+      k.perks = pk;
+      changed = true;
+    }
+    if (priceMap[key] !== undefined) {
+      k.price = priceMap[key];
+      changed = true;
+    }
+  });
   kits.forEach(k => {
     if (k.recommended && !k.badge) {
       k.badge = '⭐ RECOMENDADO';
@@ -1645,11 +1638,7 @@ function migrateKits() {
 }
 
 /* ───── INIT ───── */
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const res = await fetch('config.json?v=6');
-    if (res.ok) CONFIG_DEFAULTS = await res.json();
-  } catch {}
+document.addEventListener('DOMContentLoaded', () => {
   migrateKits();
   setLED('idle');
   updateWallet();
