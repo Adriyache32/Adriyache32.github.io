@@ -1013,6 +1013,34 @@ function showCreatorTab(tab) {
   }
 }
 
+/* ───── EXPORT CONFIG ───── */
+function exportConfig() {
+  const sd = JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {};
+  const json = JSON.stringify(sd, null, 2);
+  const content = document.getElementById('creator-tab-content');
+  content.innerHTML = `
+    <div class="tab-content">
+      <div class="line"><span class="prompt">└─$</span> <span class="highlight">📤 Exportar Configuración</span></div>
+      <div style="color:#888;font-size:0.7rem;margin-bottom:0.5rem">Copiá este JSON y pasámelo para que lo publique para todos.</div>
+      <textarea id="config-export" style="width:100%;min-height:300px;background:#0a0a12;color:#c0c0d0;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:0.75rem;font-family:monospace;font-size:0.7rem;resize:vertical" readonly>${json.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+      <div class="editor-actions">
+        <button class="btn-editor save" onclick="copyConfig()" style="font-size:0.7rem">📋 Copiar al portapapeles</button>
+        <button class="btn-editor" onclick="showCreatorTab('server')" style="font-size:0.7rem">← Volver</button>
+        <span id="e-msg" class="editor-success"></span>
+      </div>
+    </div>`;
+}
+function copyConfig() {
+  const ta = document.getElementById('config-export');
+  if (!ta) return;
+  ta.select();
+  ta.setSelectionRange(0, 999999);
+  navigator.clipboard.writeText(ta.value).then(() => {
+    const msg = document.getElementById('e-msg');
+    if (msg) { msg.textContent = '✓ Copiado'; setTimeout(() => msg.textContent = '', 2000); }
+  });
+}
+
 /* ───── SAVE HELPERS ───── */
 function getSD() { return JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {}; }
 
