@@ -838,14 +838,60 @@ function showCreatorTab(tab) {
     case 'mods': {
       const mdata = sd.mods || {
         mods: [
-          { name: 'Sodium', desc: 'Optimización de rendimiento', url: '#', image: '' },
-          { name: 'JourneyMap', desc: 'Mapa minimapa y del mundo', url: '#', image: '' },
-          { name: 'SimpleVoiceChat', desc: 'Voice chat de proximidad', url: '#', image: '' },
-          { name: 'Litematica', desc: 'Esquemas de construcción', url: '#', image: '' },
+          { name: '🔧 Embeddium', desc: 'Render optimizado (Sodium para Forge). +100 FPS', url: 'https://www.curseforge.com/minecraft/mc-mods/embeddium', image: '' },
+          { name: '🔧 Oculus', desc: 'Shaders compatibles con Forge (Iris port)', url: 'https://www.curseforge.com/minecraft/mc-mods/oculus', image: '' },
+          { name: '🔧 Starlight', desc: 'Motor de iluminación reescrito, más rápido', url: 'https://www.curseforge.com/minecraft/mc-mods/starlight', image: '' },
+          { name: '🔧 Radium', desc: 'Optimización del motor de luz', url: 'https://www.curseforge.com/minecraft/mc-mods/radium', image: '' },
+          { name: '🔧 FerriteCore', desc: 'Reduce el uso de RAM hasta un 50%', url: 'https://www.curseforge.com/minecraft/mc-mods/ferritecore', image: '' },
+          { name: '🔧 ModernFix', desc: 'Arregla bugs de rendimiento y memoria', url: 'https://www.curseforge.com/minecraft/mc-mods/modernfix', image: '' },
+          { name: '🔧 ImmediatelyFast', desc: 'Optimiza la interfaz y el rendering inmediato', url: 'https://www.curseforge.com/minecraft/mc-mods/immediatelyfast', image: '' },
+          { name: '🔧 EntityCulling', desc: 'Deja de renderizar entidades tapadas', url: 'https://www.curseforge.com/minecraft/mc-mods/entityculling', image: '' },
+          { name: '🔧 CullLessLeaves', desc: 'Optimiza el render de hojas de árboles', url: 'https://www.curseforge.com/minecraft/mc-mods/cull-less-leaves', image: '' },
+          { name: '🔧 FastAsyncWorldSave', desc: 'Guardado del mundo asíncrono y rápido', url: 'https://www.curseforge.com/minecraft/mc-mods/fastasyncworldsave', image: '' },
+          { name: '🔧 Chunksending', desc: 'Envío de chunks optimizado', url: 'https://www.curseforge.com/minecraft/mc-mods/chunksending', image: '' },
+          { name: '🔧 BetterChunkLoading', desc: 'Carga de chunks más eficiente', url: 'https://www.curseforge.com/minecraft/mc-mods/better-chunk-loading', image: '' },
+          { name: '🔧 Chunky', desc: 'Pre-genera chunks para reducir lag', url: 'https://www.curseforge.com/minecraft/mc-mods/chunky-pregenerator', image: '' },
+          { name: '🔧 Connectivity', desc: 'Arregla problemas de conexión y timeouts', url: 'https://www.curseforge.com/minecraft/mc-mods/connectivity', image: '' },
+          { name: '🔧 Alternate Current', desc: 'Redstone optimizada, menos lag', url: 'https://www.curseforge.com/minecraft/mc-mods/alternate-current', image: '' },
+          { name: '🔧 FastItemFrames', desc: 'Item frames optimizados, zero lag', url: 'https://www.curseforge.com/minecraft/mc-mods/fast-item-frames', image: '' },
+          { name: '🔧 FastPaintings', desc: 'Cuadros optimizados, sin lag', url: 'https://www.curseforge.com/minecraft/mc-mods/fastpaintings', image: '' },
+          { name: '🔧 Clumps', desc: 'Junta orbes de XP en uno solo', url: 'https://www.curseforge.com/minecraft/mc-mods/clumps', image: '' },
+          { name: '🔧 Get It Together Drops', desc: 'Junta items en el piso', url: 'https://www.curseforge.com/minecraft/mc-mods/get-it-together-drops', image: '' },
+          { name: '🔧 Cupboard', desc: 'Librería de optimización para otros mods', url: 'https://www.curseforge.com/minecraft/mc-mods/cupboard', image: '' },
+          { name: '🔧 Immersive Optimization', desc: 'Optimización general del juego', url: 'https://www.curseforge.com/minecraft/mc-mods/immersive-optimization', image: '' },
+          { name: '🔧 AI Improvements', desc: 'IA de mobs más eficiente', url: 'https://www.curseforge.com/minecraft/mc-mods/ai-improvements', image: '' },
+          { name: '🔧 AllTheLeaks', desc: 'Arregla memory leaks comunes', url: 'https://www.curseforge.com/minecraft/mc-mods/alltheleaks', image: '' },
+          { name: '🔧 GPUMemLeakFix', desc: 'Arregla memory leaks de la GPU', url: 'https://www.curseforge.com/minecraft/mc-mods/gpumemleakfix', image: '' },
+          { name: '🔧 Leaky', desc: 'Detecta y reporta memory leaks', url: 'https://www.curseforge.com/minecraft/mc-mods/leaky', image: '' },
+          { name: '🔧 KryptonReforged', desc: 'Optimiza la red del juego', url: 'https://www.curseforge.com/minecraft/mc-mods/krypton-reforged', image: '' },
+          { name: '🔧 Let Me Despawn', desc: 'Mobs desaparecen más rápido para reducir lag', url: 'https://www.curseforge.com/minecraft/mc-mods/let-me-despawn', image: '' },
+          { name: '🔧 LimitedChunks', desc: 'Controla los límites de carga de chunks', url: 'https://www.curseforge.com/minecraft/mc-mods/limitedchunks', image: '' },
+          { name: '🔧 Log Begone', desc: 'Reduce el spam de logs', url: 'https://www.curseforge.com/minecraft/mc-mods/log-begone', image: '' },
+          { name: '🔧 RecipeEssentials', desc: 'Optimiza el sistema de recetas', url: 'https://www.curseforge.com/minecraft/mc-mods/recipeessentials', image: '' },
+          { name: '🔧 ServerCore', desc: 'Optimización para servidores', url: 'https://www.curseforge.com/minecraft/mc-mods/servercore', image: '' },
+          { name: '🔧 SmoothBoot Reloaded', desc: 'Inicio más rápido del juego', url: 'https://www.curseforge.com/minecraft/mc-mods/smoothboot-reloaded', image: '' },
+          { name: '🔧 StructureEssentials', desc: 'Optimiza la generación de estructuras', url: 'https://www.curseforge.com/minecraft/mc-mods/structureessentials', image: '' },
+          { name: '🔧 CrashAssistant', desc: 'Reportes de crash más claros', url: 'https://www.curseforge.com/minecraft/mc-mods/crash-assistant', image: '' },
+          { name: '🔧 Flerovium', desc: 'Optimización general de rendimiento', url: 'https://www.curseforge.com/minecraft/mc-mods/flerovium', image: '' },
+          { name: '🔧 Rubidium Extra', desc: 'Extras visuales para Rubidium/Embeddium', url: 'https://www.curseforge.com/minecraft/mc-mods/rubidium-extra', image: '' },
+          { name: '🔧 SodiumOptionsAPI', desc: 'API para opciones de Sodium en Forge', url: 'https://www.curseforge.com/minecraft/mc-mods/sodium-options-api', image: '' },
+          { name: '🔧 Chloride', desc: 'Extras visuales y fixes para Embeddium', url: 'https://www.curseforge.com/minecraft/mc-mods/chloride', image: '' },
+          { name: '🔧 Vanillin', desc: 'Mejoras vanilla sin cambiar mecánicas', url: 'https://www.curseforge.com/minecraft/mc-mods/vanillin', image: '' },
+          { name: '🔧 LMFT (Lazy Mouse Fix Tweaks)', desc: 'Arregla el input del mouse', url: 'https://www.curseforge.com/minecraft/mc-mods/lazy-mouse-fix-tweaks', image: '' },
+          { name: '🔧 ModFixer', desc: 'Arregla compatibilidad entre mods', url: 'https://www.curseforge.com/minecraft/mc-mods/modfixer', image: '' },
+          { name: '🔧 Fastload', desc: 'Carga el mundo más rápido', url: 'https://www.curseforge.com/minecraft/mc-mods/fastload', image: '' },
+          { name: '📦 Artifacts', desc: 'Accesorios mágicos y objetos únicos para equipar', url: 'https://www.curseforge.com/minecraft/mc-mods/artifacts', image: '' },
+          { name: '📦 Curios API', desc: 'Slots extras para accesorios (necesario para Artifacts)', url: 'https://www.curseforge.com/minecraft/mc-mods/curios', image: '' },
+          { name: '📦 Effortless Building', desc: 'Herramientas de construcción rápida sin perder vanilla', url: 'https://www.curseforge.com/minecraft/mc-mods/effortless-building', image: '' },
+          { name: '📦 Sophisticated Backpacks', desc: 'Mochilas avanzadas con upgrades', url: 'https://www.curseforge.com/minecraft/mc-mods/sophisticated-backpacks', image: '' },
+          { name: '📦 Almanac', desc: 'Libro con información de cultivos y mobs', url: 'https://www.curseforge.com/minecraft/mc-mods/almanac', image: '' },
+          { name: '🗺️ Xaero\'s Minimap', desc: 'Minimapa con waypoints y radar', url: 'https://www.curseforge.com/minecraft/mc-mods/xaeros-minimap', image: '' },
+          { name: 'ℹ️ Jade', desc: 'Muestra info del bloque que estás mirando', url: 'https://www.curseforge.com/minecraft/mc-mods/jade', image: '' },
+          { name: 'ℹ️ JEI (Just Enough Items)', desc: 'Recetario completo del juego', url: 'https://www.curseforge.com/minecraft/mc-mods/jei', image: '' },
+          { name: 'ℹ️ Just Enough Resources', desc: 'Muestra drops de mobs y generación de minerales', url: 'https://www.curseforge.com/minecraft/mc-mods/just-enough-resources-jer', image: '' },
         ],
         modpacks: [
-          { name: 'Nervalia Pack', desc: 'Modpack oficial del server', url: '#', image: '' },
-          { name: 'Fabulously Optimized', desc: 'Modpack de optimización', url: '#', image: '' },
+          { name: '📦 Pack de optimización', desc: 'Pack con todos los mods de optimización pre-seleccionados', url: '#', image: '' },
         ],
         shaders: [
           { name: 'Complementary Shaders', desc: 'Shaders vibrantes y ligeros', url: '#', image: '' },
@@ -1918,12 +1964,45 @@ function applyGaleria() {
 }
 
 /* ───── MODS ───── */
+let _modFilterText = '';
+let _modFilterDebounce = null;
+
 function switchModTab(tab, btn) {
   document.querySelectorAll('.mod-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
   document.querySelectorAll('#mods-content .mods-grid').forEach(g => g.classList.add('hidden'));
   const grid = document.getElementById(`mods-grid-${tab}`);
   if (grid) grid.classList.remove('hidden');
+  const input = document.getElementById('mods-search');
+  if (input) {
+    input.placeholder = `Buscar en ${tab}...`;
+    input.focus();
+  }
+  updateModCount();
+}
+
+function filterMods(value) {
+  _modFilterText = value.toLowerCase().trim();
+  clearTimeout(_modFilterDebounce);
+  _modFilterDebounce = setTimeout(() => {
+    const grids = document.querySelectorAll('#mods-content .mods-grid');
+    grids.forEach(grid => {
+      grid.querySelectorAll('.mod-card').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.classList.toggle('mods-hidden', _modFilterText && !text.includes(_modFilterText));
+      });
+    });
+    updateModCount();
+  }, 80);
+}
+
+function updateModCount() {
+  const visible = document.querySelector('#mods-content .mods-grid:not(.hidden)');
+  if (!visible) return;
+  const total = visible.querySelectorAll('.mod-card').length;
+  const shown = visible.querySelectorAll('.mod-card:not(.mods-hidden)').length;
+  const el = document.getElementById('mods-count');
+  if (el) el.textContent = _modFilterText ? `${shown}/${total}` : `${total}`;
 }
 
 function applyMods() {
@@ -1937,22 +2016,30 @@ function applyMods() {
     if (!grid) return;
     const items = mdata[cat] || [];
     if (items.length === 0) {
-      grid.innerHTML = '<div style="text-align:center;color:#444;padding:2rem">Sin contenido aún</div>';
+      grid.innerHTML = '<div class="mods-empty">Sin contenido aún</div>';
       return;
     }
-    grid.innerHTML = items.map(item => `
+    const html = items.map(item => `
       <div class="mod-card">
         ${item.image
-          ? `<img class="mod-img" src="${item.image}" alt="${item.name}" loading="lazy">`
+          ? `<img class="mod-img" src="${item.image}" alt="${item.name.replace(/"/g,'')}" loading="lazy">`
           : `<div class="mod-img-placeholder">📦</div>`}
         <div class="mod-info">
           <h4>${item.name}</h4>
           <div class="mod-desc">${item.desc}</div>
-          <a href="${item.url || '#'}" class="mod-cf-link" target="_blank">CurseForge →</a>
+          <a href="${item.url || '#'}" class="mod-cf-link" target="_blank">${item.url && item.url !== '#' ? 'Descargar →' : 'CurseForge →'}</a>
         </div>
       </div>
     `).join('');
+    grid.innerHTML = html;
   });
+
+  const input = document.getElementById('mods-search');
+  if (input) {
+    _modFilterText = '';
+    input.value = '';
+  }
+  updateModCount();
 }
 
 function addModEntry(cat) {
@@ -2626,6 +2713,54 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { threshold: 0.3 });
   if (section) observer.observe(section);
 });
+
+/* ───── SYSTEM MONITOR WIDGET ───── */
+function initSysMon() {
+  const cpuFill = document.getElementById('cpu-fill');
+  const ramFill = document.getElementById('ram-fill');
+  const swapFill = document.getElementById('swap-fill');
+  const cpuPct = document.getElementById('cpu-pct');
+  const ramPct = document.getElementById('ram-pct');
+  const swapPct = document.getElementById('swap-pct');
+  if (!cpuFill) return;
+
+  let cpu = 20 + Math.random() * 30;
+  let targetCpu = cpu;
+  let ram = 30 + Math.random() * 20;
+  let targetRam = ram;
+  let swap = 10 + Math.random() * 15;
+  let targetSwap = swap;
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function updateSysMon() {
+    targetCpu = Math.max(5, Math.min(95, targetCpu + (Math.random() - 0.5) * 20));
+    targetRam = Math.max(20, Math.min(95, targetRam + (Math.random() - 0.5) * 8));
+    targetSwap = Math.max(5, Math.min(60, targetSwap + (Math.random() - 0.5) * 6));
+
+    const mem = performance.memory;
+    if (mem) {
+      const used = mem.usedJSHeapSize / mem.jsHeapSizeLimit;
+      targetRam = Math.round(used * 100);
+    }
+
+    cpu = lerp(cpu, targetCpu, 0.12);
+    ram = lerp(ram, targetRam, 0.12);
+    swap = lerp(swap, targetSwap, 0.12);
+
+    cpuFill.style.width = cpu.toFixed(1) + '%';
+    ramFill.style.width = ram.toFixed(1) + '%';
+    swapFill.style.width = swap.toFixed(1) + '%';
+    cpuPct.textContent = cpu.toFixed(0) + '%';
+    ramPct.textContent = ram.toFixed(0) + '%';
+    swapPct.textContent = swap.toFixed(0) + '%';
+
+    requestAnimationFrame(updateSysMon);
+  }
+  updateSysMon();
+}
+
+document.addEventListener('DOMContentLoaded', initSysMon);
 
 checkStatus();
 setInterval(checkStatus, 60000);
