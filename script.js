@@ -1206,6 +1206,7 @@ function addKit() {
 
 function refreshKits() {
   migrateKits();
+  migrateMembresias();
   showCreatorTab('kits');
   const msg = document.getElementById('e-msg');
   if (msg) { msg.textContent = '✓ Perks actualizados'; setTimeout(() => msg.textContent = '', 2000); }
@@ -1330,6 +1331,8 @@ function removeMembresia(index) {
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   showCreatorTab('membresias');
 }
+
+function addLogro() {
   const sd = getSD();
   const logros = sd.logros || [];
   logros.push({ name: 'Nuevo Logro', desc: 'Descripción', icon: '⭐' });
@@ -1760,6 +1763,18 @@ function migrateKits() {
   }
 }
 
+function migrateMembresias() {
+  const sd = JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {};
+  if (!sd.membresias || !Array.isArray(sd.membresias) || sd.membresias.length === 0) {
+    sd.membresias = [
+      { name: 'Semanal', price: 30, dailyCoins: 1, badge: '', perks: ['Tag especial en el chat', '1 home adicional', 'Acceso a /fly en spawn'] },
+      { name: 'Mensual', price: 80, dailyCoins: 3, badge: '🔥 POPULAR', perks: ['Tag especial + color', '3 homes adicionales', 'Acceso a /fly y /nick', 'Rol exclusivo en Discord'] },
+      { name: 'Vitalicio', price: 300, dailyCoins: 5, badge: '👑 VIP', perks: ['Tag especial + color + brillo', '5 homes adicionales', 'Acceso a /fly, /nick, /enderchest', 'Rol VIP en Discord', '+50 monedas iniciales'] },
+    ];
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+  }
+}
+
 /* ───── INIT ───── */
 document.addEventListener('DOMContentLoaded', () => {
   if (!localStorage.getItem(SERVER_DATA_KEY)) {
@@ -1795,6 +1810,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
   }
   migrateKits();
+  migrateMembresias();
   setLED('idle');
   updateWallet();
   restoreLogros();
