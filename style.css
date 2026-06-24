@@ -1122,6 +1122,13 @@ h1 {
   color: #fff;
   border: 2px solid rgba(255, 255, 255, 0.1);
 }
+.member-avatar-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
 
 .member span {
   font-size: 0.85rem;
