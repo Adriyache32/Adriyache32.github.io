@@ -2781,53 +2781,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (section) observer.observe(section);
 });
 
-/* ───── SYSTEM MONITOR WIDGET ───── */
-function initSysMon() {
-  const cpuFill = document.getElementById('cpu-fill');
-  const ramFill = document.getElementById('ram-fill');
-  const swapFill = document.getElementById('swap-fill');
-  const cpuPct = document.getElementById('cpu-pct');
-  const ramPct = document.getElementById('ram-pct');
-  const swapPct = document.getElementById('swap-pct');
-  if (!cpuFill) return;
-
-  let cpu = 20 + Math.random() * 30;
-  let targetCpu = cpu;
-  let ram = 30 + Math.random() * 20;
-  let targetRam = ram;
-  let swap = 10 + Math.random() * 15;
-  let targetSwap = swap;
-
-  function lerp(a, b, t) { return a + (b - a) * t; }
-
-  function updateSysMon() {
-    targetCpu = Math.max(5, Math.min(95, targetCpu + (Math.random() - 0.5) * 20));
-    targetRam = Math.max(20, Math.min(95, targetRam + (Math.random() - 0.5) * 8));
-    targetSwap = Math.max(5, Math.min(60, targetSwap + (Math.random() - 0.5) * 6));
-
-    const mem = performance.memory;
-    if (mem) {
-      const used = mem.usedJSHeapSize / mem.jsHeapSizeLimit;
-      targetRam = Math.round(used * 100);
-    }
-
-    cpu = lerp(cpu, targetCpu, 0.12);
-    ram = lerp(ram, targetRam, 0.12);
-    swap = lerp(swap, targetSwap, 0.12);
-
-    cpuFill.style.width = cpu.toFixed(1) + '%';
-    ramFill.style.width = ram.toFixed(1) + '%';
-    swapFill.style.width = swap.toFixed(1) + '%';
-    cpuPct.textContent = cpu.toFixed(0) + '%';
-    ramPct.textContent = ram.toFixed(0) + '%';
-    swapPct.textContent = swap.toFixed(0) + '%';
-
-    requestAnimationFrame(updateSysMon);
-  }
-  updateSysMon();
-}
-
-document.addEventListener('DOMContentLoaded', initSysMon);
 
 checkStatus();
 setInterval(checkStatus, 60000);
