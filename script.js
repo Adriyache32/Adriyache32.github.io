@@ -812,22 +812,22 @@ function showCreatorTab(tab) {
     case 'mods': {
       const mdata = sd.mods || {
         mods: [
-          { name: 'Sodium', desc: 'Optimización de rendimiento', version: '1.20.4', url: '#' },
-          { name: 'JourneyMap', desc: 'Mapa minimapa y del mundo', version: '1.20.4', url: '#' },
-          { name: 'SimpleVoiceChat', desc: 'Voice chat de proximidad', version: '1.20.4', url: '#' },
-          { name: 'Litematica', desc: 'Esquemas de construcción', version: '1.20.4', url: '#' },
+          { name: 'Sodium', desc: 'Optimización de rendimiento', url: '#', image: '' },
+          { name: 'JourneyMap', desc: 'Mapa minimapa y del mundo', url: '#', image: '' },
+          { name: 'SimpleVoiceChat', desc: 'Voice chat de proximidad', url: '#', image: '' },
+          { name: 'Litematica', desc: 'Esquemas de construcción', url: '#', image: '' },
         ],
         modpacks: [
-          { name: 'Nervalia Pack', desc: 'Modpack oficial del server', version: 'v1.0', url: '#' },
-          { name: 'Fabulously Optimized', desc: 'Modpack de optimización', version: 'v5.0', url: '#' },
+          { name: 'Nervalia Pack', desc: 'Modpack oficial del server', url: '#', image: '' },
+          { name: 'Fabulously Optimized', desc: 'Modpack de optimización', url: '#', image: '' },
         ],
         shaders: [
-          { name: 'Complementary Shaders', desc: 'Shaders vibrantes y ligeros', version: 'v4.7', url: '#' },
-          { name: 'BSL Shaders', desc: 'Shaders realistas', version: 'v8.2', url: '#' },
+          { name: 'Complementary Shaders', desc: 'Shaders vibrantes y ligeros', url: '#', image: '' },
+          { name: 'BSL Shaders', desc: 'Shaders realistas', url: '#', image: '' },
         ],
         textures: [
-          { name: 'Faithful x64', desc: 'Texturas fieles en 64x', version: '1.20.4', url: '#' },
-          { name: 'Bare Bones', desc: 'Texturas minimalistas', version: '1.20.4', url: '#' },
+          { name: 'Faithful x64', desc: 'Texturas fieles en 64x', url: '#', image: '' },
+          { name: 'Bare Bones', desc: 'Texturas minimalistas', url: '#', image: '' },
         ],
       };
       const categories = ['mods', 'modpacks', 'shaders', 'textures'];
@@ -839,10 +839,10 @@ function showCreatorTab(tab) {
           </div>
           ${(mdata[cat] || []).map((item, i) => `
             <div class="editor-field" style="padding:0.3rem 0">
-              <input class="editor-input" id="m-${cat}-name-${i}" value="${item.name}" placeholder="Nombre" style="flex:0.2;font-size:0.7rem">
-              <input class="editor-input" id="m-${cat}-desc-${i}" value="${item.desc}" placeholder="Desc" style="flex:0.3;font-size:0.7rem">
-              <input class="editor-input" id="m-${cat}-url-${i}" value="${item.url || '#'}" placeholder="CurseForge URL" style="flex:0.3;font-size:0.7rem">
-              <input class="editor-input" id="m-${cat}-ver-${i}" value="${item.version}" placeholder="Versión" style="flex:0.1;font-size:0.7rem">
+              <input class="editor-input" id="m-${cat}-name-${i}" value="${item.name}" placeholder="Nombre" style="flex:0.15;font-size:0.7rem">
+              <input class="editor-input" id="m-${cat}-desc-${i}" value="${item.desc}" placeholder="Desc" style="flex:0.25;font-size:0.7rem">
+              <input class="editor-input" id="m-${cat}-url-${i}" value="${item.url || '#'}" placeholder="CurseForge URL" style="flex:0.25;font-size:0.7rem">
+              <input class="editor-input" id="m-${cat}-img-${i}" value="${item.image || ''}" placeholder="Imagen URL" style="flex:0.2;font-size:0.7rem">
               <button class="btn-editor danger" onclick="removeModEntry('${cat}', ${i})" style="flex:0;padding:0.2rem 0.4rem;font-size:0.65rem">✕</button>
             </div>
           `).join('')}
@@ -1488,7 +1488,6 @@ function applyMods() {
   const mdata = sd.mods || {};
   const categories = ['mods', 'modpacks', 'shaders', 'textures'];
   const catNames = { mods: 'Mods', modpacks: 'Modpacks', shaders: 'Shaders', textures: 'Texture Packs' };
-  const catIcons = { mods: '📦', modpacks: '📦', shaders: '🌅', textures: '🎨' };
 
   categories.forEach(cat => {
     const grid = document.getElementById(`mods-grid-${cat}`);
@@ -1500,13 +1499,14 @@ function applyMods() {
     }
     grid.innerHTML = items.map(item => `
       <div class="mod-card">
-        <div class="mod-icon">${catIcons[cat]}</div>
+        ${item.image
+          ? `<img class="mod-img" src="${item.image}" alt="${item.name}" loading="lazy">`
+          : `<div class="mod-img-placeholder">📦</div>`}
         <div class="mod-info">
           <h4>${item.name}</h4>
-          <p>${item.desc}<br><a href="${item.url || '#'}" class="mod-cf-link" target="_blank">CurseForge →</a></p>
-          <span class="mod-version">${item.version}</span>
+          <div class="mod-desc">${item.desc}</div>
+          <a href="${item.url || '#'}" class="mod-cf-link" target="_blank">CurseForge →</a>
         </div>
-        <a href="${item.url || '#'}" class="btn-mod-dl" target="_blank">Descargar</a>
       </div>
     `).join('');
   });
@@ -1520,7 +1520,7 @@ function addModEntry(cat) {
   const sd = getSD();
   if (!sd.mods) sd.mods = {};
   if (!sd.mods[cat]) sd.mods[cat] = [];
-  sd.mods[cat].push({ name: 'Nuevo', desc: 'Descripción', version: '1.0', url: '#' });
+  sd.mods[cat].push({ name: 'Nuevo', desc: 'Descripción', url: '#', image: '' });
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   showCreatorTab('mods');
 }
@@ -1544,11 +1544,11 @@ function saveMods() {
       const n = document.getElementById(`m-${cat}-name-${i}`);
       const d = document.getElementById(`m-${cat}-desc-${i}`);
       const u = document.getElementById(`m-${cat}-url-${i}`);
-      const v = document.getElementById(`m-${cat}-ver-${i}`);
+      const img = document.getElementById(`m-${cat}-img-${i}`);
       if (n) items[i].name = n.value;
       if (d) items[i].desc = d.value;
       if (u) items[i].url = u.value;
-      if (v) items[i].version = v.value;
+      if (img) items[i].image = img.value;
     });
   });
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
