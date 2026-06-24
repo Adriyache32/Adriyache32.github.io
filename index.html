@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nervalia - chanchos MC studios</title>
-  <link rel="stylesheet" href="style.css?v=15">
+  <link rel="stylesheet" href="style.css?v=18">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -56,6 +56,7 @@
         </div>
         <div class="hero-buttons">
           <a href="https://discord.gg/dG5hyxkca" class="btn btn-discord" target="_blank">Discord</a>
+          <a href="https://cafecito.app/nervalia" class="btn btn-cafe" target="_blank">☕ Cafecito</a>
           <a href="https://map.nervalia.mc" class="btn btn-map" target="_blank">Mapa Dinámico</a>
         </div>
       </div>
@@ -389,68 +390,80 @@
       <h2>FAQ</h2>
       <p class="section-subtitle">/// Preguntas frecuentes ///</p>
       <div class="faq-list">
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">¿Cómo entro al server?</div>
-          <div class="faq-a">Primero tenés que pedir whitelist a algún miembro del equipo. Una vez agregado, conectate con la IP <strong>nervalia.mc</strong>.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">¿Qué versión necesito?</div>
-          <div class="faq-a">El server corre en 1.20.1. Cualquier versión entre 1.20.1 y 1.21 funciona.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">¿Cómo consigo monedas?</div>
-          <div class="faq-a">Completando logros del server. Cada logro completado te da <strong>0.5 🪙</strong>.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">¿Se puede hacer grief?</div>
-          <div class="faq-a">No. El server tiene whitelist y CoreProtect. Todo se revierte y el responsable es baneado.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">¿Hay voice chat?</div>
-          <div class="faq-a">Sí, usamos Simple Voice Chat con proximidad. Descargalo de la sección Mods.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">¿Cómo creo un equipo/clan?</div>
-          <div class="faq-a">Contactá al equipo por Discord con los nombres de los miembros y el nombre del clan. Si es aprobado, se crea un rol privado y un canal para su equipo.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">¿Cómo ser moderador? 🌟</div>
-          <div class="faq-a faq-form">
-            <p style="color:#f0c040;font-size:0.8rem;margin-bottom:1rem">Completá este formulario para postularte como moderador. Será revisado por el equipo.</p>
-            <div class="faq-form-field"><span>Nick Minecraft</span><input class="faq-form-input" id="mod-nick" placeholder="Tu nick"></div>
-            <div class="faq-form-field"><span>Email</span><input class="faq-form-input" id="mod-email" placeholder="tu@email.com"></div>
-            <div class="faq-form-field"><span>Edad</span><input class="faq-form-input" id="mod-edad" placeholder="Tu edad"></div>
-            <div class="faq-form-field"><span>¿Cuánto tiempo llevás en el server?</span><textarea class="faq-form-input faq-form-textarea" id="mod-tiempo" placeholder="Ej: 6 meses"></textarea></div>
-            <div class="faq-form-field"><span>¿Por qué querés ser moderador?</span><textarea class="faq-form-input faq-form-textarea" id="mod-porque" placeholder="Explicá tus motivos..."></textarea></div>
-            <div class="faq-form-field"><span>Experiencia previa como mod</span><textarea class="faq-form-input faq-form-textarea" id="mod-experiencia" placeholder="Contá si moderaste otros servers..."></textarea></div>
-            <div class="faq-form-field"><span>¿Cuántas horas por día te conectás?</span><input class="faq-form-input" id="mod-horas" placeholder="Ej: 4-6 horas"></div>
-            <div class="faq-form-field"><span>Idiomas que manejás</span><input class="faq-form-input" id="mod-idiomas" placeholder="Ej: Español, Inglés"></div>
-            <div class="faq-form-field"><span>¿Tenés micrófono y discord?</span><input class="faq-form-input" id="mod-mic" placeholder="Sí / No"></div>
-            <div class="faq-form-field"><span>¿Cómo resolverías un griefing?</span><textarea class="faq-form-input faq-form-textarea" id="mod-grief" placeholder="Describí tu procedimiento..."></textarea></div>
-            <button class="btn btn-login" onclick="submitModForm()" style="margin-top:0.75rem">[ ENVIAR SOLICITUD ]</button>
-            <span id="mod-msg" class="faq-form-msg"></span>
+        <div class="tier-section" style="margin-bottom:0.75rem">
+          <div class="tier-header" onclick="toggleTier(this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid #f0c040;user-select:none">
+            <span style="font-size:0.8rem;font-weight:600;color:#c0c0d0">❓ Preguntas Frecuentes</span>
+            <span style="font-size:0.7rem;color:#444">▶ 9 preguntas</span>
           </div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">¿Cómo ser fundador? 👑</div>
-          <div class="faq-a faq-form">
-            <p style="color:#f0c040;font-size:0.8rem;margin-bottom:1rem">Formulario exclusivo para fundadores. Solo los más comprometidos.</p>
-            <div class="faq-form-field"><span>Nick Minecraft</span><input class="faq-form-input" id="fd-nick" placeholder="Tu nick"></div>
-            <div class="faq-form-field"><span>Email de contacto</span><input class="faq-form-input" id="fd-email" placeholder="tu@email.com"></div>
-            <div class="faq-form-field"><span>Edad real</span><input class="faq-form-input" id="fd-edad" placeholder="Tu edad"></div>
-            <div class="faq-form-field"><span>País / Zona horaria</span><input class="faq-form-input" id="fd-pais" placeholder="Ej: Argentina / GMT-3"></div>
-            <div class="faq-form-field"><span>¿Cuánto tiempo llevás en el server?</span><textarea class="faq-form-input faq-form-textarea" id="fd-tiempo" placeholder="Ej: 1 año"></textarea></div>
-            <div class="faq-form-field"><span>¿Por qué querés ser fundador?</span><textarea class="faq-form-input faq-form-textarea" id="fd-porque" placeholder="Motivos detallados..."></textarea></div>
-            <div class="faq-form-field"><span>Experiencia liderando equipos</span><textarea class="faq-form-input faq-form-textarea" id="fd-liderazgo" placeholder="Contá tu experiencia previa liderando proyectos..."></textarea></div>
-            <div class="faq-form-field"><span>¿Qué aportarías al equipo directivo?</span><textarea class="faq-form-input faq-form-textarea" id="fd-aporte" placeholder="Habilidades, ideas, recursos..."></textarea></div>
-            <div class="faq-form-field"><span>¿Podés ayudar con costos del server?</span><input class="faq-form-input" id="fd-costos" placeholder="Sí / No / Tal vez"></div>
-            <div class="faq-form-field"><span>¿Tenés experiencia con plugins/config?</span><textarea class="faq-form-input faq-form-textarea" id="fd-plugins" placeholder="Ej: Configuré WorldEdit, CoreProtect..."></textarea></div>
-            <div class="faq-form-field"><span>¿Cuántas horas semanales podés dedicar?</span><input class="faq-form-input" id="fd-horas" placeholder="Ej: 20+ horas"></div>
-            <div class="faq-form-field"><span>LinkedIn / GitHub / Portafolio (opcional)</span><input class="faq-form-input" id="fd-linkedin" placeholder="URL"></div>
-            <div class="faq-form-field"><span>¿Cómo manejás situaciones de conflicto?</span><textarea class="faq-form-input faq-form-textarea" id="fd-conflictos" placeholder="Describí un caso y cómo lo resolverías..."></textarea></div>
-            <div class="faq-form-field"><span>Referencia de un miembro actual</span><input class="faq-form-input" id="fd-referencia" placeholder="Nick de quien te refiere"></div>
-            <button class="btn btn-login" onclick="submitFounderForm()" style="margin-top:0.75rem">[ ENVIAR SOLICITUD ]</button>
-            <span id="fd-msg" class="faq-form-msg"></span>
+          <div class="tier-body" style="display:none;flex-direction:column;gap:0.35rem;margin-top:0.4rem">
+            <div class="faq-item">
+              <div class="faq-q" style="padding:0.4rem 0.6rem;border-radius:6px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04);font-size:0.75rem;color:#c0c0d0;font-weight:600">¿Cómo entro al server?</div>
+              <div class="faq-a" style="padding:0.4rem 0.6rem;font-size:0.65rem;color:#666">Primero tenés que pedir whitelist a algún miembro del equipo. Una vez agregado, conectate con la IP <strong>nervalia.mc</strong>.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" style="padding:0.4rem 0.6rem;border-radius:6px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04);font-size:0.75rem;color:#c0c0d0;font-weight:600">¿Qué versión necesito?</div>
+              <div class="faq-a" style="padding:0.4rem 0.6rem;font-size:0.65rem;color:#666">El server corre en 1.20.1. Cualquier versión entre 1.20.1 y 1.21 funciona.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" style="padding:0.4rem 0.6rem;border-radius:6px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04);font-size:0.75rem;color:#c0c0d0;font-weight:600">¿Cómo consigo monedas?</div>
+              <div class="faq-a" style="padding:0.4rem 0.6rem;font-size:0.65rem;color:#666">Completando logros del server. Cada logro completado te da <strong>0.5 🪙</strong>.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" style="padding:0.4rem 0.6rem;border-radius:6px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04);font-size:0.75rem;color:#c0c0d0;font-weight:600">¿Se puede hacer grief?</div>
+              <div class="faq-a" style="padding:0.4rem 0.6rem;font-size:0.65rem;color:#666">No. El server tiene whitelist y CoreProtect. Todo se revierte y el responsable es baneado.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" style="padding:0.4rem 0.6rem;border-radius:6px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04);font-size:0.75rem;color:#c0c0d0;font-weight:600">¿Hay voice chat?</div>
+              <div class="faq-a" style="padding:0.4rem 0.6rem;font-size:0.65rem;color:#666">Sí, usamos Simple Voice Chat con proximidad. Descargalo de la sección Mods.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" style="padding:0.4rem 0.6rem;border-radius:6px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04);font-size:0.75rem;color:#c0c0d0;font-weight:600">¿Cómo creo un equipo/clan?</div>
+              <div class="faq-a" style="padding:0.4rem 0.6rem;font-size:0.65rem;color:#666">Contactá al equipo por Discord con los nombres de los miembros y el nombre del clan. Si es aprobado, se crea un rol privado y un canal para su equipo.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" style="padding:0.4rem 0.6rem;border-radius:6px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04);font-size:0.75rem;color:#c0c0d0;font-weight:600">¿Cómo ser moderador? 🌟</div>
+              <div class="faq-a" style="padding:0.4rem 0.6rem;font-size:0.65rem;color:#666">
+                <p style="color:#888;font-size:0.7rem;margin-bottom:0.5rem">Completá este formulario para postularte como moderador. Será revisado por el equipo.</p>
+                <div style="display:flex;flex-direction:column;gap:0.3rem">
+                  <div><span style="font-size:0.6rem;color:#555">Nick Minecraft</span><input class="faq-form-input" id="mod-nick" placeholder="Tu nick" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff"></div>
+                  <div><span style="font-size:0.6rem;color:#555">Email</span><input class="faq-form-input" id="mod-email" placeholder="tu@email.com" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff"></div>
+                  <div><span style="font-size:0.6rem;color:#555">Edad</span><input class="faq-form-input" id="mod-edad" placeholder="Tu edad" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff"></div>
+                  <div><span style="font-size:0.6rem;color:#555">¿Cuánto tiempo llevás en el server?</span><textarea class="faq-form-input" id="mod-tiempo" placeholder="Ej: 6 meses" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff;min-height:40px"></textarea></div>
+                  <div><span style="font-size:0.6rem;color:#555">¿Por qué querés ser moderador?</span><textarea class="faq-form-input" id="mod-porque" placeholder="Explicá tus motivos..." style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff;min-height:40px"></textarea></div>
+                  <div><span style="font-size:0.6rem;color:#555">Experiencia previa como mod</span><textarea class="faq-form-input" id="mod-experiencia" placeholder="Contá si moderaste otros servers..." style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff;min-height:40px"></textarea></div>
+                  <div><span style="font-size:0.6rem;color:#555">¿Cuántas horas por día te conectás?</span><input class="faq-form-input" id="mod-horas" placeholder="Ej: 4-6 horas" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff"></div>
+                  <div><span style="font-size:0.6rem;color:#555">Idiomas que manejás</span><input class="faq-form-input" id="mod-idiomas" placeholder="Ej: Español, Inglés" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff"></div>
+                  <div><span style="font-size:0.6rem;color:#555">¿Tenés micrófono y discord?</span><input class="faq-form-input" id="mod-mic" placeholder="Sí / No" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff"></div>
+                  <div><span style="font-size:0.6rem;color:#555">¿Cómo resolverías un griefing?</span><textarea class="faq-form-input" id="mod-grief" placeholder="Describí tu procedimiento..." style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff;min-height:40px"></textarea></div>
+                  <button class="btn btn-login" onclick="submitModForm()" style="margin-top:0.3rem;font-size:0.65rem;padding:0.3rem 0.6rem">[ ENVIAR SOLICITUD ]</button>
+                  <span id="mod-msg" class="faq-form-msg"></span>
+                </div>
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q" style="padding:0.4rem 0.6rem;border-radius:6px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04);font-size:0.75rem;color:#c0c0d0;font-weight:600">¿Cómo ser fundador? 👑</div>
+              <div class="faq-a" style="padding:0.4rem 0.6rem;font-size:0.65rem;color:#666">
+                <p style="color:#888;font-size:0.7rem;margin-bottom:0.5rem">Formulario exclusivo para fundadores. Solo los más comprometidos.</p>
+                <div style="display:flex;flex-direction:column;gap:0.3rem">
+                  <div><span style="font-size:0.6rem;color:#555">Nick Minecraft</span><input class="faq-form-input" id="fd-nick" placeholder="Tu nick" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff"></div>
+                  <div><span style="font-size:0.6rem;color:#555">Email de contacto</span><input class="faq-form-input" id="fd-email" placeholder="tu@email.com" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff"></div>
+                  <div><span style="font-size:0.6rem;color:#555">Edad real</span><input class="faq-form-input" id="fd-edad" placeholder="Tu edad" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff"></div>
+                  <div><span style="font-size:0.6rem;color:#555">País / Zona horaria</span><input class="faq-form-input" id="fd-pais" placeholder="Ej: Argentina / GMT-3" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff"></div>
+                  <div><span style="font-size:0.6rem;color:#555">¿Cuánto tiempo llevás en el server?</span><textarea class="faq-form-input" id="fd-tiempo" placeholder="Ej: 1 año" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff;min-height:40px"></textarea></div>
+                  <div><span style="font-size:0.6rem;color:#555">¿Por qué querés ser fundador?</span><textarea class="faq-form-input" id="fd-porque" placeholder="Motivos detallados..." style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff;min-height:40px"></textarea></div>
+                  <div><span style="font-size:0.6rem;color:#555">Experiencia liderando equipos</span><textarea class="faq-form-input" id="fd-liderazgo" placeholder="Contá tu experiencia..." style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff;min-height:40px"></textarea></div>
+                  <div><span style="font-size:0.6rem;color:#555">¿Qué aportarías al equipo directivo?</span><textarea class="faq-form-input" id="fd-aporte" placeholder="Habilidades, ideas..." style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff;min-height:40px"></textarea></div>
+                  <div><span style="font-size:0.6rem;color:#555">¿Podés ayudar con costos del server?</span><input class="faq-form-input" id="fd-costos" placeholder="Sí / No / Tal vez" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff"></div>
+                  <div><span style="font-size:0.6rem;color:#555">¿Tenés experiencia con plugins/config?</span><textarea class="faq-form-input" id="fd-plugins" placeholder="Ej: WorldEdit, CoreProtect..." style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff;min-height:40px"></textarea></div>
+                  <div><span style="font-size:0.6rem;color:#555">¿Cuántas horas semanales podés dedicar?</span><input class="faq-form-input" id="fd-horas" placeholder="Ej: 20+ horas" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff"></div>
+                  <div><span style="font-size:0.6rem;color:#555">LinkedIn / GitHub / Portafolio (opcional)</span><input class="faq-form-input" id="fd-linkedin" placeholder="URL" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff"></div>
+                  <div><span style="font-size:0.6rem;color:#555">¿Cómo manejás situaciones de conflicto?</span><textarea class="faq-form-input" id="fd-conflictos" placeholder="Describí un caso..." style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff;min-height:40px"></textarea></div>
+                  <div><span style="font-size:0.6rem;color:#555">Referencia de un miembro actual</span><input class="faq-form-input" id="fd-referencia" placeholder="Nick de quien te refiere" style="width:100%;padding:0.3rem 0.5rem;font-size:0.65rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;color:#fff"></div>
+                  <button class="btn btn-login" onclick="submitFounderForm()" style="margin-top:0.3rem;font-size:0.65rem;padding:0.3rem 0.6rem">[ ENVIAR SOLICITUD ]</button>
+                  <span id="fd-msg" class="faq-form-msg"></span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -771,6 +784,6 @@
     <p>Nervalia &mdash; chanchos MC studios &mdash; hecho con 💚</p>
   </footer>
 
-  <script src="script.js?v=15"></script>
+  <script src="script.js?v=18"></script>
 </body>
 </html>

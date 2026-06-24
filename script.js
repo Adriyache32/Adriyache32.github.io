@@ -564,6 +564,13 @@ function confirmPaywall() {
     return;
   }
 
+  const inv2 = JSON.parse(localStorage.getItem(INVENTORY_KEY)) || [];
+  if (inv2.some(i => i.kit === paywallKit)) {
+    alert('❌ Ya reclamaste este kit. No podés reclamarlo de nuevo.');
+    closePaywall();
+    return;
+  }
+
   const accounts = getAccounts();
   const fp = getPCFingerprint();
   const mine = accounts.find(a => a.fingerprint === fp);
@@ -583,7 +590,7 @@ function confirmPaywall() {
   }
   closePaywall();
   alert(`✅ ${isMemb ? 'Membresía' : 'Kit'} ${paywallKit} canjeado con éxito!`);
-  if (isMemb) applyMembresias();
+  if (isMemb) applyMembresias(); else applyKits();
 }
 
 /* ───── CREATOR TABS ───── */
@@ -1599,15 +1606,21 @@ function applyKits() {
   const kits = sd.kits;
   const grid = document.querySelector('#tienda .kits-grid');
   if (!kits || !grid) return;
-  grid.innerHTML = kits.map((k, i) => `
+  const inv = JSON.parse(localStorage.getItem(INVENTORY_KEY)) || [];
+  const claimed = new Set(inv.map(i => i.kit));
+  grid.innerHTML = kits.map((k, i) => {
+    const already = claimed.has(k.name);
+    return `
     <div class="kit-card${k.badge ? ' featured' : ''}">
       ${k.badge ? `<div class="kit-badge">${k.badge}</div>` : ''}
       <div class="kit-tier">${k.name}</div>
       <div class="kit-price">${k.price === 0 ? 'GRATIS' : k.price + ' 🪙'}</div>
       <ul class="kit-perks">${k.perks.map(p => `<li>${p}</li>`).join('')}</ul>
-      <button class="btn btn-kit" onclick="openPaywall('${k.name}', ${k.price})">${k.price === 0 ? 'Obtener' : 'Canjear'}</button>
+      ${already
+        ? '<button class="btn btn-kit" disabled style="opacity:0.5;cursor:not-allowed">✅ Reclamado</button>'
+        : `<button class="btn btn-kit" onclick="openPaywall('${k.name}', ${k.price})">${k.price === 0 ? 'Obtener' : 'Canjear'}</button>`}
     </div>
-  `).join('');
+  `}).join('');
 }
 
 /* ───── MEMBRESÍAS ───── */
@@ -1829,18 +1842,33 @@ function saveReglas() {
 
 function applyReglas() {
   const sd = getSD();
-  const reglas = sd.reglas;
+  const reglas = sd.reglas || [];
   const list = document.querySelector('#reglas .reglas-list');
-  if (!reglas || !list) return;
-  list.innerHTML = reglas.map((r, i) => {
+  if (!list) return;
+  const groups = [
+    { name: 'Convivencia', color: '#7289da', items: [] },
+    { name: 'Jugabilidad', color: '#43b581', items: [] },
+  ];
+  reglas.forEach((r, i) => {
     const parts = r.split(' — ');
-    return `
-      <div class="regla">
-        <span class="regla-num">${String(i + 1).padStart(2, '0')}</span>
-        <div><strong>${parts[0] || r}</strong><p>${parts[1] || ''}</p></div>
+    groups[i < 3 ? 0 : 1].items.push({ num: String(i + 1).padStart(2, '0'), title: parts[0] || r, desc: parts[1] || '' });
+  });
+  list.innerHTML = groups.map((g, gi) => `
+    <div class="tier-section" style="margin-bottom:0.75rem">
+      <div class="tier-header" onclick="toggleTier(this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid ${g.color};user-select:none">
+        <span style="font-size:0.8rem;font-weight:600;color:#c0c0d0">📜 ${g.name}</span>
+        <span style="font-size:0.7rem;color:#444">${gi === 0 ? '▼' : '▶'} ${g.items.length} reglas</span>
       </div>
-    `;
-  }).join('');
+      <div class="tier-body" style="display:${gi === 0 ? 'flex' : 'none'};flex-direction:column;gap:0.35rem;margin-top:0.4rem">
+        ${g.items.map(r => `
+          <div class="regla" style="display:flex;align-items:flex-start;gap:0.6rem;padding:0.4rem 0.6rem;border-radius:6px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04)">
+            <span class="regla-num" style="font-size:0.65rem;color:#444;font-family:monospace;min-width:22px">${r.num}</span>
+            <div><strong style="font-size:0.75rem;color:#c0c0d0">${r.title}</strong><p style="font-size:0.65rem;color:#666;margin:0.1rem 0 0">${r.desc}</p></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
 }
 
 function addGaleria() {
@@ -1925,10 +1953,6 @@ function applyMods() {
       </div>
     `).join('');
   });
-}
-
-function toggleFaq(el) {
-  el.parentElement.classList.toggle('open');
 }
 
 function addModEntry(cat) {
@@ -2529,31 +2553,39 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem(SERVER_DATA_KEY, JSON.stringify({
       "title": "~Nervalia~",
       "version": "1.20.1",
-      "mode": "Survival / Forge",
+      "mode": "Survival / Forge ",
       "slot": "20 jugadores",
       "plugins": "¿?",
       "desc1": "Server survival privado para amigos y conocidos.",
       "desc2": "Contamos con voice chat de proximidad y mapa dinámico.",
-      "team": [],
+      "team": [
+        { "name": "Eliezer", "role": "Fundador", "color": "#7289da" },
+        { "name": "Manchitas", "role": "Fundador", "color": "#7289da" },
+        { "name": "Adriel", "role": "Moderador", "color": "#7289da" },
+        { "name": "Mellado", "role": "Moderador", "color": "#7289da" }
+      ],
       "discord": "https://discord.gg/dG5hyxkca",
       "icon": "https://i.pinimg.com/736x/e8/5b/4d/e85b4d17e58cd4b24e0e886b2ad1a9c7.jpg",
       "modeStatus": "Trabajando",
-      "serverIP": "nervalia.mc",
+      "serverIP": "-------",
       "kits": [
-        { "name": "Cobre", "price": 0, "badge": "🎁 GRATIS", "perks": ["🪖 Armadura: Casco de cuero, Peto de cuero, Pantalones de cuero, Botas de cuero", "⛏️ Herramientas: Pico de madera, Hacha de madera, Espada de madera, Pala de madera", "🍞 Comida: 10 panes, 5 manzanas", "📦 Items: 16 antorchas, 1 Cama marrón", "🏷️ Tag coloreado en el chat"] },
-        { "name": "Bronce", "price": 5, "badge": "🟢 INICIAL", "perks": ["🪖 Armadura: Casco de cota de malla, Peto de cota de malla, Pantalones de cota de malla, Botas de cota de malla", "⛏️ Herramientas: Pico de piedra, Hacha de piedra, Espada de piedra, Pala de piedra", "🍞 Comida: 20 filetes de res", "📦 Items: 32 antorchas, 1 Cama naranja, 1 Mesa de trabajo", "🏠 Home adicional (2 total)"] },
-        { "name": "Plata", "price": 10, "badge": "🔥 POPULAR", "perks": ["🪖 Armadura: Casco de hierro, Peto de hierro, Pantalones de hierro, Botas de hierro", "⛏️ Herramientas: Pico de hierro, Hacha de hierro, Espada de hierro, Pala de hierro", "🍞 Comida: 15 chuletas de cerdo cocidas", "📦 Items: 24 antorchas, 1 Cama gris, 1 Mesa de encantamientos", "🔮 Acceso a /enderchest"] },
-        { "name": "Oro", "price": 20, "badge": "⭐ RECOMENDADO", "perks": ["🪖 Armadura: Casco de oro, Peto de oro, Pantalones de oro, Botas de oro", "⛏️ Herramientas: Pico de oro (Eficiencia II), Hacha de oro (Eficiencia II), Espada de oro, Pala de oro (Eficiencia II)", "🍞 Comida: 30 filetes de res, 10 pasteles de calabaza", "📦 Items: 48 antorchas, 1 Cama amarilla, 1 Yunque, 3 Libros", "💰 5 monedas del server"] },
-        { "name": "Diamante", "price": 40, "badge": "💎 VIP", "perks": ["🪖 Armadura: Casco de diamante, Peto de diamante, Pantalones de diamante, Botas de diamante", "⛏️ Herramientas: Pico de diamante (Fortuna III), Hacha de diamante (Eficiencia III), Espada de diamante (Filo III), Pala de diamante (Eficiencia III)", "🍞 Comida: 40 filetes de res, 20 pasteles de calabaza", "📦 Items: 64 antorchas, 1 Cama celeste, 1 Cofre de ender, 5 Obsidiana, 1 Perla de ender"] },
+        { "name": "Cobre", "price": 0, "badge": "GRATIS", "perks": ["🪖 Armadura: Casco de cuero, Peto de cuero, Pantalones de cuero, Botas de cuero", "⛏️ Herramientas: Pico de madera, Hacha de madera, Espada de madera, Pala de madera", "🍞 Comida: 10 panes, 5 manzanas", "📦 Items: 16 antorchas, 1 Cama marrón", "🏷️ Tag coloreado en el chat"] },
+        { "name": "Bronce", "price": 5, "badge": "", "perks": ["🪖 Armadura: Casco de cota de malla, Peto de cota de malla, Pantalones de cota de malla, Botas de cota de malla", "⛏️ Herramientas: Pico de piedra, Hacha de piedra, Espada de piedra, Pala de piedra", "🍞 Comida: 20 filetes de res", "📦 Items: 32 antorchas, 1 Cama naranja, 1 Mesa de trabajo", "🏠 Home adicional (2 total)"] },
+        { "name": "Plata", "price": 10, "badge": "", "perks": ["🪖 Armadura: Casco de hierro, Peto de hierro, Pantalones de hierro, Botas de hierro", "⛏️ Herramientas: Pico de hierro, Hacha de hierro, Espada de hierro, Pala de hierro", "🍞 Comida: 15 chuletas de cerdo cocidas", "📦 Items: 24 antorchas, 1 Cama gris, 1 Mesa de encantamientos", "🔮 Acceso a /enderchest"] },
+        { "name": "Oro", "price": 20, "badge": "RECOMENDADO", "perks": ["🪖 Armadura: Casco de oro, Peto de oro, Pantalones de oro, Botas de oro", "⛏️ Herramientas: Pico de oro (Eficiencia II), Hacha de oro (Eficiencia II), Espada de oro, Pala de oro (Eficiencia II)", "🍞 Comida: 30 filetes de res, 10 pasteles de calabaza", "📦 Items: 48 antorchas, 1 Cama amarilla, 1 Yunque, 3 Libros", "💰 5 monedas del server"] },
+        { "name": "Diamante", "price": 40, "badge": "", "perks": ["🪖 Armadura: Casco de diamante, Peto de diamante, Pantalones de diamante, Botas de diamante", "⛏️ Herramientas: Pico de diamante (Fortuna III), Hacha de diamante (Eficiencia III), Espada de diamante (Filo III), Pala de diamante (Eficiencia III)", "🍞 Comida: 40 filetes de res, 20 pasteles de calabaza", "📦 Items: 64 antorchas, 1 Cama celeste, 1 Cofre de ender, 5 Obsidiana, 1 Perla de ender"] },
         { "name": "Esmeralda", "price": 80, "badge": "", "perks": ["🪖 Armadura: Casco de diamante (Protección II), Peto de diamante (Protección II), Pantalones de diamante (Protección II), Botas de diamante (Protección II)", "⛏️ Herramientas: Pico de diamante (Fortuna III, Eficiencia III), Hacha de diamante (Eficiencia III, Filo III), Espada de diamante (Filo III, Saqueo II), Pala de diamante (Eficiencia III)", "🍞 Comida: 64 filetes de res, 32 pasteles de calabaza, 8 manzanas doradas", "📦 Items: 64 antorchas, 1 Cama verde, 1 Cofre de ender, 16 Obsidiana, 5 Perlas de ender, 1 Huevo de dragón"] },
-        { "name": "Rubi", "price": 160, "badge": "🆕 NUEVO", "perks": ["🪖 Armadura: Casco de diamante (Protección III), Peto de diamante (Protección III), Pantalones de diamante (Protección III), Botas de diamante (Protección III)", "⛏️ Herramientas: Pico de diamante (Fortuna IV, Eficiencia IV), Hacha de diamante (Eficiencia IV, Filo IV), Espada de diamante (Filo IV, Saqueo II), Pala de diamante (Eficiencia IV)", "🍞 Comida: 50 filetes de res, 20 pasteles de calabaza, 10 manzanas doradas", "📦 Items: 64 antorchas, 1 Cama roja, 1 Cofre de ender, 10 Obsidiana, 3 Perlas de ender"] },
-        { "name": "Netherite", "price": 320, "badge": "🆕 NUEVO", "perks": ["🪖 Armadura: Casco de netherite, Peto de netherite, Pantalones de netherite, Botas de netherite", "⛏️ Herramientas: Pico de netherite (Fortuna V), Hacha de netherite (Eficiencia V), Espada de netherite (Filo V), Pala de netherite (Eficiencia V)", "🍞 Comida: 64 filetes de res, 32 pasteles de calabaza, 32 manzanas doradas", "📦 Items: 64 antorchas, 1 Cama negra, 1 Cofre de ender, 32 Obsidiana, 10 Perlas de ender, 1 Huevo de dragón, 1 Totem de inmortalidad"] },
-        { "name": "Super Netherite", "price": 640, "badge": "👑 SUPREMO", "perks": ["🪖 Armadura: Casco de netherite (Protección V, Casco de acuático), Peto de netherite (Protección V), Pantalones de netherite (Protección V, Caída de pluma IV), Botas de netherite (Protección V, Caída de pluma IV, Agilidad acuática)", "⛏️ Herramientas: Pico de netherite (Fortuna V, Eficiencia V, Irrompibilidad III), Hacha de netherite (Eficiencia V, Filo V, Irrompibilidad III), Espada de netherite (Filo V, Aspecto ígneo II, Saqueo III, Barrido III, Irrompibilidad III), Pala de netherite (Eficiencia V, Irrompibilidad III), Azada de netherite (Eficiencia V, Irrompibilidad III)", "🍞 Comida: 64 chuletas de res, 32 pasteles de calabaza, 64 manzanas doradas notches", "📦 Items: 64 antorchas, 1 Cama negra, 1 Cofre de ender, 64 Obsidiana, 16 Perlas de ender, 1 Huevo de dragón, 1 Totem de inmortalidad, 1 Élitatra (Reparación III, Protección IV), 1 Escudo (Reparación III), 1 Ballesta (Multidisparo, Perforación IV, Velocidad de cargado III)", "💰 50 monedas del server"] }
+        { "name": "Rubi", "price": 160, "badge": "NUEVO", "perks": ["🪖 Armadura: Casco de diamante (Protección III), Peto de diamante (Protección III), Pantalones de diamante (Protección III), Botas de diamante (Protección III)", "⛏️ Herramientas: Pico de diamante (Fortuna IV, Eficiencia IV), Hacha de diamante (Eficiencia IV, Filo IV), Espada de diamante (Filo IV, Saqueo II), Pala de diamante (Eficiencia IV)", "🍞 Comida: 50 filetes de res, 20 pasteles de calabaza, 10 manzanas doradas", "📦 Items: 64 antorchas, 1 Cama roja, 1 Cofre de ender, 10 Obsidiana, 3 Perlas de ender"] },
+        { "name": "Netherite", "price": 320, "badge": "NUEVO", "perks": ["🪖 Armadura: Casco de netherite, Peto de netherite, Pantalones de netherite, Botas de netherite", "⛏️ Herramientas: Pico de netherite (Fortuna V), Hacha de netherite (Eficiencia V), Espada de netherite (Filo V), Pala de netherite (Eficiencia V)", "🍞 Comida: 64 filetes de res, 32 pasteles de calabaza, 32 manzanas doradas", "📦 Items: 64 antorchas, 1 Cama negra, 1 Cofre de ender, 32 Obsidiana, 10 Perlas de ender, 1 Huevo de dragón, 1 Totem de inmortalidad"] },
+        { "name": "Super Netherite", "price": 640, "badge": "NUEVO", "perks": ["🪖 Armadura: Casco de netherite (Protección V, Casco de acuático), Peto de netherite (Protección V), Pantalones de netherite (Protección V, Caída de pluma IV), Botas de netherite (Protección V, Caída de pluma IV, Agilidad acuática)", "⛏️ Herramientas: Pico de netherite (Fortuna V, Eficiencia V, Irrompibilidad III), Hacha de netherite (Eficiencia V, Filo V, Irrompibilidad III), Espada de netherite (Filo V, Aspecto ígneo II, Saqueo III, Barrido III, Irrompibilidad III), Pala de netherite (Eficiencia V, Irrompibilidad III), Azada de netherite (Eficiencia V, Irrompibilidad III)", "🍞 Comida: 64 chuletas de res, 32 pasteles de calabaza, 64 manzanas doradas notches", "📦 Items: 64 antorchas, 1 Cama negra, 1 Cofre de ender, 64 Obsidiana, 16 Perlas de ender, 1 Huevo de dragón, 1 Totem de inmortalidad, 1 Élitatra (Reparación III, Protección IV), 1 Escudo (Reparación III), 1 Ballesta (Multidisparo, Perforación IV, Velocidad de cargado III)", "💰 50 monedas del server"] }
       ],
+      "_kitVer": 1,
+      "reglas": [],
+      "galeria": [],
       "membresias": [
-        { "name": "Semanal", "price": 30, "dailyCoins": 1, "badge": "", "perks": ["Tag especial en el chat", "1 home adicional"] },
-        { "name": "Mensual", "price": 80, "dailyCoins": 3, "badge": "🔥 POPULAR", "perks": ["Tag especial + color", "3 homes adicionales", "Rol exclusivo en Discord"] },
-        { "name": "Vitalicio", "price": 300, "dailyCoins": 5, "badge": "👑 VIP", "perks": ["Tag especial + color + brillo", "5 homes adicionales", "Rol VIP en Discord", "+50 monedas iniciales"] }
+        { "name": "Semanal", "price": 30, "dailyCoins": 1, "badge": "", "perks": ["Tag especial en el chat", "1 home adicional", "Acceso a /fly en spawn"] },
+        { "name": "Mensual", "price": 80, "dailyCoins": 3, "badge": "🔥 POPULAR", "perks": ["Tag especial + color", "3 homes adicionales", "Acceso a /fly y /nick", "Rol exclusivo en Discord"] },
+        { "name": "Vitalicio", "price": 300, "dailyCoins": 5, "badge": "👑 VIP", "perks": ["Tag especial + color + brillo", "5 homes adicionales", "Acceso a /fly, /nick, /enderchest", "Rol VIP en Discord", "+50 monedas iniciales"] }
       ]
     }));
   }

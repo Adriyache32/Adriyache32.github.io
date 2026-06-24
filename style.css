@@ -277,6 +277,16 @@ h1 {
   transform: translateY(-1px);
 }
 
+.btn-cafe {
+  background: #c76f2b;
+  color: #fff;
+}
+
+.btn-cafe:hover {
+  background: #a85d22;
+  transform: translateY(-1px);
+}
+
 .section {
   max-width: 1100px;
   margin: 0 auto;
