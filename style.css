@@ -4,10 +4,29 @@
   box-sizing: border-box;
 }
 
+:root {
+  --md-sys-color-primary: #6750A4;
+  --md-sys-color-on-primary: #FFFFFF;
+  --md-sys-color-primary-container: #4F378B;
+  --md-sys-color-on-primary-container: #EADDFF;
+  --md-sys-color-secondary: #958DA5;
+  --md-sys-color-on-secondary: #FFFFFF;
+  --md-sys-color-surface: #1C1B1F;
+  --md-sys-color-surface-dim: #141218;
+  --md-sys-color-surface-bright: #3B383E;
+  --md-sys-color-on-surface: #E6E1E5;
+  --md-sys-color-on-surface-variant: #CAC4D0;
+  --md-sys-color-outline: #938F99;
+  --md-sys-color-outline-variant: #49454F;
+  --md-color-gold: #D0BCFF;
+  --md-color-success: #4A8C6F;
+  --md-color-error: #F2B8B5;
+}
+
 body {
   font-family: 'Inter', -apple-system, sans-serif;
-  background: #0a0a0f;
-  color: #e0e0e0;
+  background: var(--md-sys-color-surface-dim);
+  color: var(--md-sys-color-on-surface);
   line-height: 1.6;
   min-height: 100vh;
 }
@@ -17,9 +36,9 @@ body {
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(ellipse at 20% 50%, rgba(88, 101, 242, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(114, 137, 254, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(255, 107, 107, 0.04) 0%, transparent 50%);
+    radial-gradient(ellipse at 20% 50%, rgba(103, 80, 164, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(103, 80, 164, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(149, 141, 165, 0.04) 0%, transparent 50%);
 }
 
 header {
@@ -27,9 +46,9 @@ header {
   top: 0;
   width: 100%;
   z-index: 100;
-  background: rgba(10, 10, 15, 0.8);
+  background: color-mix(in srgb, var(--md-sys-color-surface-dim) 85%, transparent);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
 
 nav {
@@ -44,7 +63,7 @@ nav {
 .logo {
   font-size: 1.25rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #7289da, #5865f2);
+  background: linear-gradient(135deg, var(--md-sys-color-primary), var(--md-sys-color-primary-container));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -54,7 +73,7 @@ nav {
   display: none;
   background: none;
   border: 1px solid rgba(255,255,255,0.1);
-  color: #fff;
+  color: var(--md-sys-color-on-surface);
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
@@ -116,7 +135,7 @@ nav a:hover {
 h1 {
   font-size: 4rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #fff 0%, #7289da 100%);
+  background: linear-gradient(135deg, var(--md-sys-color-on-surface) 0%, var(--md-sys-color-primary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -145,19 +164,19 @@ h1 {
 
 .ip-box code {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--md-sys-color-outline-variant);
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-size: 1.1rem;
-  color: #fff;
+  color: var(--md-sys-color-on-surface);
   letter-spacing: 0.5px;
   font-family: 'JetBrains Mono', monospace;
 }
 
 .copy-btn {
-  background: rgba(114, 137, 254, 0.15);
-  color: #7289da;
-  border: 1px solid rgba(114, 137, 254, 0.3);
+  background: rgba(103, 80, 164, 0.15);
+  color: var(--md-sys-color-primary);
+  border: 1px solid rgba(103, 80, 164, 0.3);
   padding: 0.75rem 1.25rem;
   border-radius: 8px;
   font-size: 0.85rem;
@@ -168,14 +187,14 @@ h1 {
 }
 
 .copy-btn:hover {
-  background: rgba(114, 137, 254, 0.25);
-  border-color: #7289da;
+  background: rgba(103, 80, 164, 0.25);
+  border-color: var(--md-sys-color-primary);
 }
 
 .copy-btn.copied {
-  background: rgba(67, 181, 129, 0.2);
-  border-color: #43b581;
-  color: #43b581;
+  background: rgba(74, 140, 111, 0.2);
+  border-color: var(--md-color-success);
+  color: var(--md-color-success);
 }
 
 .status {
@@ -257,8 +276,8 @@ h1 {
 }
 
 .btn-discord {
-  background: #5865f2;
-  color: #fff;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
 }
 
 .btn-discord:hover {
@@ -298,7 +317,7 @@ h1 {
   font-weight: 700;
   text-align: center;
   margin-bottom: 1rem;
-  color: #fff;
+  color: var(--md-sys-color-on-surface);
 }
 
 .section-subtitle {
@@ -499,10 +518,10 @@ h1 {
 }
 
 .kit-card.featured {
-  border-color: #f0c040;
-  background: rgba(240, 192, 64, 0.05);
+  border-color: var(--md-sys-color-primary);
+  background: rgba(103, 80, 164, 0.05);
   transform: scale(1.05);
-  box-shadow: 0 0 30px rgba(240, 192, 64, 0.15);
+  box-shadow: 0 0 30px rgba(103, 80, 164, 0.15);
 }
 
 .kit-card.featured:hover {
@@ -526,7 +545,7 @@ h1 {
 .kit-tier {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--md-sys-color-on-surface);
   margin-bottom: 0.5rem;
 }
 
@@ -557,9 +576,9 @@ h1 {
 }
 
 .btn-kit {
-  background: rgba(240, 192, 64, 0.15);
-  color: #f0c040;
-  border: 1px solid rgba(240, 192, 64, 0.3);
+  background: rgba(208, 188, 255, 0.15);
+  color: var(--md-color-gold);
+  border: 1px solid rgba(208, 188, 255, 0.3);
   width: 100%;
   justify-content: center;
 }
