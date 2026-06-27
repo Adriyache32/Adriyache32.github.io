@@ -1,5 +1,5 @@
 function getServerIP() {
-  const sd = JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {};
+  const sd = getSD();
   return sd.serverIP || 'nervalia.mc';
 }
 function getAPIURL() { return `https://api.mcstatus.io/v2/status/java/${getServerIP()}`; }
@@ -15,6 +15,7 @@ const VISIT_LOG_KEY = 'nervalia_visit_log';
 const ACTION_LOG_KEY = 'nervalia_action_log';
 let unsavedChanges = false;
 let unsavedDot = null;
+let __repoData = null; // cached from data.json
 
 function setUnsaved() {
   unsavedChanges = true;
@@ -1500,7 +1501,19 @@ function copyConfig() {
 }
 
 /* ───── SAVE HELPERS ───── */
-function getSD() { return JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {}; }
+function getSD() {
+  const local = JSON.parse(localStorage.getItem(SERVER_DATA_KEY)) || {};
+  if (!__repoData) return local;
+  const merged = { ...__repoData };
+  for (const key in local) {
+    if (local[key] && typeof local[key] === 'object' && !Array.isArray(local[key]) && __repoData[key]) {
+      merged[key] = { ...__repoData[key], ...local[key] };
+    } else {
+      merged[key] = local[key];
+    }
+  }
+  return merged;
+}
 
 function saveServerData() {
   logCreatorAction('guardó Server');
@@ -2725,9 +2738,19 @@ function migrateMods() {
 }
 
 /* ───── INIT ───── */
-document.addEventListener('DOMContentLoaded', () => {
+async function loadRepoData() {
+  try {
+    const res = await fetch('data.json?' + Date.now());
+    if (res.ok) {
+      __repoData = await res.json();
+    }
+  } catch {}
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadRepoData();
   if (!localStorage.getItem(SERVER_DATA_KEY)) {
-    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify({
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(__repoData || {
   "title": "~Nervalia~",
   "version": "1.20.1",
   "mode": "Survival / Forge ",

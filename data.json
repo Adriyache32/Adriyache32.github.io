@@ -1,0 +1,124 @@
+{
+  "title": "Nervalia",
+  "serverIP": "nervalia.mc",
+  "version": "1.20.1",
+  "mode": "Survival / Forge",
+  "slot": "20 jugadores",
+  "plugins": "VoiceChat, CoreProtect, WorldEdit",
+  "discord": "",
+  "icon": "",
+  "modeStatus": "Activo",
+  "desc1": "Server survival privado para amigos y conocidos. Ambiente tranquilo, construcci\u00f3n colaborativa y eventos peri\u00f3dicos. Todos los jugadores pasan por un proceso de whitelist para mantener la calidad.",
+  "desc2": "Contamos con voice chat de proximidad, protecci\u00f3n de construcciones con CoreProtect y un mapa din\u00e1mico para ver el mundo desde el navegador.",
+  "reglas": [
+    "01 No Griefing \u2014 No destruir construcciones ajenas sin permiso.",
+    "02 No Hacks \u2014 Prohibidos clientes modificados con ventajas injustas.",
+    "03 Respeto \u2014 Trata a todos con respeto. No toleramos toxicidad.",
+    "04 No Robar \u2014 No tomar items de cofres o bases ajenas sin permiso.",
+    "05 Duplicaci\u00f3n \u2014 Prohibido duplicar items o usar bugs intencionalmente.",
+    "06 Voice Chat \u2014 Uso obligatorio de voice chat de proximidad para mejor experiencia."
+  ],
+  "team": [
+    { "name": "Eliezer", "role": "Creador", "color": "#f0c040", "image": "" },
+    { "name": "Manchitas", "role": "Creador", "color": "#f0c040", "image": "" },
+    { "name": "Adriyache32", "role": "Moderador", "color": "#4ecdc4", "image": "" },
+    { "name": "Mellado", "role": "Moderador", "color": "#4ecdc4", "image": "" }
+  ],
+  "galeria": [
+    { "label": "Base principal", "icon": "\ud83c\udfd7\ufe0f" },
+    { "label": "Atardecer en spawn", "icon": "\ud83c\udf04" },
+    { "label": "Castillo medieval", "icon": "\ud83c\udff0" },
+    { "label": "Base acu\u00e1tica", "icon": "\ud83c\udf0a" },
+    { "label": "Portal del Nether", "icon": "\ud83d\udd25" },
+    { "label": "End base", "icon": "\ud83c\udf0c" }
+  ],
+  "kits": [
+    { "name": "Bronce", "price": 5, "badge": "\ud83d\udfe2 INICIAL", "perks": ["\ud83e\ude96 Armadura: Casco de cota de malla, Peto de cota de malla, Pantalones de cota de malla, Botas de cota de malla", "\u26cf\ufe0f Herramientas: Pico de piedra, Hacha de piedra, Espada de piedra, Pala de piedra", "\ud83c\udf5e Comida: 20 filetes de res", "\ud83d\udce6 Items: 32 antorchas, 1 Cama naranja, 1 Mesa de trabajo", "\ud83c\udfe0 Home adicional (2 total)"] },
+    { "name": "Plata", "price": 10, "badge": "\ud83d\udd25 POPULAR", "perks": ["\ud83e\ude96 Armadura: Casco de hierro, Peto de hierro, Pantalones de hierro, Botas de hierro", "\u26cf\ufe0f Herramientas: Pico de hierro, Hacha de hierro, Espada de hierro, Pala de hierro", "\ud83c\udf5e Comida: 15 chuletas de cerdo cocidas", "\ud83d\udce6 Items: 24 antorchas, 1 Cama gris, 1 Mesa de encantamientos", "\ud83d\udd2e Acceso a /enderchest"] },
+    { "name": "Oro", "price": 20, "badge": "\u2b50 RECOMENDADO", "perks": ["\ud83e\ude96 Armadura: Casco de oro, Peto de oro, Pantalones de oro, Botas de oro", "\u26cf\ufe0f Herramientas: Pico de oro (Eficiencia II), Hacha de oro (Eficiencia II), Espada de oro, Pala de oro (Eficiencia II)", "\ud83c\udf5e Comida: 30 filetes de res, 10 pasteles de calabaza", "\ud83d\udce6 Items: 48 antorchas, 1 Cama amarilla, 1 Yunque, 3 Libros", "\ud83d\udcb0 5 monedas del server"] },
+    { "name": "Diamante", "price": 40, "badge": "\ud83d\udc8e VIP", "perks": ["\ud83e\ude96 Armadura: Casco de diamante, Peto de diamante, Pantalones de diamante, Botas de diamante", "\u26cf\ufe0f Herramientas: Pico de diamante (Fortuna III), Hacha de diamante (Eficiencia III), Espada de diamante (Filo III), Pala de diamante (Eficiencia III)", "\ud83c\udf5e Comida: 40 filetes de res, 20 pasteles de calabaza", "\ud83d\udce6 Items: 64 antorchas, 1 Cama celeste, 1 Cofre de ender, 5 Obsidiana, 1 Perla de ender"] },
+    { "name": "Esmeralda", "price": 80, "badge": "", "perks": ["\ud83e\ude96 Armadura: Casco de diamante (Protecci\u00f3n II), Peto de diamante (Protecci\u00f3n II), Pantalones de diamante (Protecci\u00f3n II), Botas de diamante (Protecci\u00f3n II)", "\u26cf\ufe0f Herramientas: Pico de diamante (Fortuna III, Eficiencia III), Hacha de diamante (Eficiencia III, Filo III), Espada de diamante (Filo III, Saqueo II), Pala de diamante (Eficiencia III)", "\ud83c\udf5e Comida: 64 filetes de res, 32 pasteles de calabaza, 8 manzanas doradas", "\ud83d\udce6 Items: 64 antorchas, 1 Cama verde, 1 Cofre de ender, 16 Obsidiana, 5 Perlas de ender, 1 Huevo de drag\u00f3n"] },
+    { "name": "Rubi", "price": 160, "badge": "\ud83c\udd95 NUEVO", "perks": ["\ud83e\ude96 Armadura: Casco de diamante (Protecci\u00f3n III), Peto de diamante (Protecci\u00f3n III), Pantalones de diamante (Protecci\u00f3n III), Botas de diamante (Protecci\u00f3n III)", "\u26cf\ufe0f Herramientas: Pico de diamante (Fortuna IV, Eficiencia IV), Hacha de diamante (Eficiencia IV, Filo IV), Espada de diamante (Filo IV, Saqueo II), Pala de diamante (Eficiencia IV)", "\ud83c\udf5e Comida: 50 filetes de res, 20 pasteles de calabaza, 10 manzanas doradas", "\ud83d\udce6 Items: 64 antorchas, 1 Cama roja, 1 Cofre de ender, 10 Obsidiana, 3 Perlas de ender"] },
+    { "name": "Netherite", "price": 320, "badge": "\ud83c\udd95 NUEVO", "perks": ["\ud83e\ude96 Armadura: Casco de netherite, Peto de netherite, Pantalones de netherite, Botas de netherite", "\u26cf\ufe0f Herramientas: Pico de netherite (Fortuna V), Hacha de netherite (Eficiencia V), Espada de netherite (Filo V), Pala de netherite (Eficiencia V)", "\ud83c\udf5e Comida: 64 filetes de res, 32 pasteles de calabaza, 32 manzanas doradas", "\ud83d\udce6 Items: 64 antorchas, 1 Cama negra, 1 Cofre de ender, 32 Obsidiana, 10 Perlas de ender, 1 Huevo de drag\u00f3n, 1 Totem de inmortalidad"] },
+    { "name": "Super Netherite", "price": 640, "badge": "\ud83d\udc51 SUPREMO", "perks": ["\ud83e\ude96 Armadura: Casco de netherite (Protecci\u00f3n V, Casco de acu\u00e1tico), Peto de netherite (Protecci\u00f3n V), Pantalones de netherite (Protecci\u00f3n V, Ca\u00edda de pluma IV), Botas de netherite (Protecci\u00f3n V, Ca\u00edda de pluma IV, Agilidad acu\u00e1tica)", "\u26cf\ufe0f Herramientas: Pico de netherite (Fortuna V, Eficiencia V, Irrompibilidad III), Hacha de netherite (Eficiencia V, Filo V, Irrompibilidad III), Espada de netherite (Filo V, Aspecto \u00edgneo II, Saqueo III, Barrido III, Irrompibilidad III), Pala de netherite (Eficiencia V, Irrompibilidad III), Azada de netherite (Eficiencia V, Irrompibilidad III)", "\ud83c\udf5e Comida: 64 chuletas de res, 32 pasteles de calabaza, 64 manzanas doradas notches", "\ud83d\udce6 Items: 64 antorchas, 1 Cama negra, 1 Cofre de ender, 64 Obsidiana, 16 Perlas de ender, 1 Huevo de drag\u00f3n, 1 Totem de inmortalidad, 1 \u00c9litatra (Reparaci\u00f3n III, Protecci\u00f3n IV), 1 Escudo (Reparaci\u00f3n III), 1 Ballesta (Multidisparo, Perforaci\u00f3n IV, Velocidad de cargado III)", "\ud83d\udcb0 50 monedas del server"] }
+  ],
+  "membresias": [
+    { "name": "Semanal", "price": 30, "dailyCoins": 1, "badge": "", "perks": ["Tag especial en el chat", "1 home adicional"] },
+    { "name": "Mensual", "price": 80, "dailyCoins": 3, "badge": "\ud83d\udd25 POPULAR", "perks": ["Tag especial + color", "3 homes adicionales", "Rol exclusivo en Discord"] },
+    { "name": "Vitalicio", "price": 300, "dailyCoins": 5, "badge": "\ud83d\udc51 VIP", "perks": ["Tag especial + color + brillo", "5 homes adicionales", "Rol VIP en Discord", "+50 monedas iniciales"] }
+  ],
+  "logros": [
+    { "id": "logro-minero", "name": "Minero Inicial", "desc": "Consigue 10 bloques de piedra", "icon": "\u26cf\ufe0f", "tier": 1, "reward": 0.5 },
+    { "id": "logro-le\u00f1ador", "name": "Le\u00f1ador Novato", "desc": "Corta 10 \u00e1rboles", "icon": "\ud83c\udf33", "tier": 1, "reward": 0.5 },
+    { "id": "logro-base", "name": "Primera Base", "desc": "Construye tu primera casa", "icon": "\ud83c\udfe0", "tier": 1, "reward": 0.5 },
+    { "id": "logro-granjero", "name": "Granjero", "desc": "Planta y cosecha 20 cultivos", "icon": "\ud83c\udf3e", "tier": 2, "reward": 0.5 },
+    { "id": "logro-dragon", "name": "Cazador de Dragones", "desc": "Derrota al Ender Dragon", "icon": "\ud83d\udc09", "tier": 5, "reward": 0.5 },
+    { "id": "logro-nether", "name": "Explorador del Nether", "desc": "Visita el Nether por primera vez", "icon": "\u2694\ufe0f", "tier": 2, "reward": 0.5 }
+  ],
+  "mods": {
+    "mods": [
+      { "name": "\ud83d\udd27 Embeddium", "desc": "Render optimizado (Sodium para Forge). +100 FPS", "url": "https://www.curseforge.com/minecraft/mc-mods/embeddium", "image": "" },
+      { "name": "\ud83d\udd27 Oculus", "desc": "Shaders compatibles con Forge (Iris port)", "url": "https://www.curseforge.com/minecraft/mc-mods/oculus", "image": "" },
+      { "name": "\ud83d\udd27 Starlight", "desc": "Motor de iluminaci\u00f3n reescrito, m\u00e1s r\u00e1pido", "url": "https://www.curseforge.com/minecraft/mc-mods/starlight", "image": "" },
+      { "name": "\ud83d\udd27 Radium", "desc": "Optimizaci\u00f3n del motor de luz", "url": "https://www.curseforge.com/minecraft/mc-mods/radium", "image": "" },
+      { "name": "\ud83d\udd27 FerriteCore", "desc": "Reduce el uso de RAM hasta un 50%", "url": "https://www.curseforge.com/minecraft/mc-mods/ferritecore", "image": "" },
+      { "name": "\ud83d\udd27 ModernFix", "desc": "Arregla bugs de rendimiento y memoria", "url": "https://www.curseforge.com/minecraft/mc-mods/modernfix", "image": "" },
+      { "name": "\ud83d\udd27 ImmediatelyFast", "desc": "Optimiza la interfaz y el rendering inmediato", "url": "https://www.curseforge.com/minecraft/mc-mods/immediatelyfast", "image": "" },
+      { "name": "\ud83d\udd27 EntityCulling", "desc": "Deja de renderizar entidades tapadas", "url": "https://www.curseforge.com/minecraft/mc-mods/entityculling", "image": "" },
+      { "name": "\ud83d\udd27 CullLessLeaves", "desc": "Optimiza el render de hojas de \u00e1rboles", "url": "https://www.curseforge.com/minecraft/mc-mods/cull-less-leaves", "image": "" },
+      { "name": "\ud83d\udd27 FastAsyncWorldSave", "desc": "Guardado del mundo as\u00edncrono y r\u00e1pido", "url": "https://www.curseforge.com/minecraft/mc-mods/fastasyncworldsave", "image": "" },
+      { "name": "\ud83d\udd27 Chunksending", "desc": "Env\u00edo de chunks optimizado", "url": "https://www.curseforge.com/minecraft/mc-mods/chunksending", "image": "" },
+      { "name": "\ud83d\udd27 BetterChunkLoading", "desc": "Carga de chunks m\u00e1s eficiente", "url": "https://www.curseforge.com/minecraft/mc-mods/better-chunk-loading", "image": "" },
+      { "name": "\ud83d\udd27 Chunky", "desc": "Pre-genera chunks para reducir lag", "url": "https://www.curseforge.com/minecraft/mc-mods/chunky-pregenerator", "image": "" },
+      { "name": "\ud83d\udd27 Connectivity", "desc": "Arregla problemas de conexi\u00f3n y timeouts", "url": "https://www.curseforge.com/minecraft/mc-mods/connectivity", "image": "" },
+      { "name": "\ud83d\udd27 Alternate Current", "desc": "Redstone optimizada, menos lag", "url": "https://www.curseforge.com/minecraft/mc-mods/alternate-current", "image": "" },
+      { "name": "\ud83d\udd27 FastItemFrames", "desc": "Item frames optimizados, zero lag", "url": "https://www.curseforge.com/minecraft/mc-mods/fast-item-frames", "image": "" },
+      { "name": "\ud83d\udd27 FastPaintings", "desc": "Cuadros optimizados, sin lag", "url": "https://www.curseforge.com/minecraft/mc-mods/fastpaintings", "image": "" },
+      { "name": "\ud83d\udd27 Clumps", "desc": "Junta orbes de XP en uno solo", "url": "https://www.curseforge.com/minecraft/mc-mods/clumps", "image": "" },
+      { "name": "\ud83d\udd27 Get It Together Drops", "desc": "Junta items en el piso", "url": "https://www.curseforge.com/minecraft/mc-mods/get-it-together-drops", "image": "" },
+      { "name": "\ud83d\udd27 Cupboard", "desc": "Librer\u00eda de optimizaci\u00f3n para otros mods", "url": "https://www.curseforge.com/minecraft/mc-mods/cupboard", "image": "" },
+      { "name": "\ud83d\udd27 Immersive Optimization", "desc": "Optimizaci\u00f3n general del juego", "url": "https://www.curseforge.com/minecraft/mc-mods/immersive-optimization", "image": "" },
+      { "name": "\ud83d\udd27 AI Improvements", "desc": "IA de mobs m\u00e1s eficiente", "url": "https://www.curseforge.com/minecraft/mc-mods/ai-improvements", "image": "" },
+      { "name": "\ud83d\udd27 AllTheLeaks", "desc": "Arregla memory leaks comunes", "url": "https://www.curseforge.com/minecraft/mc-mods/alltheleaks", "image": "" },
+      { "name": "\ud83d\udd27 GPUMemLeakFix", "desc": "Arregla memory leaks de la GPU", "url": "https://www.curseforge.com/minecraft/mc-mods/gpumemleakfix", "image": "" },
+      { "name": "\ud83d\udd27 Leaky", "desc": "Detecta y reporta memory leaks", "url": "https://www.curseforge.com/minecraft/mc-mods/leaky", "image": "" },
+      { "name": "\ud83d\udd27 KryptonReforged", "desc": "Optimiza la red del juego", "url": "https://www.curseforge.com/minecraft/mc-mods/krypton-reforged", "image": "" },
+      { "name": "\ud83d\udd27 Let Me Despawn", "desc": "Mobs desaparecen m\u00e1s r\u00e1pido para reducir lag", "url": "https://www.curseforge.com/minecraft/mc-mods/let-me-despawn", "image": "" },
+      { "name": "\ud83d\udd27 LimitedChunks", "desc": "Controla los l\u00edmites de carga de chunks", "url": "https://www.curseforge.com/minecraft/mc-mods/limitedchunks", "image": "" },
+      { "name": "\ud83d\udd27 Log Begone", "desc": "Reduce el spam de logs", "url": "https://www.curseforge.com/minecraft/mc-mods/log-begone", "image": "" },
+      { "name": "\ud83d\udd27 RecipeEssentials", "desc": "Optimiza el sistema de recetas", "url": "https://www.curseforge.com/minecraft/mc-mods/recipeessentials", "image": "" },
+      { "name": "\ud83d\udd27 ServerCore", "desc": "Optimizaci\u00f3n para servidores", "url": "https://www.curseforge.com/minecraft/mc-mods/servercore", "image": "" },
+      { "name": "\ud83d\udd27 SmoothBoot Reloaded", "desc": "Inicio m\u00e1s r\u00e1pido del juego", "url": "https://www.curseforge.com/minecraft/mc-mods/smoothboot-reloaded", "image": "" },
+      { "name": "\ud83d\udd27 StructureEssentials", "desc": "Optimiza la generaci\u00f3n de estructuras", "url": "https://www.curseforge.com/minecraft/mc-mods/structureessentials", "image": "" },
+      { "name": "\ud83d\udd27 CrashAssistant", "desc": "Reportes de crash m\u00e1s claros", "url": "https://www.curseforge.com/minecraft/mc-mods/crash-assistant", "image": "" },
+      { "name": "\ud83d\udd27 Flerovium", "desc": "Optimizaci\u00f3n general de rendimiento", "url": "https://www.curseforge.com/minecraft/mc-mods/flerovium", "image": "" },
+      { "name": "\ud83d\udd27 Rubidium Extra", "desc": "Extras visuales para Rubidium/Embeddium", "url": "https://www.curseforge.com/minecraft/mc-mods/rubidium-extra", "image": "" },
+      { "name": "\ud83d\udd27 SodiumOptionsAPI", "desc": "API para opciones de Sodium en Forge", "url": "https://www.curseforge.com/minecraft/mc-mods/sodium-options-api", "image": "" },
+      { "name": "\ud83d\udd27 Chloride", "desc": "Extras visuales y fixes para Embeddium", "url": "https://www.curseforge.com/minecraft/mc-mods/chloride", "image": "" },
+      { "name": "\ud83d\udd27 Vanillin", "desc": "Mejoras vanilla sin cambiar mec\u00e1nicas", "url": "https://www.curseforge.com/minecraft/mc-mods/vanillin", "image": "" },
+      { "name": "\ud83d\udd27 LMFT (Lazy Mouse Fix Tweaks)", "desc": "Arregla el input del mouse", "url": "https://www.curseforge.com/minecraft/mc-mods/lazy-mouse-fix-tweaks", "image": "" },
+      { "name": "\ud83d\udd27 ModFixer", "desc": "Arregla compatibilidad entre mods", "url": "https://www.curseforge.com/minecraft/mc-mods/modfixer", "image": "" },
+      { "name": "\ud83d\udd27 Fastload", "desc": "Carga el mundo m\u00e1s r\u00e1pido", "url": "https://www.curseforge.com/minecraft/mc-mods/fastload", "image": "" },
+      { "name": "\ud83d\udce6 Artifacts", "desc": "Accesorios m\u00e1gicos y objetos \u00fanicos para equipar", "url": "https://www.curseforge.com/minecraft/mc-mods/artifacts", "image": "" },
+      { "name": "\ud83d\udce6 Curios API", "desc": "Slots extras para accesorios (necesario para Artifacts)", "url": "https://www.curseforge.com/minecraft/mc-mods/curios", "image": "" },
+      { "name": "\ud83d\udce6 Effortless Building", "desc": "Herramientas de construcci\u00f3n r\u00e1pida sin perder vanilla", "url": "https://www.curseforge.com/minecraft/mc-mods/effortless-building", "image": "" },
+      { "name": "\ud83d\udce6 Sophisticated Backpacks", "desc": "Mochilas avanzadas con upgrades", "url": "https://www.curseforge.com/minecraft/mc-mods/sophisticated-backpacks", "image": "" },
+      { "name": "\ud83d\udce6 Almanac", "desc": "Libro con informaci\u00f3n de cultivos y mobs", "url": "https://www.curseforge.com/minecraft/mc-mods/almanac", "image": "" },
+      { "name": "\ud83d\uddfa\ufe0f Xaero's Minimap", "desc": "Minimapa con waypoints y radar", "url": "https://www.curseforge.com/minecraft/mc-mods/xaeros-minimap", "image": "" },
+      { "name": "\u2139\ufe0f Jade", "desc": "Muestra info del bloque que est\u00e1s mirando", "url": "https://www.curseforge.com/minecraft/mc-mods/jade", "image": "" },
+      { "name": "\u2139\ufe0f JEI (Just Enough Items)", "desc": "Recetario completo del juego", "url": "https://www.curseforge.com/minecraft/mc-mods/jei", "image": "" },
+      { "name": "\u2139\ufe0f Just Enough Resources", "desc": "Muestra drops de mobs y generaci\u00f3n de minerales", "url": "https://www.curseforge.com/minecraft/mc-mods/just-enough-resources-jer", "image": "" }
+    ],
+    "modpacks": [
+      { "name": "\ud83d\udce6 Pack de optimizaci\u00f3n", "desc": "Pack con todos los mods de optimizaci\u00f3n pre-seleccionados", "url": "#", "image": "" }
+    ],
+    "shaders": [
+      { "name": "Complementary Shaders", "desc": "Shaders vibrantes y ligeros", "url": "#", "image": "" },
+      { "name": "BSL Shaders", "desc": "Shaders realistas", "url": "#", "image": "" }
+    ],
+    "textures": [
+      { "name": "Faithful x64", "desc": "Texturas fieles en 64x", "url": "#", "image": "" },
+      { "name": "Bare Bones", "desc": "Texturas minimalistas", "url": "#", "image": "" }
+    ]
+  }
+}
