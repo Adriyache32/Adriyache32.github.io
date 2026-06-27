@@ -643,11 +643,13 @@ function showCreatorTab(tab) {
         { name: 'Mellado', role: 'Moderador', color: '#4ecdc4', image: '' },
       ];
       let teamHtml = members.map((m, i) => `
-        <div class="editor-field">
+        <div class="editor-field" style="flex-wrap:wrap">
           <span class="label">#${i+1}</span>
-          <input class="editor-input" id="tm-name-${i}" value="${m.name}" placeholder="Nombre" style="flex:0.4">
-          <input class="editor-input" id="tm-role-${i}" value="${m.role}" placeholder="Rol" style="flex:0.25">
-          <input class="editor-input" id="tm-img-${i}" value="${m.image || ''}" placeholder="URL foto" style="flex:0.25;font-size:0.65rem">
+          <input class="editor-input" id="tm-name-${i}" value="${m.name}" placeholder="Nombre" style="flex:0.3">
+          <input class="editor-input" id="tm-role-${i}" value="${m.role}" placeholder="Rol" style="flex:0.2">
+          <input class="editor-input" id="tm-img-${i}" value="${m.image || ''}" placeholder="URL o Base64" style="flex:0.3;font-size:0.65rem" readonly>
+          <label class="btn-editor" style="font-size:0.6rem;padding:0.3rem 0.5rem;cursor:pointer;flex:0;white-space:nowrap">📁 Foto<input type="file" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none" onchange="uploadTeamImage(${i})"></label>
+          ${m.image && m.image.startsWith('data:') ? `<img src="${m.image}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-left:0.3rem">` : ''}
         </div>
       `).join('');
       content.innerHTML = `
@@ -1591,6 +1593,34 @@ function addTeamMember() {
   sd.team = team;
   localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
   showCreatorTab('team');
+}
+
+function uploadTeamImage(i) {
+  const input = document.querySelector(`input[type="file"][onchange*="uploadTeamImage(${i})"]`);
+  if (!input || !input.files || !input.files[0]) return;
+  const file = input.files[0];
+  if (file.size > 500 * 1024) { alert('La imagen es muy grande. Máximo 500KB.'); return; }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const imgInput = document.getElementById(`tm-img-${i}`);
+    if (imgInput) imgInput.value = e.target.result;
+    const sd = getSD();
+    const team = sd.team || [];
+    if (team[i]) team[i].image = e.target.result;
+    sd.team = team;
+    localStorage.setItem(SERVER_DATA_KEY, JSON.stringify(sd));
+    setUnsaved();
+    const parent = imgInput?.closest('.editor-field');
+    if (parent) {
+      const oldPreview = parent.querySelector('img');
+      if (oldPreview) oldPreview.remove();
+      const preview = document.createElement('img');
+      preview.src = e.target.result;
+      preview.style.cssText = 'width:32px;height:32px;border-radius:50%;object-fit:cover;margin-left:0.3rem';
+      parent.appendChild(preview);
+    }
+  };
+  reader.readAsDataURL(file);
 }
 
 function saveTeam() {
