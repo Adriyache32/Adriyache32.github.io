@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ranking Patoviciado</title>
+<style>
+:root{
+  --bg:#0f1115; --card:#181b21; --border:#2a2e37; --text:#f0efec; --sec:#a3a1998
+  ;--muted:#8b8983; --warn:#faedc7; --warnfill:#eda100; --accent:#378add;
+}
+[data-mode="light"], @media (prefers-color-scheme: light){}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,Segoe UI,Roboto,sans-serif}
+body{background:#0f1115;color:#f0efec;padding:1.2rem;max-width:480px;margin:0 auto}
+.total{background:#181b21;border-radius:14px;padding:1rem 1.2rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;border:0.5px solid #2a2e37}
+.total b{font-size:22px}
+.sec{font-size:11px;color:#8b8983;text-transform:uppercase;letter-spacing:.5px;margin:14px 4px 8px}
+.card{background:#181b21;border-radius:14px;border:1.5px solid #2a2e37;margin-bottom:12px;overflow:hidden}
+.hd{display:flex;align-items:center;gap:10px;padding:14px;border-bottom:0.5px solid #2a2e37}
+.rk{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0;background:#20242c}
+.nm{flex:1}
+.nmrow{display:flex;align-items:center;gap:6px}
+.nmrow b{font-size:15px}
+.dv{font-size:11.5px;color:#a19f9a}
+.pt{font-size:22px;font-weight:700;text-align:right}
+.bd{padding:12px 14px}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.sp{background:#20242c;padding:7px 9px;border-radius:8px;font-size:11px}
+.bar{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:10.5px}
+.bar span:first-child{width:26px;color:#a19f9a}
+.trk{flex:1;height:6px;background:#20242c;border-radius:3px;overflow:hidden}
+.fl{height:100%;border-radius:3px;background:#5f5e5a}
+.bar b{width:20px;text-align:right}
+.g{color:#eda100}
+.os{width:15px;height:15px;vertical-align:-2px}
+.tr{font-size:10px;font-weight:600;padding:2px 6px;border-radius:5px;margin-left:4px}
+.tr.u{background:#0d3b26;color:#5fd99a}
+.tr.d{background:#3f1414;color:#f28b8b}
+.tr.s{background:#2a2e37;color:#8b8983}
+</style>
+</head>
+<body data-prompt="PROMPT PARA MEJORAR ESTE ARTIFACT: Eres un experto en diseño web y UX. Este es un ranking de performance de PCs/laptops. Mejora el diseño manteniendo: Estructura (Podio 1-3, Contendientes 4+, Celulares vacío), Datos (no cambies especificaciones), Funcionalidad (responsive, sin JS externo), Dark theme (#0f1115 bg, #181b21 cards). Puedes mejorar: Tipografía/espaciado, colores/contraste, animaciones hover, layout cards, iconografía SO, A11y, CSS performance, visualización de datos. Mantén tono casual y temática Patoviciado.">
+<svg width="0" height="0" style="position:absolute">
+<symbol id="win" viewBox="0 0 24 24"><path fill="#5aa9e6" d="M1 1h9.5v9.5H1zm11 0h11v9.5h-11zm0 11h11v11h-11zm-11 0h9.5v11H1z"/></symbol>
+<symbol id="mint" viewBox="0 0 200 200"><path d="M55 40v115c0 20 15 30 35 30h5v-55h-7c-6 0-10-4-10-12V40z" fill="#87CF3E"/><path d="M100 65v120h23v-85c0-10 7-15 15-15s14 5 14 15v85h23V90c0-23-17-35-37-35-13 0-25 6-33 16-2-6-4-9-5-11z" fill="#87CF3E"/></symbol>
+<symbol id="edos" viewBox="0 0 200 220"><path d="M100 5 15 105v40l85 65V5Z" fill="#FF5F5F"/><path d="M100 5 185 105v40l-85 65V5Z" fill="#5C7CFA"/><path d="M100 25 45 105c-10 25 0 50 20 70l35 25V25Z" fill="#8B5CF6"/><path d="M100 25 155 105c10 25 0 50-20 70l-35 25V25Z" fill="#8B5CF6" opacity=".85"/></symbol>
+</svg>
+<div class="total"><div>Poder combinado del servidor<br><b>294 pts</b></div>⚡</div>
+<div style="font-size:10px;color:#8b8983;margin-bottom:10px;padding:0 4px">🔍 Sin tope de 100 · investigado con PassMark/3DMark real para todos</div>
+
+<h2 style="font-size:15px;font-weight:700;margin:6px 4px 2px;display:flex;align-items:center;gap:6px">💻 PCs / Laptops</h2>
+<div class="sec">Podio</div>
+
+<div class="card" style="border-color:#eda100">
+<div class="hd"><div class="rk" style="background:#eda100;color:#412402">1</div>
+<div class="nm"><div class="nmrow"><b>Mateo</b> <svg class="os"><use href="#win"/></svg><span class="tr u">▲ +7</span></div><div class="dv">ACEMAGIC Mini PC AM18</div></div>
+<div class="pt g">107</div></div>
+<div class="bd">
+<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ Radeon 780M nivel GTX 1650/RX 5500M, no solo "tope"</div>
+<div class="specs"><div class="sp">Ryzen 7 7840HS (8C/16T)</div><div class="sp">32GB DDR5</div><div class="sp">Radeon 780M (12CU)</div><div class="sp">1TB PCIe4</div></div>
+<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:100%;background:#eda100"></div></div><b>40</b></div>
+<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:100%;background:#eda100"></div></div><b>25</b></div>
+<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:100%;background:#eda100"></div></div><b>27</b></div>
+<div class="bar"><span>SSD</span><div class="trk"><div class="fl" style="width:100%;background:#eda100"></div></div><b>15</b></div>
+</div></div>
+
+<div class="card">
+<div class="hd"><div class="rk">2</div>
+<div class="nm"><div class="nmrow"><b>Mellado</b> <svg class="os"><use href="#win"/></svg><span class="tr s">= 63</span></div><div class="dv">PC Desktop Ryzen 5</div></div>
+<div class="pt">63</div></div>
+<div class="bd">
+<div style="font-size:10.5px;color:#8b8983;margin-bottom:8px">Verificado: Vega 7 en 4600G ya estaba bien puntuada</div>
+<div class="specs"><div class="sp">Ryzen 5 4600G (6C/12T)</div><div class="sp">16GB</div><div class="sp">Radeon Vega 7</div><div class="sp">466GB SSD</div></div>
+<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:52%"></div></div><b>21</b></div>
+<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:72%"></div></div><b>18</b></div>
+<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:50%"></div></div><b>10</b></div>
+<div class="bar"><span>SSD</span><div class="trk"><div class="fl" style="width:93%"></div></div><b>14</b></div>
+</div></div>
+
+<div class="card" style="border-color:#0c447c">
+<div class="hd"><div class="rk" style="background:#0c447c;color:#b5d4f4">3</div>
+<div class="nm"><div class="nmrow"><b>Adriel</b> <svg class="os"><use href="#edos"/></svg><span class="tr u">▲ +2</span></div><div class="dv">Lenovo IdeaPad 3 · CPU+GPU OC · Dual-channel</div></div>
+<div class="pt">47</div></div>
+<div class="bd">
+<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ RAM confirmada dual-channel (4GB soldado + 4GB SO-DIMM)</div>
+<div class="specs"><div class="sp">Ryzen 5 4500U (6C/6T, 3.3GHz OC)</div><div class="sp">8GB dual-ch</div><div class="sp">Vega 6 (OC)</div><div class="sp">500GB NVMe</div></div>
+<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:42%"></div></div><b>17</b></div>
+<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:44%"></div></div><b>11</b></div>
+<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:50%"></div></div><b>10</b></div>
+<div class="bar"><span>SSD</span><div class="trk"><div class="fl" style="width:80%"></div></div><b>12</b></div>
+</div></div>
+
+<div class="sec">Contendientes</div>
+
+<div class="card">
+<div class="hd"><div class="rk">4</div>
+<div class="nm"><div class="nmrow"><b>Diego</b> <svg class="os"><use href="#win"/></svg><span class="tr d">▼ -2</span></div><div class="dv">IdeaPad Slim 3 · RAM single-channel</div></div>
+<div class="pt">45</div></div>
+<div class="bd">
+<div style="font-size:10.5px;color:#f28b8b;margin-bottom:8px">⚠ 8GB en Slim 3 corre en single-channel, no dual</div>
+<div class="specs"><div class="sp">Ryzen 5 5625U (6C/12T)</div><div class="sp">8GB single-ch</div><div class="sp">Radeon Vega 7</div><div class="sp">180GB SSD</div></div>
+<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:52%"></div></div><b>21</b></div>
+<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:28%"></div></div><b>7</b></div>
+<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:45%"></div></div><b>9</b></div>
+<div class="bar"><span>SSD</span><div class="trk"><div class="fl" style="width:53%"></div></div><b>8</b></div>
+</div></div>
+
+<div class="card">
+<div class="hd"><div class="rk" style="background:#3c3489;color:#cecbf6">5</div>
+<div class="nm"><div class="nmrow"><b>Eliezer</b> <svg class="os"><use href="#win"/></svg><span class="tr u">▲ +2</span></div><div class="dv">LAPTOP-DLQU141U</div></div>
+<div class="pt">24</div></div>
+<div class="bd">
+<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ UHD G1 (32 EU) es 61% más rápida que UHD 620 genérica</div>
+<div class="specs"><div class="sp">Core i3-1005G1 (2C/4T)</div><div class="sp">12GB</div><div class="sp">UHD Graphics G1 (32EU)</div><div class="sp">130GB SSD</div></div>
+<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:15%"></div></div><b>6</b></div>
+<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:52%"></div></div><b>13</b></div>
+<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:20%"></div></div><b>4</b></div>
+<div class="bar"><span>SSD</span><div class="trk"><div class="fl" style="width:7%"></div></div><b>1</b></div>
+</div></div>
+
+<div class="card">
+<div class="hd"><div class="rk" style="background:#085041;color:#9fe1cb">6</div>
+<div class="nm"><div class="nmrow"><b>Sergio</b> <svg class="os"><use href="#mint"/></svg><span class="tr u">▲ +2</span></div><div class="dv">Portátil i3-6006U · Linux Mint</div></div>
+<div class="pt">18</div></div>
+<div class="bd">
+<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ HD 520 supera 2-3x en 3DMark a UHD genérica (más EUs, Skylake)</div>
+<div class="specs"><div class="sp">Core i3-6006U (2C/4T)</div><div class="sp">8GB</div><div class="sp">HD Graphics 520 (24 EU)</div><div class="sp">329GB SSD</div></div>
+<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:10%"></div></div><b>4</b></div>
+<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:36%"></div></div><b>9</b></div>
+<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:15%"></div></div><b>3</b></div>
+<div class="bar"><span>SSD</span><div class="trk"><div class="fl" style="width:13%"></div></div><b>2</b></div>
+</div></div>
+
+<h2 style="font-size:15px;font-weight:700;margin:22px 4px 10px;display:flex;align-items:center;gap:6px">📱 Celulares</h2>
+<div class="card" style="border-style:dashed;opacity:.6">
+<div style="padding:24px 14px;text-align:center">
+<div style="font-size:13px;color:#a19f9a;font-weight:600">Próximamente</div>
+<div style="font-size:11px;color:#8b8983;margin-top:4px">Ranking de celulares del servidor, en camino 🔜</div>
+</div>
+</div>
+
+</body>
+</html>
