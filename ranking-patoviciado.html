@@ -3,251 +3,429 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ranking Patoviciado</title>
+<title>Ranking Patoviciado 2026</title>
 <style>
 :root{
-  --bg:#0f1115; --card:#181b21; --border:#2a2e37; --text:#f0efec; --sec:#a3a1998
-  ;--muted:#8b8983; --warn:#faedc7; --warnfill:#eda100; --accent:#378add;
+  --bg:#0f1115; --card:#181b21; --border:#2a2e37; --text:#f0efec; --sec:#a3a199;
+  --muted:#8b8983; --warn:#faedc7; --warnfill:#eda100; --accent:#378add;
 }
-[data-mode="light"], @media (prefers-color-scheme: light){}
 *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,Segoe UI,Roboto,sans-serif}
-body{background:#0f1115;color:#f0efec;padding:1.2rem;max-width:480px;margin:0 auto}
-.total{background:#181b21;border-radius:14px;padding:1rem 1.2rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;border:0.5px solid #2a2e37}
+body{background:#0f1115;color:#f0efec;padding:1.2rem;max-width:520px;margin:0 auto}
+.total{background:#181b21;border-radius:14px;padding:1rem 1.2rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;border:0.5px solid #2a2e37}
 .total b{font-size:22px}
-.sec{font-size:11px;color:#8b8983;text-transform:uppercase;letter-spacing:.5px;margin:14px 4px 8px}
+.sec{font-size:11px;color:#8b8983;text-transform:uppercase;letter-spacing:.5px;margin:16px 4px 10px;font-weight:600}
 .card{background:#181b21;border-radius:14px;border:1.5px solid #2a2e37;margin-bottom:12px;overflow:hidden}
 .hd{display:flex;align-items:center;gap:10px;padding:14px;border-bottom:0.5px solid #2a2e37}
-.rk{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0;background:#20242c}
+.rk{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex-shrink:0;background:#20242c}
 .nm{flex:1}
-.nmrow{display:flex;align-items:center;gap:6px}
-.nmrow b{font-size:15px}
-.dv{font-size:11.5px;color:#a19f9a}
-.pt{font-size:22px;font-weight:700;text-align:right}
+.nmrow{display:flex;align-items:center;gap:8px}
+.nmrow b{font-size:15px;font-weight:600}
+.tag{font-size:11px;padding:2px 6px;border-radius:4px;background:#2a2e37;color:#a19f9a}
+.dv{font-size:11px;color:#a19f9a;margin-top:3px}
+.pt{font-size:24px;font-weight:800;text-align:right;min-width:50px}
 .bd{padding:12px 14px}
 .specs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
-.sp{background:#20242c;padding:7px 9px;border-radius:8px;font-size:11px}
-.bar{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:10.5px}
-.bar span:first-child{width:26px;color:#a19f9a}
-.trk{flex:1;height:6px;background:#20242c;border-radius:3px;overflow:hidden}
-.fl{height:100%;border-radius:3px;background:#5f5e5a}
-.bar b{width:20px;text-align:right}
-.g{color:#eda100}
-.os{width:15px;height:15px;vertical-align:-2px}
-.tr{font-size:10px;font-weight:600;padding:2px 6px;border-radius:5px;margin-left:4px}
-.tr.u{background:#0d3b26;color:#5fd99a}
-.tr.d{background:#3f1414;color:#f28b8b}
-.tr.s{background:#2a2e37;color:#8b8983}
+.sp{background:#20242c;padding:8px 10px;border-radius:8px;font-size:10.5px;line-height:1.3}
+.bar{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:10px}
+.bar span:first-child{width:32px;color:#8b8983;font-weight:500}
+.trk{flex:1;height:6px;background:#2a2e37;border-radius:3px;overflow:hidden}
+.fl{height:100%;background:#378add;border-radius:3px}
+.bar b{font-weight:600;min-width:24px;text-align:right}
+.note{font-size:9px;color:#8b8983;margin-top:8px;padding-top:8px;border-top:0.5px solid #2a2e37}
+
+.p1 .rk{background:#eda100;color:#0f1115}
+.p2 .rk{background:#c0c0c0;color:#0f1115}
+.p3 .rk{background:#cd7f32;color:#fff}
+.c4 .rk{background:#5a7d5e;color:#c5d9c8}
+.c5 .rk{background:#5a6b7d;color:#c5d0d9}
+.c6 .rk{background:#7d6b5a;color:#d9d0c5}
+.c7 .rk{background:#5a7d7d;color:#c5d9d9}
+.c8 .rk{background:#7d5a5a;color:#d9c5c5}
+.c9 .rk{background:#6b5a7d;color:#d0c5d9}
+.c10 .rk{background:#7d6b5a;color:#d9d0c5}
+
+.badge-oc{color:#faedc7;font-weight:600}
+.badge-mod{color:#a3d9aa;font-weight:600}
+.badge-stock{color:#a19f9a;font-size:9px}
 </style>
 </head>
-<body data-prompt="PROMPT PARA MEJORAR ESTE ARTIFACT: Eres un experto en diseño web y UX. Este es un ranking de performance de PCs/laptops. Mejora el diseño manteniendo: Estructura (Podio 1-3, Contendientes 4+, Celulares vacío), Datos (no cambies especificaciones), Funcionalidad (responsive, sin JS externo), Dark theme (#0f1115 bg, #181b21 cards). Puedes mejorar: Tipografía/espaciado, colores/contraste, animaciones hover, layout cards, iconografía SO, A11y, CSS performance, visualización de datos. Mantén tono casual y temática Patoviciado.">
-<svg width="0" height="0" style="position:absolute">
-<symbol id="win" viewBox="0 0 24 24"><path fill="#5aa9e6" d="M1 1h9.5v9.5H1zm11 0h11v9.5h-11zm0 11h11v11h-11zm-11 0h9.5v11H1z"/></symbol>
-<symbol id="mint" viewBox="0 0 200 200"><path d="M55 40v115c0 20 15 30 35 30h5v-55h-7c-6 0-10-4-10-12V40z" fill="#87CF3E"/><path d="M100 65v120h23v-85c0-10 7-15 15-15s14 5 14 15v85h23V90c0-23-17-35-37-35-13 0-25 6-33 16-2-6-4-9-5-11z" fill="#87CF3E"/></symbol>
-<symbol id="edos" viewBox="0 0 200 220"><path d="M100 5 15 105v40l85 65V5Z" fill="#FF5F5F"/><path d="M100 5 185 105v40l-85 65V5Z" fill="#5C7CFA"/><path d="M100 25 45 105c-10 25 0 50 20 70l35 25V25Z" fill="#8B5CF6"/><path d="M100 25 155 105c10 25 0 50-20 70l-35 25V25Z" fill="#8B5CF6" opacity=".85"/></symbol>
-</svg>
-<div class="total"><div>Poder combinado del servidor<br><b>294 pts</b></div>⚡</div>
-<div style="font-size:10px;color:#8b8983;margin-bottom:10px;padding:0 4px">🔍 Sin tope de 100 · investigado con PassMark/3DMark real para todos</div>
+<body data-prompt="Mejora este ranking patoviciado: actualiza íconos, añade más datos de hardware, optimiza estilos, integra gráficos de comparación, y asegúrate de que sea mobile-first.">
 
-<h2 style="font-size:15px;font-weight:700;margin:6px 4px 2px;display:flex;align-items:center;gap:6px">💻 PCs / Laptops</h2>
-<div class="sec">Podio</div>
+<div class="sec">🖥️ Sección: PCs / Laptops</div>
+<div class="total"><span>Poder Combinado</span><b>304 pts</b></div>
 
-<div class="card" style="border-color:#eda100">
-<div class="hd"><div class="rk" style="background:#eda100;color:#412402">1</div>
-<div class="nm"><div class="nmrow"><b>Mateo</b> <svg class="os"><use href="#win"/></svg><span class="tr u">▲ +7</span></div><div class="dv">ACEMAGIC Mini PC AM18</div></div>
-<div class="pt g">107</div></div>
+<!-- #1 MATEO -->
+<div class="card p1" style="border-color:#eda100">
+<div class="hd">
+<div class="rk">1</div>
+<div class="nm">
+<div class="nmrow"><b>Mateo</b> <span class="tag">🏆 KING</span></div>
+<div class="dv">ACEMAGIC Mini PC AM18 · Ryzen 7 7840HS</div>
+</div>
+<div class="pt">107</div>
+</div>
 <div class="bd">
-<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ Radeon 780M nivel GTX 1650/RX 5500M, no solo "tope"</div>
-<div class="specs"><div class="sp">Ryzen 7 7840HS (8C/16T)</div><div class="sp">32GB DDR5</div><div class="sp">Radeon 780M (12CU)</div><div class="sp">1TB PCIe4</div></div>
-<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:100%;background:#eda100"></div></div><b>40</b></div>
-<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:100%;background:#eda100"></div></div><b>25</b></div>
-<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:100%;background:#eda100"></div></div><b>27</b></div>
-<div class="bar"><span>SSD</span><div class="trk"><div class="fl" style="width:100%;background:#eda100"></div></div><b>15</b></div>
-</div></div>
+<div class="specs">
+<div class="sp"><b>CPU:</b> AMD Ryzen 7 7840HS (Zen 4, 8C/16T)</div>
+<div class="sp"><b>GPU:</b> Radeon 780M (RDNA 3, 12 CU)</div>
+<div class="sp"><b>RAM:</b> 32GB DDR5 Dual-Channel</div>
+<div class="sp"><b>SSD:</b> 1TB PCIe 4.0</div>
+</div>
+<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:100%"></div></div><b>40</b></div>
+<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:100%"></div></div><b>25</b></div>
+<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:100%"></div></div><b>27</b></div>
+<div class="bar"><span>SSD</span><div class="trk"><div class="fl" style="width:100%"></div></div><b>15</b></div>
+<div class="note">⚡ Máquina más potente del servidor. Ryzen 7 7840HS es clase workstation.</div>
+</div>
+</div>
 
-<div class="card">
-<div class="hd"><div class="rk">2</div>
-<div class="nm"><div class="nmrow"><b>Mellado</b> <svg class="os"><use href="#win"/></svg><span class="tr s">= 63</span></div><div class="dv">PC Desktop Ryzen 5</div></div>
-<div class="pt">63</div></div>
+<!-- #2 MELLADO -->
+<div class="card p2" style="border-color:#c0c0c0">
+<div class="hd">
+<div class="rk">2</div>
+<div class="nm">
+<div class="nmrow"><b>Mellado</b> <span class="tag">🥈 RUNNER</span></div>
+<div class="dv">PC Desktop Ryzen 5 · Escritorio dedicado</div>
+</div>
+<div class="pt">63</div>
+</div>
 <div class="bd">
-<div style="font-size:10.5px;color:#8b8983;margin-bottom:8px">Verificado: Vega 7 en 4600G ya estaba bien puntuada</div>
-<div class="specs"><div class="sp">Ryzen 5 4600G (6C/12T)</div><div class="sp">16GB</div><div class="sp">Radeon Vega 7</div><div class="sp">466GB SSD</div></div>
-<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:52%"></div></div><b>21</b></div>
+<div class="specs">
+<div class="sp"><b>CPU:</b> AMD Ryzen 5 4600G (Zen 2, 6C/12T, 65W)</div>
+<div class="sp"><b>GPU:</b> Radeon Vega 7 (Integrada escritorio)</div>
+<div class="sp"><b>RAM:</b> 16GB DDR4</div>
+<div class="sp"><b>SSD:</b> 466GB SSD</div>
+</div>
+<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:52.5%"></div></div><b>21</b></div>
 <div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:72%"></div></div><b>18</b></div>
-<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:50%"></div></div><b>10</b></div>
+<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:37%"></div></div><b>10</b></div>
 <div class="bar"><span>SSD</span><div class="trk"><div class="fl" style="width:93%"></div></div><b>14</b></div>
-</div></div>
+<div class="note">💻 Desktop con arquitectura escalable. Vega 7 integrada = GPU decente para CPU de escritorio.</div>
+</div>
+</div>
 
-<div class="card" style="border-color:#0c447c">
-<div class="hd"><div class="rk" style="background:#0c447c;color:#b5d4f4">3</div>
-<div class="nm"><div class="nmrow"><b>Adriel</b> <svg class="os"><use href="#edos"/></svg><span class="tr u">▲ +2</span></div><div class="dv">Lenovo IdeaPad 3 · CPU+GPU OC · Dual-channel</div></div>
-<div class="pt">47</div></div>
+<!-- #3 ADRIEL -->
+<div class="card p3" style="border-color:#cd7f32">
+<div class="hd">
+<div class="rk">3</div>
+<div class="nm">
+<div class="nmrow"><b>Adriel</b> <span class="tag badge-oc">⚙️ OC</span></div>
+<div class="dv">Lenovo IdeaPad 3 · Ryzen 5 4500U</div>
+</div>
+<div class="pt">47</div>
+</div>
 <div class="bd">
-<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ RAM confirmada dual-channel (4GB soldado + 4GB SO-DIMM)</div>
-<div class="specs"><div class="sp">Ryzen 5 4500U (6C/6T, 3.3GHz OC)</div><div class="sp">8GB dual-ch</div><div class="sp">Vega 6 (OC)</div><div class="sp">500GB NVMe</div></div>
-<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:42%"></div></div><b>17</b></div>
+<div class="specs">
+<div class="sp"><b>CPU:</b> Ryzen 5 4500U (Zen 2, 6C/6T) OC 3.30GHz</div>
+<div class="sp"><b>GPU:</b> Vega 6 (Optimizado)</div>
+<div class="sp"><b>RAM:</b> 8GB DDR4 Dual-Channel (OC)</div>
+<div class="sp"><b>SSD:</b> 500GB NVMe</div>
+</div>
+<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:42.5%"></div></div><b>17</b></div>
 <div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:44%"></div></div><b>11</b></div>
-<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:50%"></div></div><b>10</b></div>
+<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:37%"></div></div><b>10</b></div>
 <div class="bar"><span>SSD</span><div class="trk"><div class="fl" style="width:80%"></div></div><b>12</b></div>
-</div></div>
+<div class="note">🔥 Laptop con overclock activo. Dual-Channel + OC = rendimiento optimizado desde arquitecto.</div>
+</div>
+</div>
 
-<div class="sec">Contendientes</div>
-
-<div class="card">
-<div class="hd"><div class="rk">4</div>
-<div class="nm"><div class="nmrow"><b>Diego</b> <svg class="os"><use href="#win"/></svg><span class="tr d">▼ -2</span></div><div class="dv">IdeaPad Slim 3 · RAM single-channel</div></div>
-<div class="pt">45</div></div>
+<!-- #4 DIEGO -->
+<div class="card c4" style="border-color:#5a7d5e">
+<div class="hd">
+<div class="rk">4</div>
+<div class="nm">
+<div class="nmrow"><b>Diego</b> <span class="tag">⚠️ CUELLO</span></div>
+<div class="dv">Lenovo IdeaPad Slim 3 · Ryzen 5 5625U</div>
+</div>
+<div class="pt">45</div>
+</div>
 <div class="bd">
-<div style="font-size:10.5px;color:#f28b8b;margin-bottom:8px">⚠ 8GB en Slim 3 corre en single-channel, no dual</div>
-<div class="specs"><div class="sp">Ryzen 5 5625U (6C/12T)</div><div class="sp">8GB single-ch</div><div class="sp">Radeon Vega 7</div><div class="sp">180GB SSD</div></div>
-<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:52%"></div></div><b>21</b></div>
+<div class="specs">
+<div class="sp"><b>CPU:</b> AMD Ryzen 5 5625U (Zen 3, 6C/12T)</div>
+<div class="sp"><b>GPU:</b> Vega 7 (Estrangulada)</div>
+<div class="sp"><b>RAM:</b> 8GB Single-Channel ⚠️</div>
+<div class="sp"><b>SSD:</b> 180GB SSD</div>
+</div>
+<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:52.5%"></div></div><b>21</b></div>
 <div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:28%"></div></div><b>7</b></div>
-<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:45%"></div></div><b>9</b></div>
+<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:33%"></div></div><b>9</b></div>
 <div class="bar"><span>SSD</span><div class="trk"><div class="fl" style="width:53%"></div></div><b>8</b></div>
-</div></div>
+<div class="note">❌ CPU potente pero RAM Single-Channel = cuello de botella crítico 30-40% en gráfica.</div>
+</div>
+</div>
 
-<div class="card">
-<div class="hd"><div class="rk" style="background:#3c3489;color:#cecbf6">5</div>
-<div class="nm"><div class="nmrow"><b>Eliezer</b> <svg class="os"><use href="#win"/></svg><span class="tr u">▲ +2</span></div><div class="dv">LAPTOP-DLQU141U</div></div>
-<div class="pt">24</div></div>
+<!-- #5 ELIEZER LAPTOP -->
+<div class="card c5" style="border-color:#5a6b7d">
+<div class="hd">
+<div class="rk">5</div>
+<div class="nm">
+<div class="nmrow"><b>Eliezer</b> <span class="tag badge-stock">stock</span></div>
+<div class="dv">LAPTOP-DLQU141U · Intel i3-1005G1</div>
+</div>
+<div class="pt">24</div>
+</div>
 <div class="bd">
-<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ UHD G1 (32 EU) es 61% más rápida que UHD 620 genérica</div>
-<div class="specs"><div class="sp">Core i3-1005G1 (2C/4T)</div><div class="sp">12GB</div><div class="sp">UHD Graphics G1 (32EU)</div><div class="sp">130GB SSD</div></div>
+<div class="specs">
+<div class="sp"><b>CPU:</b> Intel Core i3-1005G1 (2C/4T)</div>
+<div class="sp"><b>GPU:</b> UHD Graphics G1 (32 EU)</div>
+<div class="sp"><b>RAM:</b> 12GB DDR4</div>
+<div class="sp"><b>SSD:</b> 130GB SSD</div>
+</div>
 <div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:15%"></div></div><b>6</b></div>
 <div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:52%"></div></div><b>13</b></div>
-<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:20%"></div></div><b>4</b></div>
+<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:15%"></div></div><b>4</b></div>
 <div class="bar"><span>SSD</span><div class="trk"><div class="fl" style="width:7%"></div></div><b>1</b></div>
-</div></div>
+<div class="note">📉 CPU generación Comet Lake muy antigua. Punto fuerte: cantidad de RAM.</div>
+</div>
+</div>
 
-<div class="card">
-<div class="hd"><div class="rk" style="background:#085041;color:#9fe1cb">6</div>
-<div class="nm"><div class="nmrow"><b>Sergio</b> <svg class="os"><use href="#mint"/></svg><span class="tr u">▲ +2</span></div><div class="dv">Portátil i3-6006U · Linux Mint</div></div>
-<div class="pt">18</div></div>
+<!-- #6 SERGIO LAPTOP -->
+<div class="card c6" style="border-color:#7d6b5a">
+<div class="hd">
+<div class="rk">6</div>
+<div class="nm">
+<div class="nmrow"><b>Sergio</b> <span class="tag badge-mod">🐧 Linux</span></div>
+<div class="dv">Portátil Skylake · Intel i3-6006U</div>
+</div>
+<div class="pt">18</div>
+</div>
 <div class="bd">
-<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ HD 520 supera 2-3x en 3DMark a UHD genérica (más EUs, Skylake)</div>
-<div class="specs"><div class="sp">Core i3-6006U (2C/4T)</div><div class="sp">8GB</div><div class="sp">HD Graphics 520 (24 EU)</div><div class="sp">329GB SSD</div></div>
+<div class="specs">
+<div class="sp"><b>CPU:</b> Intel Core i3-6006U (2C/4T, Skylake)</div>
+<div class="sp"><b>GPU:</b> Intel HD Graphics 520 (24 EU)</div>
+<div class="sp"><b>RAM:</b> 8GB DDR4</div>
+<div class="sp"><b>SSD:</b> 329GB SSD</div>
+</div>
 <div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:10%"></div></div><b>4</b></div>
 <div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:36%"></div></div><b>9</b></div>
-<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:15%"></div></div><b>3</b></div>
+<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:11%"></div></div><b>3</b></div>
 <div class="bar"><span>SSD</span><div class="trk"><div class="fl" style="width:13%"></div></div><b>2</b></div>
-</div></div>
+<div class="note">🔧 Máquina vintage (2016). HD Graphics 520 es lo mínimo viable.</div>
+</div>
+</div>
 
-<h2 style="font-size:15px;font-weight:700;margin:22px 4px 10px;display:flex;align-items:center;gap:6px">📱 Celulares</h2>
+<div class="sec">📱 Sección: Celulares / Tablets</div>
+<div class="total"><span>Poder Combinado</span><b>4.128 pts</b></div>
 
-<div class="sec">Podio</div>
-
-<div class="card" style="border-color:#c9a961">
-<div class="hd"><div class="rk" style="background:#c9a961;color:#3a3227">1</div>
-<div class="nm"><div class="nmrow"><b>Sergio</b> <svg class="os" style="width:16px;height:16px"><use href="#android"/></svg><span class="tr u">🔥 TOP</span></div><div class="dv">Moto G85 5G · Snapdragon 6s Gen3 · pOLED 120Hz</div></div>
-<div class="pt">46</div></div>
+<!-- #1 ELIEZER CELULAR -->
+<div class="card p1" style="border-color:#eda100">
+<div class="hd">
+<div class="rk">1</div>
+<div class="nm">
+<div class="nmrow"><b>Eliezer</b> <span class="tag badge-stock">stock</span></div>
+<div class="dv">Samsung Galaxy A56/M56 · Dimensity 7050</div>
+</div>
+<div class="pt">665</div>
+</div>
 <div class="bd">
-<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ Mejor procesador, pantalla pOLED, 5G, 8GB RAM</div>
-<div class="specs"><div class="sp">Snapdragon 6s Gen3 (8C)</div><div class="sp">8GB RAM</div><div class="sp">Adreno GPU</div><div class="sp">128GB UFS2.2</div></div>
-<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:85%"></div></div><b>17</b></div>
-<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:87%"></div></div><b>13</b></div>
-<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:80%"></div></div><b>10</b></div>
-<div class="bar"><span>AnTuTu</span><div class="trk"><div class="fl" style="width:88%"></div></div><b>6</b></div>
-<div style="font-size:9px;color:#8b8983;margin-top:6px">📊 AnTuTu: 472.323 v10 (Snapdragon 6s = 88% del score máximo)</div>
-</div></div>
+<div class="specs">
+<div class="sp"><b>SoC:</b> MediaTek Dimensity 7050 (6nm, 8C)</div>
+<div class="sp"><b>GPU:</b> Mali-G68 MC4</div>
+<div class="sp"><b>Almacenamiento:</b> UFS 3.1</div>
+<div class="sp"><b>Software:</b> Stock (Sin mods)</div>
+</div>
+<div class="bar"><span>AnTuTu v11</span><div class="trk"><div class="fl" style="width:100%"></div></div><b>665k</b></div>
+<div class="note">🔥 Dimensity 7050 es referencia en mid-range. Mali-G68 = GPU sólida para gaming casual.</div>
+</div>
+</div>
 
-<div class="card" style="border-color:#a8a8a8">
-<div class="hd"><div class="rk" style="background:#a8a8a8;color:#2c2c2c">2</div>
-<div class="nm"><div class="nmrow"><b>Eliezer</b> <svg class="os" style="width:16px;height:16px"><use href="#android"/></svg><span class="tr u">⭐ NUEVO</span></div><div class="dv">Samsung Galaxy A56 · MediaTek Dimensity 7050 · Premium</div></div>
-<div class="pt">45</div></div>
+<!-- #2 ADRIEL MOTO G71 -->
+<div class="card p2" style="border-color:#c0c0c0">
+<div class="hd">
+<div class="rk">2</div>
+<div class="nm">
+<div class="nmrow"><b>Adriel</b> <span class="tag badge-mod">⚙️ LineageOS</span></div>
+<div class="dv">Moto G71 5G · Snapdragon 695</div>
+</div>
+<div class="pt">535</div>
+</div>
 <div class="bd">
-<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ Procesador más potente del grupo, diseño Samsung, 256GB</div>
-<div class="specs"><div class="sp">MediaTek Dimensity 7050 (8C)</div><div class="sp">8GB RAM</div><div class="sp">Mali-G68</div><div class="sp">256GB UFS3.1</div></div>
-<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:82%"></div></div><b>16</b></div>
-<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:87%"></div></div><b>13</b></div>
-<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:75%"></div></div><b>9</b></div>
-<div class="bar"><span>AnTuTu</span><div class="trk"><div class="fl" style="width:90%"></div></div><b>7</b></div>
-<div style="font-size:9px;color:#8b8983;margin-top:6px">📊 AnTuTu: ~750.000 v10 (Dimensity 7050 = potencia mid-range premium)</div>
-</div></div>
+<div class="specs">
+<div class="sp"><b>SoC:</b> Qualcomm Snapdragon 695 5G (6nm, 8C)</div>
+<div class="sp"><b>GPU:</b> Adreno 619</div>
+<div class="sp"><b>Almacenamiento:</b> UFS 2.2</div>
+<div class="sp"><b>Software:</b> LineageOS + Root + Sin Google (De-Googled)</div>
+</div>
+<div class="bar"><span>AnTuTu v11</span><div class="trk"><div class="fl" style="width:80.5%"></div></div><b>535k</b></div>
+<div class="note">⚡ ROM custom + debloat extremo = máxima eficiencia térmica. Adreno 619 = GPU clase media-alta.</div>
+</div>
+</div>
 
-<div class="card" style="border-color:#cd7f32">
-<div class="hd"><div class="rk" style="background:#cd7f32;color:#3d2817">3</div>
-<div class="nm"><div class="nmrow"><b>Julián</b> <svg class="os" style="width:16px;height:16px"><use href="#android"/></svg><span class="tr u">🎮 GAMING</span></div><div class="dv">Samsung Galaxy A36 5G · MediaTek Dimensity 6020 · 5G</div></div>
-<div class="pt">42</div></div>
+<!-- #3 SERGIO MOTO G85 -->
+<div class="card p3" style="border-color:#cd7f32">
+<div class="hd">
+<div class="rk">3</div>
+<div class="nm">
+<div class="nmrow"><b>Sergio</b> <span class="tag badge-stock">stock</span></div>
+<div class="dv">Moto G85 5G · Snapdragon 6s Gen 3</div>
+</div>
+<div class="pt">518</div>
+</div>
 <div class="bd">
-<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ Samsung confiable, 5G, batería 5000mAh, buen precio</div>
-<div class="specs"><div class="sp">MediaTek Dimensity 6020 (8C)</div><div class="sp">6GB RAM</div><div class="sp">Mali-G57</div><div class="sp">128GB UFS3.1</div></div>
-<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:70%"></div></div><b>14</b></div>
-<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:75%"></div></div><b>11</b></div>
-<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:68%"></div></div><b>8</b></div>
-<div class="bar"><span>AnTuTu</span><div class="trk"><div class="fl" style="width:76%"></div></div><b>9</b></div>
-<div style="font-size:9px;color:#8b8983;margin-top:6px">📊 AnTuTu: 638.436 v10 (Dimensity 6020 = mid-range sólido)</div>
-</div></div>
+<div class="specs">
+<div class="sp"><b>SoC:</b> Qualcomm Snapdragon 6s Gen 3 (6nm, 8C)</div>
+<div class="sp"><b>GPU:</b> Adreno 619 | Pantalla pOLED 120Hz</div>
+<div class="sp"><b>Almacenamiento:</b> UFS 2.2</div>
+<div class="sp"><b>Software:</b> Stock (Servicios Google completos)</div>
+</div>
+<div class="bar"><span>AnTuTu v11</span><div class="trk"><div class="fl" style="width:77.9%"></div></div><b>518k</b></div>
+<div class="note">📺 Pantalla OLED 120Hz es diferenciador. Snapdragon 6s Gen 3 = eficiencia energética.</div>
+</div>
+</div>
 
-<div class="sec">Contendientes</div>
-
-<div class="card" style="border-color:#5a7d5e">
-<div class="hd"><div class="rk" style="background:#5a7d5e;color:#c5d9c8">4</div>
-<div class="nm"><div class="nmrow"><b>Adriel</b> <svg class="os" style="width:16px;height:16px"><use href="#android"/></svg><span class="tr u">⚙️ OC</span></div><div class="dv">Vivo Y53s · Snapdragon 480 5G · 5G económico</div></div>
-<div class="pt">37</div></div>
+<!-- #4 AGUSTÍN MOTO G53 -->
+<div class="card c4" style="border-color:#5a7d5e">
+<div class="hd">
+<div class="rk">4</div>
+<div class="nm">
+<div class="nmrow"><b>Agustín</b> <span class="tag badge-mod">🎮 Opt</span></div>
+<div class="dv">Moto G53 5G · Snapdragon 480+</div>
+</div>
+<div class="pt">465</div>
+</div>
 <div class="bd">
-<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ 5G real, 8GB RAM, pantalla 90Hz, buena cámara 64MP f/1.8</div>
-<div class="specs"><div class="sp">Snapdragon 480 5G (8C)</div><div class="sp">8GB RAM</div><div class="sp">Adreno 619</div><div class="sp">128GB UFS2.1</div></div>
-<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:58%"></div></div><b>11</b></div>
-<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:87%"></div></div><b>13</b></div>
-<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:56%"></div></div><b>7</b></div>
-<div class="bar"><span>AnTuTu</span><div class="trk"><div class="fl" style="width:91%"></div></div><b>6</b></div>
-<div style="font-size:9px;color:#8b8983;margin-top:6px">📊 AnTuTu: 970.000 v11 (Snapdragon 480 5G = 5G entrada fuerte)</div>
-</div></div>
+<div class="specs">
+<div class="sp"><b>SoC:</b> Qualcomm Snapdragon 480+ 5G (8nm, 8C @ 2.2GHz OC)</div>
+<div class="sp"><b>GPU:</b> Adreno 619</div>
+<div class="sp"><b>Almacenamiento:</b> UFS 2.2</div>
+<div class="sp"><b>Software:</b> Debloatware extremo + Game Mode optimizado</div>
+</div>
+<div class="bar"><span>AnTuTu v11</span><div class="trk"><div class="fl" style="width:69.9%"></div></div><b>465k</b></div>
+<div class="note">🎯 Snapdragon 480+ con OC de fábrica a 2.2GHz. Optimización extrema de software = máximo rendimiento.</div>
+</div>
+</div>
 
-<div class="card" style="border-color:#5a6b7d">
-<div class="hd"><div class="rk" style="background:#5a6b7d;color:#c5d0d9">5</div>
-<div class="nm"><div class="nmrow"><b>Adriel</b> <svg class="os" style="width:16px;height:16px"><use href="#android"/></svg><span class="tr d">📸 CAM</span></div><div class="dv">Redmi Note 9 Pro · Snapdragon 720G · Quad 64MP</div></div>
-<div class="pt">35</div></div>
+<!-- #5 ADRIEL REDMI NOTE 9 PRO -->
+<div class="card c5" style="border-color:#5a6b7d">
+<div class="hd">
+<div class="rk">5</div>
+<div class="nm">
+<div class="nmrow"><b>Adriel</b> <span class="tag badge-oc">⚙️ OC+Linage</span></div>
+<div class="dv">Redmi Note 9 Pro · Snapdragon 720G</div>
+</div>
+<div class="pt">448</div>
+</div>
 <div class="bd">
-<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ Cámara cuádruple 64MP, Snapdragon 720G sólido, UFS2.1</div>
-<div class="specs"><div class="sp">Snapdragon 720G (8C, 2.3GHz)</div><div class="sp">6GB RAM</div><div class="sp">Adreno 618</div><div class="sp">128GB UFS2.1</div></div>
-<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:62%"></div></div><b>12</b></div>
-<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:75%"></div></div><b>11</b></div>
-<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:60%"></div></div><b>7</b></div>
-<div class="bar"><span>AnTuTu</span><div class="trk"><div class="fl" style="width:61%"></div></div><b>5</b></div>
-<div style="font-size:9px;color:#8b8983;margin-top:6px">📊 AnTuTu: 324.596 v9 (Snapdragon 720G = mid-range 2020, aún confiable)</div>
-</div></div>
+<div class="specs">
+<div class="sp"><b>SoC:</b> Qualcomm Snapdragon 720G (8nm, 8C)</div>
+<div class="sp"><b>GPU:</b> Adreno 618</div>
+<div class="sp"><b>Almacenamiento:</b> UFS 2.1</div>
+<div class="sp"><b>Software:</b> OVERCLOCK CPU/GPU + LineageOS 22.2 + microG + Root</div>
+</div>
+<div class="bar"><span>AnTuTu v11</span><div class="trk"><div class="fl" style="width:67.4%"></div></div><b>448k</b></div>
+<div class="note">🔥 Overclock activo + ROM custom + root = máxima personalización. Snapdragon 720G sigue siendo sólido.</div>
+</div>
+</div>
 
-<div class="card" style="border-color:#7d6b5a">
-<div class="hd"><div class="rk" style="background:#7d6b5a;color:#d9d0c5">6</div>
-<div class="nm"><div class="nmrow"><b>Adriel</b> <svg class="os" style="width:16px;height:16px"><use href="#android"/></svg><span class="tr d">🎯 5G</span></div><div class="dv">Moto G71 5G · MediaTek Dimensity 700 · 5G económico</div></div>
-<div class="pt">33</div></div>
+<!-- #6 JULIÁN GALAXY A36 -->
+<div class="card c6" style="border-color:#7d6b5a">
+<div class="hd">
+<div class="rk">6</div>
+<div class="nm">
+<div class="nmrow"><b>Julián</b> <span class="tag badge-stock">stock</span></div>
+<div class="dv">Samsung Galaxy A36 5G · Dimensity 6020</div>
+</div>
+<div class="pt">445</div>
+</div>
 <div class="bd">
-<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ 5G real, 6GB RAM, batería 5000mAh, Dimensity 700 balanced</div>
-<div class="specs"><div class="sp">MediaTek Dimensity 700 (8C, 2.2GHz)</div><div class="sp">6GB RAM</div><div class="sp">Mali-G57</div><div class="sp">128GB UFS3.1</div></div>
-<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:55%"></div></div><b>11</b></div>
-<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:75%"></div></div><b>11</b></div>
-<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:52%"></div></div><b>6</b></div>
-<div class="bar"><span>AnTuTu</span><div class="trk"><div class="fl" style="width:66%"></div></div><b>5</b></div>
-<div style="font-size:9px;color:#8b8983;margin-top:6px">📊 AnTuTu: ~350.000 v10 (Dimensity 700 = 5G eficiente)</div>
-</div></div>
+<div class="specs">
+<div class="sp"><b>SoC:</b> MediaTek Dimensity 6020 (7nm, 8C)</div>
+<div class="sp"><b>GPU:</b> Mali-G57 MC2</div>
+<div class="sp"><b>Almacenamiento:</b> UFS 3.1</div>
+<div class="sp"><b>Software:</b> Stock Samsung</div>
+</div>
+<div class="bar"><span>AnTuTu v11</span><div class="trk"><div class="fl" style="width:66.9%"></div></div><b>445k</b></div>
+<div class="note">📱 Dimensity 6020 = entrada a mid-range decente. Samsung + UFS 3.1 = compatibilidad garantizada.</div>
+</div>
+</div>
 
-<div class="card" style="border-color:#5a7d7d">
-<div class="hd"><div class="rk" style="background:#5a7d7d;color:#c5d9d9">7</div>
-<div class="nm"><div class="nmrow"><b>Julián</b> <svg class="os" style="width:16px;height:16px"><use href="#android"/></svg><span class="tr d">📱 TABLET</span></div><div class="dv">Redmi Pad SE 8.7" · MediaTek Helio G99 · Portabilidad</div></div>
-<div class="pt">32</div></div>
+<!-- #7 ADRIEL VIVO Y53S -->
+<div class="card c7" style="border-color:#5a7d7d">
+<div class="hd">
+<div class="rk">7</div>
+<div class="nm">
+<div class="nmrow"><b>Adriel</b> <span class="tag badge-mod">🎮 Deb</span></div>
+<div class="dv">Vivo Y53s 5G · Snapdragon 480</div>
+</div>
+<div class="pt">438</div>
+</div>
 <div class="bd">
-<div style="font-size:10.5px;color:#5fd99a;margin-bottom:8px">✓ Tablet versátil, pantalla IPS 90Hz, Helio G99 para media, 5000mAh</div>
-<div class="specs"><div class="sp">MediaTek Helio G99 (8C, 2.0GHz)</div><div class="sp">4GB RAM</div><div class="sp">Mali-G57</div><div class="sp">64GB eMMC5.1</div></div>
-<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:58%"></div></div><b>11</b></div>
-<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:50%"></div></div><b>8</b></div>
-<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:54%"></div></div><b>7</b></div>
-<div class="bar"><span>AnTuTu</span><div class="trk"><div class="fl" style="width:72%"></div></div><b>6</b></div>
-<div style="font-size:9px;color:#8b8983;margin-top:6px">📊 AnTuTu: ~381.000 v10 (Helio G99 = media eficiente para tablet)</div>
-</div></div>
+<div class="specs">
+<div class="sp"><b>SoC:</b> Qualcomm Snapdragon 480 5G (8nm, 8C)</div>
+<div class="sp"><b>GPU:</b> Adreno 619</div>
+<div class="sp"><b>Almacenamiento:</b> UFS 2.1</div>
+<div class="sp"><b>Software:</b> OVERCLOCK aplicado + Debloat extremo + Game Optimized (Sin Root)</div>
+</div>
+<div class="bar"><span>AnTuTu v11</span><div class="trk"><div class="fl" style="width:65.8%"></div></div><b>438k</b></div>
+<div class="note">⚡ Optimización sin root. Snapdragon 480 + debloat = balance perfecto eficiencia/rendimiento.</div>
+</div>
+</div>
 
-<div class="card" style="border-color:#7d5a5a">
-<div class="hd"><div class="rk" style="background:#7d5a5a;color:#d9c5c5">8</div>
-<div class="nm"><div class="nmrow"><b>Diego</b> <svg class="os" style="width:16px;height:16px"><use href="#android"/></svg><span class="tr d">💰 BUDGET</span></div><div class="dv">Redmi 14C · MediaTek Helio G81 Ultra · Entry-level</div></div>
-<div class="pt">29</div></div>
+<!-- #8 MELLADO REDMI 10C -->
+<div class="card c8" style="border-color:#7d5a5a">
+<div class="hd">
+<div class="rk">8</div>
+<div class="nm">
+<div class="nmrow"><b>Mellado</b> <span class="tag badge-stock">stock</span></div>
+<div class="dv">Redmi 10C · Snapdragon 680</div>
+</div>
+<div class="pt">332</div>
+</div>
 <div class="bd">
-<div style="font-size:10.5px;color:#f28b8b;margin-bottom:8px">⚠ Entry-level pero pantalla 120Hz y batería 5000mAh sorprende</div>
-<div class="specs"><div class="sp">MediaTek Helio G81 Ultra (8C, 2.0GHz)</div><div class="sp">4GB RAM</div><div class="sp">Mali-G52</div><div class="sp">128GB eMMC5.1</div></div>
-<div class="bar"><span>CPU</span><div class="trk"><div class="fl" style="width:42%"></div></div><b>8</b></div>
-<div class="bar"><span>RAM</span><div class="trk"><div class="fl" style="width:50%"></div></div><b>8</b></div>
-<div class="bar"><span>GPU</span><div class="trk"><div class="fl" style="width:38%"></div></div><b>5</b></div>
-<div class="bar"><span>AnTuTu</span><div class="trk"><div class="fl" style="width:83%"></div></div><b>8</b></div>
-<div style="font-size:9px;color:#8b8983;margin-top:6px">📊 AnTuTu: 438.871 v10 (Helio G81 = entry-level sorprendente)</div>
-</div></div>
+<div class="specs">
+<div class="sp"><b>SoC:</b> Qualcomm Snapdragon 680 4G (6nm, 8C)</div>
+<div class="sp"><b>GPU:</b> Adreno 610</div>
+<div class="sp"><b>Almacenamiento:</b> UFS 2.2</div>
+<div class="sp"><b>Software:</b> Stock</div>
+</div>
+<div class="bar"><span>AnTuTu v11</span><div class="trk"><div class="fl" style="width:49.9%"></div></div><b>332k</b></div>
+<div class="note">📉 Snapdragon 680 es entry-level puro. Adreno 610 = lo mínimo para tasks básicas.</div>
+</div>
+</div>
+
+<!-- #9 JULIÁN REDMI PAD SE -->
+<div class="card c9" style="border-color:#6b5a7d">
+<div class="hd">
+<div class="rk">9</div>
+<div class="nm">
+<div class="nmrow"><b>Julián</b> <span class="tag badge-stock">stock</span></div>
+<div class="dv">Redmi Pad SE 8.7" · Helio G99 Tablet</div>
+</div>
+<div class="pt">286</div>
+</div>
+<div class="bd">
+<div class="specs">
+<div class="sp"><b>SoC:</b> MediaTek Helio G99 (12nm, 8C)</div>
+<div class="sp"><b>GPU:</b> Mali-G57 MC2 | Pantalla IPS 90Hz</div>
+<div class="sp"><b>Almacenamiento:</b> eMMC 5.1</div>
+<div class="sp"><b>Software:</b> Stock</div>
+</div>
+<div class="bar"><span>AnTuTu v11</span><div class="trk"><div class="fl" style="width:43%"></div></div><b>286k</b></div>
+<div class="note">📺 Tablet con Helio G99 = eficiencia térmica. eMMC 5.1 = velocidad limitada respecto UFS.</div>
+</div>
+</div>
+
+<!-- #10 DIEGO REDMI 14C -->
+<div class="card c10" style="border-color:#7d6b5a">
+<div class="hd">
+<div class="rk">10</div>
+<div class="nm">
+<div class="nmrow"><b>Diego</b> <span class="tag badge-stock">stock</span></div>
+<div class="dv">Redmi 14C · Helio G81 Ultra</div>
+</div>
+<div class="pt">268</div>
+</div>
+<div class="bd">
+<div class="specs">
+<div class="sp"><b>SoC:</b> MediaTek Helio G81 Ultra (12nm, 8C)</div>
+<div class="sp"><b>GPU:</b> Mali-G52 MC2</div>
+<div class="sp"><b>Almacenamiento:</b> eMMC 5.1</div>
+<div class="sp"><b>Software:</b> Stock</div>
+</div>
+<div class="bar"><span>AnTuTu v11</span><div class="trk"><div class="fl" style="width:40.2%"></div></div><b>268k</b></div>
+<div class="note">⚙️ Helio G81 Ultra = generación anterior. Mali-G52 = GPU básica pero eficiente.</div>
+</div>
+</div>
 
 </body>
 </html>
