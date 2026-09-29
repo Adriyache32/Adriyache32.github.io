@@ -81,6 +81,7 @@ header p{color:var(--mu);margin-top:8px}
 footer{margin-top:26px;text-align:center;font-size:12px;color:var(--mu)}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 .ver{display:inline-block;margin-top:10px;padding:3px 10px;border-radius:999px;font:700 12px Sora,sans-serif;color:var(--cy);border:1px solid #38d5ff55;background:#38d5ff14}
+.mb{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}.bg.sm{padding:2px 8px 2px 6px;font-size:11px}
 </style>
 </head>
 <body data-prompt="Mejora este ranking patoviciado: mantén los datos de hardware, mejora animaciones, íconos y badges, y asegúrate de que siga siendo mobile-first, accesible y de un solo archivo HTML.">
@@ -104,12 +105,14 @@ footer{margin-top:26px;text-align:center;font-size:12px;color:var(--mu)}
 <symbol id="crown" viewBox="0 0 24 24"><path d="m3 8 4 4 5-7 5 7 4-4-2 11H5z"/></symbol>
 <symbol id="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
 <symbol id="trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4v1a3 3 0 0 0 4 3M16 6h4v1a3 3 0 0 1-4 3M12 13v4M8 21h8M9 17h6"/></symbol>
+<symbol id="signal" viewBox="0 0 24 24"><path d="M4 20v-3M9 20v-7M14 20V9M19 20V4"/></symbol>
+<symbol id="screen" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></symbol>
 </svg>
 <div class="wrap">
 <header>
 <div class="logo"><svg class="i" style="width:28px;height:28px"><use href="#trophy"/></svg></div>
 <h1>Ranking Patoviciado</h1>
-<span class="ver">v1.2</span><p>Las máquinas del grupo, de la más potente a la más humilde.</p>
+<span class="ver">v1.3</span><p>Las máquinas del grupo, de la más potente a la más humilde.</p>
 </header>
 <div class="tabs" id="tabs" data-t="pc" role="tablist">
 <i></i>
@@ -122,7 +125,21 @@ footer{margin-top:26px;text-align:center;font-size:12px;color:var(--mu)}
 <script>
 const I=n=>`<svg class="i" aria-hidden="true"><use href="#${n}"/></svg>`;
 const BG={oc:['bolt','Overclock','--au'],dual:['ram','Dual-Channel','--cy'],single:['warn','Single-Channel','--ro'],linux:['term','Linux Mint','--gr'],root:['shield','Root','--vi'],deg:['shield','De-Googled','--vi'],rom:['layers','LineageOS','--vi'],debl:['minus','Debloat','--cy'],game:['pad','Game Mode','--cy'],stock:['check','Stock','--mu'],desk:['desk','Escritorio','--mu'],tab:['tab','Tablet','--mu']};
-const bdg=k=>{const[b,t,c]=BG[k];return`<span class="bg" style="--c:var(${c})">${I(b)}${t}</span>`};
+const chip=(i,t,c,z)=>`<span class="bg${z?' sm':''}" style="--c:var(${c})">${I(i)}${t}</span>`;
+const auto=x=>{const t=x.sp.map(p=>p[1]).join(' | ')+' '+x.d,a=[];let m;
+if(m=t.match(/Zen \d/))a.push(['cpu',m[0],'--cy']);
+if(/Skylake/.test(t))a.push(['cpu','Skylake','--cy']);
+if(/DDR5/.test(t))a.push(['ram','DDR5','--cy']);
+if(m=t.match(/PCIe [\d.]+|NVMe/))a.push(['ssd',m[0],'--cy']);
+if(m=t.match(/(\d+)W\b/))a.push(['bolt',m[1]+' W','--mu']);
+if(m=t.match(/(\d+)nm/))a.push(['cpu',m[1]+' nm','--cy']);
+if(/5G/.test(t))a.push(['signal','5G','--gr']);
+if(m=t.match(/UFS [\d.]+|eMMC [\d.]+/))a.push(['ssd',m[0],'--mu']);
+if(m=t.match(/(\d+)Hz/))a.push(['screen',m[1]+' Hz','--ro']);
+if(/microG/.test(t))a.push(['shield','microG','--vi']);
+if(/de fábrica/.test(t))a.push(['bolt','OC de fábrica','--au']);
+return a};
+const B=(x,z)=>[...x.b.filter(k=>!z||k!=='stock').map(k=>{const[b,t,c]=BG[k];return chip(b,t,c,z)}),...auto(x).map(a=>chip(a[0],a[1],a[2],z))];
 const pc=(n,d,s,cpu,gpu,ram,ssd,m,b,ic)=>({n,d,s,b,ic:ic||'laptop',sp:[['cpu',cpu],['gpu',gpu],['ram',ram],['ssd',ssd]],bars:[['CPU',m[0],40],['RAM',m[1],25],['GPU',m[2],27],['SSD',m[3],15]].map(x=>[x[0],x[1]/x[2],x[1]])});
 const ph=(n,d,s,v,soc,gpu,st,sw,b,ic)=>({n,d,s,b,ic:ic||'phone',sp:[['cpu',soc],['gpu',gpu],['ssd',st],['layers',sw]],bars:[['v11',s/665,s+'k'],['v10',v/665,'~'+v+'k']]});
 const D={
@@ -147,14 +164,14 @@ ph('Diego','Redmi 14C',268,255,'MediaTek Helio G81 Ultra (12nm, 8C)','Mali-G52 M
 const PC=['--au','--ag','--cu'],CC=['#5ee6a8','#38d5ff','#8b6cff','#ff8fd0','#ffb36b','#7ee0e0','#b6a8ff'];
 const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
 let tab='pc',sel=0;
-const det=x=>`<div class="dt"><div class="bgs">${x.b.map(bdg).join('')}</div><div class="sps">${x.sp.map(s=>`<div class="sp">${I(s[0])}<span>${s[1]}</span></div>`).join('')}</div>${x.bars.map(b=>`<div class="bar"><span>${b[0]}</span><div class="trk"><div class="fl" data-w="${(b[1]*100).toFixed(1)}"></div></div><b>${b[2]}</b></div>`).join('')}</div>`;
+const det=x=>`<div class="dt"><div class="bgs">${B(x).join('')}</div><div class="sps">${x.sp.map(s=>`<div class="sp">${I(s[0])}<span>${s[1]}</span></div>`).join('')}</div>${x.bars.map(b=>`<div class="bar"><span>${b[0]}</span><div class="trk"><div class="fl" data-w="${(b[1]*100).toFixed(1)}"></div></div><b>${b[2]}</b></div>`).join('')}</div>`;
 const fill=el=>requestAnimationFrame(()=>requestAnimationFrame(()=>el.querySelectorAll('.fl').forEach(f=>f.style.width=f.dataset.w+'%')));
 const cnt=(e,sfx)=>{const t=+e.dataset.n;if(rm){e.textContent=t+sfx;return}const t0=performance.now();const f=n=>{const p=Math.min(1,(n-t0)/1200);e.textContent=Math.round(t*(1-Math.pow(1-p,3)))+sfx;if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)};
 const spot=(S)=>{const x=S.items[sel];return`<div class="sh">${I(x.ic)}${x.n}<span>${x.d}</span></div>${det(x)}`};
 function render(){
 const S=D[tab],L=S.items,v=document.getElementById('view');
 const pod=[1,0,2].map(i=>{const x=L[i];return`<button class="pk r${i+1}" data-i="${i}" aria-pressed="${i===sel}" style="--c:var(${PC[i]});--h:${[132,100,78][i]}px;--d:${[.35,.15,.55][i]}s">${i===0?`<span class="cr">${I('crown')}</span>`:''}<span class="av">${x.n[0]}</span><b>${x.n}</b><span class="dv">${x.d}</span><span class="blk"><span class="num">${i+1}°</span><em data-n="${x.s}">0</em><small>${S.u}</small></span></button>`}).join('');
-const rows=L.slice(3).map((x,k)=>`<div class="row" style="--c:${CC[k%CC.length]}"><button class="rh" aria-expanded="false"><span class="rn">${k+4}</span><span class="ti"><b>${x.n}</b><small>${I(x.ic)}${x.d}</small></span><span class="sc"><em data-n="${x.s}">0</em><small>${S.u}</small></span>${I('chev')}</button><div class="rb"><div>${det(x)}</div></div></div>`).join('');
+const rows=L.slice(3).map((x,k)=>`<div class="row" style="--c:${CC[k%CC.length]}"><button class="rh" aria-expanded="false"><span class="rn">${k+4}</span><span class="ti"><b>${x.n}</b><small>${I(x.ic)}${x.d}</small><span class="mb">${B(x,1).slice(0,4).join('')}</span></span><span class="sc"><em data-n="${x.s}">0</em><small>${S.u}</small></span>${I('chev')}</button><div class="rb"><div>${det(x)}</div></div></div>`).join('');
 v.innerHTML=`<div class="stats"><div class="st">${I('bolt')}<div><em>${S.tot}</em><small>Poder combinado</small></div></div><div class="st">${I(S.ic)}<div><em>${L.length}</em><small>Equipos</small></div></div></div><div class="pod">${pod}</div><div class="spot" id="spot">${spot(S)}</div>${rows}`;
 v.querySelectorAll('[data-n]').forEach(e=>cnt(e,S.sfx));
 fill(document.getElementById('spot'));
