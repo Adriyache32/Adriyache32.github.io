@@ -183,7 +183,6 @@ if(/de fábrica/.test(t))a.push(['bolt','OC de fábrica','--au']);
 return a};
 const OS={win:['win11','Windows','--win'],w10:['win10','Windows 10','--win'],w11:['win11','Windows 11','--win'],mint:['mint','Linux Mint','--mint'],edos:['edos','EndeavourOS','--edos'],and:['and','Android','--and'],los:['and','LineageOS','--and']};
 const OSM={'Mateo|ACEMAGIC AM18':'win','Mellado|PC Desktop Ryzen 5':'w10','Adriel|Lenovo IdeaPad 3':'edos','Diego|IdeaPad Slim 3':'win','Eliezer|LAPTOP-DLQU141U':'win','Sergio|Portátil Linux Mint':'mint','Adriel|Moto G71 5G':'los','Adriel|Redmi Note 9 Pro':'los'};
-Object.values(D).forEach(S=>S.items.forEach(x=>x.os=OSM[x.n+'|'+x.d]||'and'));
 const oi=x=>`<span class="oi" style="color:var(${OS[x.os][2]})" title="${OS[x.os][1]}">${I(OS[x.os][0])}</span>`;
 const B=(x,z)=>[chip(...OS[x.os],z),...x.b.filter(k=>(!z||k!=='stock')&&!(k==='rom'&&x.os==='los')&&!(k==='linux'&&x.os==='mint')).map(k=>{const[b,t,c]=BG[k];return chip(b,t,c,z)}),...auto(x).map(a=>chip(a[0],a[1],a[2],z))];
 const pc=(n,d,s,cpu,gpu,ram,ssd,m,b,ic)=>({n,d,s,b,ic:ic||'laptop',sp:[['cpu',cpu],['gpu',gpu],['ram',ram],['ssd',ssd]],bars:[['CPU',m[0],40],['RAM',m[1],25],['GPU',m[2],27],['SSD',m[3],15]].map(x=>[x[0],x[1]/x[2],x[1]])});
@@ -207,6 +206,7 @@ ph('Adriel','Vivo Y53s 5G',438,398,'Snapdragon 480 5G (8nm, 8C)','Adreno 619','U
 ph('Mellado','Redmi 10C',332,305,'Snapdragon 680 4G (6nm, 8C)','Adreno 610','UFS 2.2','Stock',['stock']),
 ph('Julián','Redmi Pad SE 8.7"',286,272,'MediaTek Helio G99 (12nm, 8C)','Mali-G57 MC2 · IPS 90Hz','eMMC 5.1','Stock',['tab','stock'],'tab'),
 ph('Diego','Redmi 14C',268,255,'MediaTek Helio G81 Ultra (12nm, 8C)','Mali-G52 MC2','eMMC 5.1','Stock',['stock'])]}};
+Object.values(D).forEach(S=>S.items.forEach(x=>x.os=OSM[x.n+'|'+x.d]||'and'));
 const PC=['--au','--ag','--cu'],CC=['#5ee6a8','#38d5ff','#8b6cff','#ff8fd0','#ffb36b','#7ee0e0','#b6a8ff'];
 const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
 let tab='pc',sel=0;
