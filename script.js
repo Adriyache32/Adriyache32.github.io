@@ -3275,3 +3275,61 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 checkStatus();
 setInterval(checkStatus, 60000);
+
+/* ===== Router de secciones estilo Apple (sin scroll de página) ===== */
+(function () {
+  function init() {
+    const views = Array.from(document.querySelectorAll('main > section'));
+    if (!views.length) return;
+    const ids = views.map(v => v.id);
+
+    // Puntos laterales
+    const dotsWrap = document.createElement('div');
+    dotsWrap.className = 'section-dots';
+    views.forEach(v => {
+      const b = document.createElement('button');
+      b.className = 'section-dot';
+      const ttl = (v.querySelector('h1,h2')?.textContent || v.id).trim();
+      b.title = ttl;
+      b.setAttribute('aria-label', ttl);
+      b.addEventListener('click', () => show(v.id));
+      dotsWrap.appendChild(b);
+    });
+    document.body.appendChild(dotsWrap);
+
+    let current = '';
+    function show(id) {
+      if (!ids.includes(id)) id = 'home';
+      if (id === current) return;
+      current = id;
+      views.forEach(v => v.classList.toggle('active', v.id === id));
+      document.querySelectorAll('nav a').forEach(a =>
+        a.classList.toggle('nav-active', (a.getAttribute('href') || '').slice(1) === id));
+      dotsWrap.querySelectorAll('.section-dot').forEach((d, i) =>
+        d.classList.toggle('active', ids[i] === id));
+      const active = document.getElementById(id);
+      if (active) active.scrollTop = 0;
+      try { history.replaceState(null, '', '#' + id); } catch (e) {}
+    }
+    function fromHash() { show((location.hash || '#home').replace('#', '')); }
+
+    // Interceptar todos los enlaces internos: navega por secciones, no scrollea
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const id = (a.getAttribute('href') || '').slice(1);
+        if (ids.includes(id)) { e.preventDefault(); show(id); }
+      });
+    });
+    window.addEventListener('hashchange', fromHash);
+    fromHash();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+/* ===== PWA: registrar Service Worker ===== */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
