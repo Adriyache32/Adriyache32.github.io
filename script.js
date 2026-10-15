@@ -55,9 +55,13 @@ async function checkStatus() {
     if (data.online) {
       dot.className = 'status-dot online';
       text.textContent = `Online — ${data.players.online}/${data.players.max} jugadores`;
+      const sp = document.getElementById('stat-players');
+      if (sp) sp.textContent = `${data.players.online}/${data.players.max}`;
     } else {
       dot.className = 'status-dot unknown';
       text.textContent = 'Desconocido — server no montado';
+      const sp = document.getElementById('stat-players');
+      if (sp) sp.textContent = 'Offline';
     }
   } catch {
     dot.className = 'status-dot unknown';
