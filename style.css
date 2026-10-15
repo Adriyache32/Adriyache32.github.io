@@ -1696,6 +1696,20 @@ main > section.active > *:nth-child(5) { animation-delay: .20s; }
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
+
+/* Footer con versión + última actualización */
+body.sections-on footer { display: none; }
+footer .footer-meta { font-size: .8rem; color: #8b93a1; margin-top: .4rem; }
+footer .footer-meta a { color: #4ecdc4; text-decoration: none; }
+.ver-chip {
+  display: inline-block;
+  font-size: .72rem;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(78,205,196,0.15);
+  color: #4ecdc4;
+  margin-right: 6px;
+}
 html, body { height: 100%; overflow: hidden; }
 body { overscroll-behavior: none; }
 

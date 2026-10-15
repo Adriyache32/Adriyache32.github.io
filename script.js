@@ -3334,3 +3334,13 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   });
 }
+
+/* ===== Última actualización (footer) ===== */
+(function () {
+  const el = document.getElementById('last-updated');
+  if (!el) return;
+  let d;
+  try { d = new Date(document.lastModified); } catch (e) {}
+  if (!d || isNaN(d)) d = new Date();
+  el.textContent = d.toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
+})();
