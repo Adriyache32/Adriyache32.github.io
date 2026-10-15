@@ -3340,6 +3340,19 @@ setInterval(checkStatus, 60000);
       });
     });
     window.addEventListener('hashchange', fromHash);
+
+    // Navegación por teclado (←/→ ↑/↓) entre secciones
+    document.addEventListener('keydown', (e) => {
+      const tag = (e.target && e.target.tagName) || '';
+      if (/input|textarea|select/i.test(tag)) return;
+      const i = ids.indexOf(current);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown') {
+        if (i < ids.length - 1) { e.preventDefault(); show(ids[i + 1]); }
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+        if (i > 0) { e.preventDefault(); show(ids[i - 1]); }
+      } else if (e.key === 'Home') { e.preventDefault(); show('home'); }
+    });
+
     fromHash();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
