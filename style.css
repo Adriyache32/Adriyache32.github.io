@@ -1814,6 +1814,10 @@ body.sections-on footer { display: none; }
   color: #4ecdc4;
   white-space: nowrap;
 }
+
+/* Botón Instalar app (PWA) */
+.btn-install { background: linear-gradient(180deg,#4ecdc4,#2aa7a0); color: #04231f; border: none; }
+.btn-install[hidden] { display: none !important; }
 footer .footer-meta { font-size: .8rem; color: #8b93a1; margin-top: .4rem; }
 footer .footer-meta a { color: #4ecdc4; text-decoration: none; }
 .ver-chip {

@@ -3366,6 +3366,25 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+/* ===== PWA: botón "Instalar app" ===== */
+let _deferredInstall = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  _deferredInstall = e;
+  const b = document.getElementById('pwa-install');
+  if (b) b.hidden = false;
+});
+document.addEventListener('DOMContentLoaded', () => {
+  const b = document.getElementById('pwa-install');
+  if (b) b.addEventListener('click', async () => {
+    if (!_deferredInstall) return;
+    _deferredInstall.prompt();
+    try { await _deferredInstall.userChoice; } catch (e) {}
+    _deferredInstall = null;
+    b.hidden = true;
+  });
+});
+
 /* ===== Última actualización (footer) ===== */
 (function () {
   const el = document.getElementById('last-updated');
