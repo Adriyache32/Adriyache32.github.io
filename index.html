@@ -256,6 +256,14 @@
         <button class="mod-tab" onclick="switchModTab('textures', this)">Texture Packs</button>
       </div>
 
+      <div class="mods-cats">
+        <button class="mod-cat active" onclick="filterModCat('all', this)">Todo</button>
+        <button class="mod-cat" onclick="filterModCat('rendimiento', this)">⚡ Rendimiento</button>
+        <button class="mod-cat" onclick="filterModCat('graficos', this)">🌈 Gráficos</button>
+        <button class="mod-cat" onclick="filterModCat('mapa', this)">🗺️ Mapas</button>
+        <button class="mod-cat" onclick="filterModCat('utilidad', this)">🧰 Utilidad</button>
+      </div>
+
       <div class="mods-search">
         <span class="mods-search-icon">🔍</span>
         <input class="mods-search-input" id="mods-search" type="text" placeholder="Buscar mods, shaders, texture packs..." oninput="filterMods(this.value)">

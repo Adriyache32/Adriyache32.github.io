@@ -2014,6 +2014,21 @@ function applyGaleria() {
 
 /* ───── MODS ───── */
 let _modFilterText = '';
+let _modFilterCat = 'all';
+function classifyMod(text) {
+  const t = (text || '').toLowerCase();
+  if (/(minimap|journey|xareo|atlas|coordinate|\bmap\b|mapa|cartograph)/.test(t)) return 'mapa';
+  if (/(shader|iris|oculus|sodium|embeddium|textur|resource ?pack|vulkan|grafic|graphic|distanc|fog|zoom)/.test(t)) return 'graficos';
+  if (/(optimiz|fps|lag|memoria|\bram\b|chunk|luz|light|redstone|entidad|entity|clumps|\bxp\b|hoja|leaves|fast|performan|renderizado|speed|async|tps|fabricapi|taco)/.test(t)) return 'rendimiento';
+  return 'utilidad';
+}
+function filterModCat(cat, btn) {
+  _modFilterCat = cat;
+  document.querySelectorAll('.mod-cat').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const input = document.getElementById('mods-search');
+  filterMods(input ? input.value : '');
+}
 let _modFilterDebounce = null;
 
 function switchModTab(tab, btn) {
@@ -2031,14 +2046,16 @@ function switchModTab(tab, btn) {
 }
 
 function filterMods(value) {
-  _modFilterText = value.toLowerCase().trim();
+  _modFilterText = (value || '').toLowerCase().trim();
   clearTimeout(_modFilterDebounce);
   _modFilterDebounce = setTimeout(() => {
     const grids = document.querySelectorAll('#mods-content .mods-grid');
     grids.forEach(grid => {
       grid.querySelectorAll('.mod-card').forEach(card => {
         const text = card.textContent.toLowerCase();
-        card.classList.toggle('mods-hidden', _modFilterText && !text.includes(_modFilterText));
+        const textOk = !_modFilterText || text.includes(_modFilterText);
+        const catOk = _modFilterCat === 'all' || classifyMod(text) === _modFilterCat;
+        card.classList.toggle('mods-hidden', !(textOk && catOk));
       });
     });
     updateModCount();
