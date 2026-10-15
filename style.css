@@ -1706,8 +1706,9 @@ main {
 }
 
 main > section {
-  display: none;
-  height: 100dvh;
+  display: flex;
+  height: auto;
+  min-height: 100dvh;
   width: 100%;
   box-sizing: border-box;
   padding: 5.5rem 1.5rem 2.5rem;
@@ -1720,7 +1721,11 @@ main > section {
   scrollbar-width: none;
 }
 main > section::-webkit-scrollbar { display: none; }
-main > section.active {
+
+/* Cuando el router activa las secciones (JS listo), se muestran de a una */
+body.sections-on { overflow: hidden; }
+body.sections-on main > section { display: none; height: 100dvh; }
+body.sections-on main > section.active {
   display: flex;
   animation: sectionIn .5s cubic-bezier(.2,.7,.2,1) both;
 }

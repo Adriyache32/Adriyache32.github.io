@@ -3282,6 +3282,7 @@ setInterval(checkStatus, 60000);
     const views = Array.from(document.querySelectorAll('main > section'));
     if (!views.length) return;
     const ids = views.map(v => v.id);
+    document.body.classList.add('sections-on');
 
     // Puntos laterales
     const dotsWrap = document.createElement('div');
