@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /ranking-patoviciado-v
 
 Sitemap: https://adriyache32.github.io/sitemap.xml
