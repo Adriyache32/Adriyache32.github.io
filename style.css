@@ -1819,6 +1819,24 @@ body.sections-on footer { display: none; }
 .btn-install { background: linear-gradient(180deg,#4ecdc4,#2aa7a0); color: #04231f; border: none; }
 .btn-install[hidden] { display: none !important; }
 
+/* Marquesina de features (hero) */
+.marquee {
+  margin-top: 2rem;
+  width: min(900px, 90vw);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.marquee-track {
+  display: inline-flex;
+  gap: 2rem;
+  white-space: nowrap;
+  animation: marquee 26s linear infinite;
+}
+.marquee-track span { font-size: .85rem; color: #9aa0a6; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
 /* Menú móvil: backdrop + jerarquía */
 body.menu-open::after {
   content: '';
