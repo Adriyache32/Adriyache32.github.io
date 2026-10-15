@@ -3447,6 +3447,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function open() { overlay.classList.add('open'); input.value = ''; filtered = items.slice(); sel = 0; render(); input.focus(); }
     function close() { overlay.classList.remove('open'); }
+    window.openCmdk = open;
     function go(id) {
       close();
       const nav = document.querySelector('nav a[href="#' + id + '"]');

@@ -1910,6 +1910,21 @@ kbd {
   border-radius: 5px; padding: 1px 5px; font-size: .72rem; font-family: inherit;
 }
 
+/* Botón de búsqueda / palette en el nav */
+.nav-search {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #d6dbe1;
+  border-radius: 9px;
+  padding: .3rem .55rem;
+  margin-left: auto;
+  margin-right: .4rem;
+  cursor: pointer;
+  font-size: .95rem;
+  transition: border-color .15s ease, background .15s ease;
+}
+.nav-search:hover { border-color: #4ecdc4; background: rgba(78,205,196,0.12); }
+
 /* Menú móvil: backdrop + jerarquía */
 body.menu-open::after {
   content: '';
