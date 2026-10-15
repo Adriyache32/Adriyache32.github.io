@@ -3416,3 +3416,65 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!d || isNaN(d)) d = new Date();
   el.textContent = d.toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
 })();
+
+/* ===== Command palette (Ctrl+K) ===== */
+(function () {
+  function init() {
+    const items = Array.from(document.querySelectorAll('main > section')).map(s => ({
+      id: s.id,
+      label: (s.querySelector('h1,h2')?.textContent || s.id).trim()
+    }));
+    if (!items.length) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'cmdk-overlay';
+    overlay.innerHTML =
+      '<div class="cmdk">' +
+        '<input class="cmdk-input" type="text" placeholder="Ir a… (escribí para filtrar)">' +
+        '<div class="cmdk-list"></div>' +
+        '<div class="cmdk-hint"><kbd>↑</kbd><kbd>↓</kbd> navegar · <kbd>Enter</kbd> ir · <kbd>Esc</kbd> cerrar · <kbd>Ctrl</kbd>+<kbd>K</kbd> abrir</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+
+    const input = overlay.querySelector('.cmdk-input');
+    const list = overlay.querySelector('.cmdk-list');
+    let filtered = items.slice(), sel = 0;
+
+    function render() {
+      list.innerHTML = filtered.length
+        ? filtered.map((it, i) => `<div class="cmdk-item ${i === sel ? 'active' : ''}" data-id="${it.id}"><span class="cmdk-ico">›</span>${it.label}</div>`).join('')
+        : '<div class="cmdk-item">Sin resultados</div>';
+    }
+    function open() { overlay.classList.add('open'); input.value = ''; filtered = items.slice(); sel = 0; render(); input.focus(); }
+    function close() { overlay.classList.remove('open'); }
+    function go(id) {
+      close();
+      const nav = document.querySelector('nav a[href="#' + id + '"]');
+      if (nav) nav.click(); else if (location) location.hash = '#' + id;
+    }
+    input.addEventListener('input', () => {
+      const q = input.value.toLowerCase().trim();
+      filtered = items.filter(it => it.label.toLowerCase().includes(q));
+      sel = 0; render();
+    });
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) return close();
+      const it = e.target.closest('.cmdk-item');
+      if (it && it.dataset.id) go(it.dataset.id);
+    });
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        overlay.classList.contains('open') ? close() : open();
+        return;
+      }
+      if (!overlay.classList.contains('open')) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowDown') { e.preventDefault(); sel = Math.min(sel + 1, filtered.length - 1); render(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); sel = Math.max(sel - 1, 0); render(); }
+      else if (e.key === 'Enter') { e.preventDefault(); if (filtered[sel]) go(filtered[sel].id); }
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
