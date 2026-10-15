@@ -1837,6 +1837,20 @@ body.sections-on footer { display: none; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
 
+/* Decoración de títulos por sección (kicker + acento) */
+main > section > h2 { position: relative; padding-bottom: .6rem; }
+main > section > h2::after {
+  content: '';
+  position: absolute;
+  left: 50%; bottom: 0;
+  transform: translateX(-50%);
+  width: 56px; height: 3px;
+  border-radius: 3px;
+  background: var(--accent, #4ecdc4);
+  box-shadow: 0 0 16px var(--accent, #4ecdc4);
+  opacity: .85;
+}
+
 /* Menú móvil: backdrop + jerarquía */
 body.menu-open::after {
   content: '';
