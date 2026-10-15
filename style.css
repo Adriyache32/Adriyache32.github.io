@@ -1576,3 +1576,45 @@ footer {
   .hero-buttons { flex-direction: column; align-items: center; }
   .server-specs { grid-template-columns: 1fr; }
 }
+
+/* ===== Descargas & Instaladores ===== */
+.dl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.dl-card {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.15rem;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  text-decoration: none;
+  color: inherit;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+}
+.dl-card:hover {
+  transform: translateY(-3px);
+  border-color: #4ecdc4;
+  background: rgba(78,205,196,0.08);
+}
+.dl-icon { font-size: 1.8rem; line-height: 1; }
+.dl-info { display: flex; flex-direction: column; gap: 2px; }
+.dl-info h3 { margin: 0; font-size: 1.05rem; }
+.dl-info p { margin: 0; font-size: .85rem; color: #9aa0a6; }
+.dl-badge {
+  align-self: flex-start;
+  margin-top: 4px;
+  font-size: .68rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(78,205,196,0.15);
+  color: #4ecdc4;
+}
+.dl-note { margin-top: 1.25rem; font-size: .9rem; color: #9aa0a6; }
+.dl-note a { color: #4ecdc4; }
