@@ -1777,6 +1777,13 @@ body.sections-on footer { display: none; }
   .hero-stats { gap: 1rem 1.5rem; }
   .hero-stats .stat-num { font-size: 1.25rem; }
 }
+.cat-count {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: .72rem;
+  color: #8b93a1;
+}
+.mod-cat.active .cat-count { color: #4ecdc4; }
 footer .footer-meta { font-size: .8rem; color: #8b93a1; margin-top: .4rem; }
 footer .footer-meta a { color: #4ecdc4; text-decoration: none; }
 .ver-chip {

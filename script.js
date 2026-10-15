@@ -2074,6 +2074,19 @@ function updateModCount() {
   const shown = visible.querySelectorAll('.mod-card:not(.mods-hidden)').length;
   const el = document.getElementById('mods-count');
   if (el) el.textContent = _modFilterText ? `${shown}/${total}` : `${total}`;
+  updateCatCounts();
+}
+
+function updateCatCounts() {
+  const grid = document.querySelector('#mods-content .mods-grid:not(.hidden)');
+  if (!grid) return;
+  const cards = Array.from(grid.querySelectorAll('.mod-card'));
+  const counts = { all: cards.length, rendimiento: 0, graficos: 0, mapa: 0, utilidad: 0 };
+  cards.forEach(c => { counts[classifyMod(c.textContent.toLowerCase())]++; });
+  document.querySelectorAll('.cat-count').forEach(el => {
+    const k = el.dataset.count;
+    el.textContent = counts[k] != null ? counts[k] : '';
+  });
 }
 
 function applyMods() {

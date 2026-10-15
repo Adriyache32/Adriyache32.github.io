@@ -279,11 +279,11 @@
       </div>
 
       <div class="mods-cats">
-        <button class="mod-cat active" onclick="filterModCat('all', this)">Todo</button>
-        <button class="mod-cat" onclick="filterModCat('rendimiento', this)">⚡ Rendimiento</button>
-        <button class="mod-cat" onclick="filterModCat('graficos', this)">🌈 Gráficos</button>
-        <button class="mod-cat" onclick="filterModCat('mapa', this)">🗺️ Mapas</button>
-        <button class="mod-cat" onclick="filterModCat('utilidad', this)">🧰 Utilidad</button>
+        <button class="mod-cat active" data-cat="all" onclick="filterModCat('all', this)">Todo <span class="cat-count" data-count="all"></span></button>
+        <button class="mod-cat" data-cat="rendimiento" onclick="filterModCat('rendimiento', this)">⚡ Rendimiento <span class="cat-count" data-count="rendimiento"></span></button>
+        <button class="mod-cat" data-cat="graficos" onclick="filterModCat('graficos', this)">🌈 Gráficos <span class="cat-count" data-count="graficos"></span></button>
+        <button class="mod-cat" data-cat="mapa" onclick="filterModCat('mapa', this)">🗺️ Mapas <span class="cat-count" data-count="mapa"></span></button>
+        <button class="mod-cat" data-cat="utilidad" onclick="filterModCat('utilidad', this)">🧰 Utilidad <span class="cat-count" data-count="utilidad"></span></button>
       </div>
 
       <div class="mods-search">
