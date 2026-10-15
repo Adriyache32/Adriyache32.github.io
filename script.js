@@ -37,13 +37,35 @@ window.addEventListener('beforeunload', e => {
 });
 
 function toggleMenu() {
-  document.getElementById('nav-menu').classList.toggle('open');
+  const m = document.getElementById('nav-menu');
+  if (!m) return;
+  const open = m.classList.toggle('open');
+  document.body.classList.toggle('menu-open', open);
 }
 
 document.querySelectorAll('nav a').forEach(a => {
   a.addEventListener('click', () => {
-    document.getElementById('nav-menu').classList.remove('open');
+    const m = document.getElementById('nav-menu');
+    if (m) m.classList.remove('open');
+    document.body.classList.remove('menu-open');
   });
+});
+
+/* Cerrar menú al tocar afuera o con Escape */
+document.addEventListener('click', (e) => {
+  if (!document.body.classList.contains('menu-open')) return;
+  const m = document.getElementById('nav-menu');
+  if (m && !m.contains(e.target) && !e.target.closest('.menu-toggle')) {
+    m.classList.remove('open');
+    document.body.classList.remove('menu-open');
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const m = document.getElementById('nav-menu');
+    if (m) m.classList.remove('open');
+    document.body.classList.remove('menu-open');
+  }
 });
 
 async function checkStatus() {
