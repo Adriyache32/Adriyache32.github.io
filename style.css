@@ -1851,6 +1851,26 @@ main > section > h2::after {
   opacity: .85;
 }
 
+/* ===== Micro-animaciones de tarjetas ===== */
+.mod-card, .dl-card, .guia-card, .nov-item {
+  transition: transform .18s cubic-bezier(.2,.7,.2,1), box-shadow .18s ease, border-color .18s ease;
+  will-change: transform;
+}
+.mod-card:hover, .dl-card:hover, .guia-card:hover, .nov-item:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent, #4ecdc4);
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+.mod-card:active, .dl-card:active { transform: translateY(-1px) scale(.99); }
+
+/* Scroll-reveal simple para grids/tarjetas dentro de la sección activa */
+@media (prefers-reduced-motion: no-preference) {
+  .mod-card, .dl-card, .guia-card {
+    animation: cardIn .4s ease both;
+  }
+}
+@keyframes cardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
 /* Menú móvil: backdrop + jerarquía */
 body.menu-open::after {
   content: '';
