@@ -56,12 +56,12 @@ async function checkStatus() {
       dot.className = 'status-dot online';
       text.textContent = `Online — ${data.players.online}/${data.players.max} jugadores`;
     } else {
-      dot.className = 'status-dot offline';
-      text.textContent = 'Offline';
+      dot.className = 'status-dot unknown';
+      text.textContent = 'Desconocido — server no montado';
     }
   } catch {
-    dot.className = 'status-dot offline';
-    text.textContent = 'Error al verificar';
+    dot.className = 'status-dot unknown';
+    text.textContent = 'Desconocido — no se pudo verificar';
   }
 }
 
@@ -2017,9 +2017,9 @@ let _modFilterText = '';
 let _modFilterCat = 'all';
 function classifyMod(text) {
   const t = (text || '').toLowerCase();
-  if (/(minimap|journey|xareo|atlas|coordinate|\bmap\b|mapa|cartograph)/.test(t)) return 'mapa';
-  if (/(shader|iris|oculus|sodium|embeddium|textur|resource ?pack|vulkan|grafic|graphic|distanc|fog|zoom)/.test(t)) return 'graficos';
-  if (/(optimiz|fps|lag|memoria|\bram\b|chunk|luz|light|redstone|entidad|entity|clumps|\bxp\b|hoja|leaves|fast|performan|renderizado|speed|async|tps|fabricapi|taco)/.test(t)) return 'rendimiento';
+  if (/(minimap|journey\s?map|xareo|atlas|coordinate|cartograph|\bmapa?s?\b)/.test(t)) return 'mapa';
+  if (/(shader|iris|oculus|optifine|sodium|rubidium|embeddium|textur|resource\s?pack|vulkan|distanc|fog|zoom|bloom|graphic)/.test(t)) return 'graficos';
+  if (/(optimiz|\bfps\b|lag|memoria|\bram\b|chunk|\bluz\b|light|redstone|entidad|entity|clumps|\bxp\b|hoja|leaves|\bfast|performan|renderizado|\btps\b|async|taco|ferrite|starlight|radium|modernfix|immediatelyfast|cull|ai improvement)/.test(t)) return 'rendimiento';
   return 'utilidad';
 }
 function filterModCat(cat, btn) {
@@ -2042,7 +2042,8 @@ function switchModTab(tab, btn) {
     input.placeholder = `Buscar en ${tab}...`;
     input.focus();
   }
-  updateModCount();
+  // Re-aplicar filtro de texto + categoría a la pestaña activa
+  filterMods(input ? input.value : '');
 }
 
 function filterMods(value) {

@@ -1699,6 +1699,44 @@ main > section.active > *:nth-child(5) { animation-delay: .20s; }
 
 /* Footer con versión + última actualización */
 body.sections-on footer { display: none; }
+.status-dot.unknown { background: #f0c040; box-shadow: 0 0 8px rgba(240,192,64,0.6); }
+.status-dot.online  { background: #2ecc71; box-shadow: 0 0 8px rgba(46,204,113,0.6); }
+
+/* ===== Fondo estilo Aceternity (aurora + grid) ===== */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 50% at 50% 0%, rgba(78,205,196,0.10), transparent 70%),
+    linear-gradient(180deg, #0b1017 0%, #0e141d 100%);
+}
+.bg::before {
+  content: '';
+  position: absolute; inset: -20%;
+  background:
+    radial-gradient(40% 40% at 20% 20%, rgba(78,205,196,0.22), transparent 60%),
+    radial-gradient(35% 35% at 80% 30%, rgba(124,92,255,0.20), transparent 60%),
+    radial-gradient(45% 45% at 60% 85%, rgba(255,107,107,0.16), transparent 60%);
+  filter: blur(60px);
+  animation: auroraMove 24s ease-in-out infinite alternate;
+}
+.bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 75%);
+          mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 75%);
+}
+@keyframes auroraMove {
+  from { transform: translate3d(-4%, -3%, 0) scale(1.05); }
+  to   { transform: translate3d(4%, 3%, 0) scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) { .bg::before { animation: none; } }
 footer .footer-meta { font-size: .8rem; color: #8b93a1; margin-top: .4rem; }
 footer .footer-meta a { color: #4ecdc4; text-decoration: none; }
 .ver-chip {
